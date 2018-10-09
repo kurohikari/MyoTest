@@ -16,8 +16,8 @@ class TestCase {
         assert.deepStrictEqual(actual, expected, message);
     }
 
-    public DoesNotReject(block: Function|Promise<any>, message?: string|Error) {
-        assert.doesNotReject(block, message);
+    public async DoesNotReject(block: Function|Promise<any>, message?: string|Error) {
+        await assert.doesNotReject(block, message);
     }
 
     public DoesNotThrow(block: Function, message?: string|Error) {
@@ -44,8 +44,8 @@ class TestCase {
         assert.ok(value, message)
     }
 
-    public Rejects(block: Function|Promise<any>, message?: string|Error) {
-        assert.rejects(block, message);
+    public async Rejects(block: Function|Promise<any>, message?: string|Error) {
+        await assert.rejects(block, message);
     }
 
     public Throws(block: Function, message?: string|Error) {
