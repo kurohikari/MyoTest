@@ -12,5 +12,9 @@
     "\"Testing\""
   ],
   "author": "Arthur Geneau",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^10.11.6",
+    "typescript": "^3.1.2"
+  }
 }
