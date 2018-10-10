@@ -35,12 +35,13 @@ async function main() {
             fs.mkdirSync(output);
         }
         let structure = new DirStructure("root");
-        Report.GetReport().SetOutput(output);
-        Report.GetReport().SetSource(source);
+        let report = Report.GetReport();
+        report.SetOutput(output);
+        report.SetSource(source);
         RunTests(source, structure);
         await Promise.all(promises);
-        Report.GetReport().SetStructure(structure);
-        Report.GetReport().Save();
+        report.SetStructure(structure);
+        report.Save();
         if(generate) {
             ReportParser.ParseReport();
         }
@@ -63,7 +64,7 @@ function RunTests(testDir, structure) {
         structure.AddFile(file);
     }
     for(let file of files) {
-        RunTest(testDir, file);
+        RunTest(testDir, file, structure);
     }
     for(let dir of dirs) {
         structure.AddChild(new DirStructure(dir));
@@ -74,7 +75,7 @@ function RunTests(testDir, structure) {
     }
 }
 
-function RunTest(dir, file) {
+function RunTest(dir, file, structure) {
     let filePath = path.join(dir, file);
     let proc = exec(`node ${filePath}`);
     let promise = new Promise((resolve) => {
@@ -83,6 +84,7 @@ function RunTest(dir, file) {
                 let testName = data.toString().split("[")[1].split("]")[0];
                 let message = data.toString().substring(data.toString().indexOf("]")+1).trim();
                 let result = new TestResult(testName, filePath, message, true);
+                structure.AddTest(result);
                 Report.GetReport().AddTest(file, result);
             } else {
                 console.log(data);
@@ -93,6 +95,7 @@ function RunTest(dir, file) {
                 let testName = data.toString().split("[")[1].split("]")[0];
                 let message = data.toString().substring(data.toString().indexOf("]")+1).trim();
                 let result = new TestResult(testName, filePath, message, false);
+                structure.AddTest(result);
                 Report.GetReport().AddTest(file, result);
             } else {
                 console.error(data);

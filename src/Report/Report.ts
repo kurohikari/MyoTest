@@ -1,7 +1,6 @@
 import { TestResult } from "./TestResult";
 import * as path from "path";
 import * as fs from "fs";
-import { Test } from "../Test/Test";
 import { DirStructure } from "./DirStructure";
 
 const reportName: string = "myo-report.json";
@@ -70,9 +69,3 @@ export class Report {
     }
 
 }
-
-Test("Test reports", (test) => {
-    let report1 = Report.GetReport();
-    let report2 = Report.GetReport();
-    test.DeepStrictEquals(report1, report2);
-});

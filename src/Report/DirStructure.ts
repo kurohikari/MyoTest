@@ -1,12 +1,15 @@
+import { TestResult } from "./TestResult";
+import * as path from "path";
+
 export class DirStructure {
 
     private name: string;
-    private files: string[];
+    private files: {[file: string]: TestResult[]};
     private children: DirStructure[];
 
     constructor(name: string) {
         this.name = name;
-        this.files = [];
+        this.files = {};
         this.children = [];
     }
     
@@ -18,13 +21,24 @@ export class DirStructure {
         return this.files;
     }
 
+    public AddTest(test: TestResult) {
+        let testFile = path.basename(test.GetPath());
+        this.AddFile(testFile);
+        this.files[testFile].push(test);
+    }
+
+    public GetTests(file: string) {
+        if(!this.HasFile(file)) return null;
+        return this.files[file];
+    }
+
     public GetChildren() {
         return this.children;
     }
 
     public AddFile(file: string) {
         if(this.HasFile(file)) return false;
-        this.files.push(file);
+        this.files[file] = [];
         return true;
     }
 
@@ -35,12 +49,7 @@ export class DirStructure {
     }
 
     public HasFile(file: string) {
-        for(let f of this.files) {
-            if(f === file) {
-                return true;
-            }
-        }
-        return false;
+        return (Object.keys(this.files).indexOf(file) > -1);
     }
 
     public HasChild(child: DirStructure) {
@@ -59,6 +68,31 @@ export class DirStructure {
             }
         }
         throw new Error(`Structure does not have child ${childName}!`);
+    }
+
+    public toString() {
+        this.toStringify(0, this);
+    }
+
+    private toStringify(indentLevel: number, dir: DirStructure) {
+        let indents = "";
+        for(let i=0;i<indentLevel; i++) {
+            indents += "\t";
+        }
+        console.log(`${indents}[${dir.GetName()}]`);
+        indents += "\t";
+        let files = dir.GetFiles();
+        for(let file of Object.keys(files)) {
+            let tests = files[file]
+            let testsStr = "";
+            for(let test of tests) {
+                testsStr += `<${test.GetTestName()}> `;
+            }
+            console.log(`${indents}"${file}" - ${testsStr}`);
+        }
+        for(let subDir of dir.GetChildren()) {
+            this.toStringify(indentLevel+1, subDir);
+        }
     }
 
 }
