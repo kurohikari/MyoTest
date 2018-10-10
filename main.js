@@ -13,6 +13,10 @@ let promises = [];
 
 async function main() {
     let args = process.argv;
+    if(args.length == 2) {
+        console.log("no arg");
+        return 0;
+    }
     let source = null;
     let output = "./myo-test";
     let generate = false;
