@@ -1,8 +1,11 @@
 import * as assert from "assert";
+import { ErrorInfo } from "./ErrorInfo";
 
 class TestCase {
 
-    constructor(private name: string) {}
+    constructor(private name: string) {
+        //console.log(process.cwd());
+    }
 
     public GetName() {
         return this.name;
@@ -12,7 +15,7 @@ class TestCase {
         try {
             assert.strictEqual(actual, expected, message);
         } catch(assertionError) {
-            console.log(assertionError)
+            
         }
     }
 
