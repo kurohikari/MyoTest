@@ -1,10 +1,10 @@
 const exec = require("child_process").exec;
 const path = require("path");
 const fs = require("fs");
-const Report = require("./out/Report/Report").Report;
-const TestResult = require("./out/Report/TestResult").TestResult;
-const ReportParser = require("./out/Html/ReportParser").ReportParser;
-const DirStructure = require("./out/Report/DirStructure").DirStructure;
+const Report = require("./out/src/Report/Report").Report;
+const TestResult = require("./out/src/Report/TestResult").TestResult;
+const ReportParser = require("./out/src/Html/ReportParser").ReportParser;
+const DirStructure = require("./out/src/Report/DirStructure").DirStructure;
 
 const reserved = ["-s", "--source", "-o", "--output", "-g", "--generate"];
 let promises = [];
@@ -39,7 +39,7 @@ async function main() {
         report.SetOutput(output);
         report.SetSource(source);
         RunTests(source, structure);
-        await Promise.all(promises);
+        await Promise.all(promises).catch(error => {throw error});;
         report.SetStructure(structure);
         report.Save();
         if(generate) {

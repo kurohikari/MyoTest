@@ -11,8 +11,8 @@ class SideBar {
         let div = basicHtml.replace("{{structure}}", structure.GetName());
         let files = structure.GetFiles();
         let fileDivs = "";
-        for (let file of Object.keys(files)) {
-            let tests = files[file];
+        for (let file of files) {
+            let tests = structure.GetTests(file);
             if (tests.length > 0) {
                 let fileDiv = `<a href="#"><div class="file-div">${file}</div></a>\n`;
                 fileDivs += fileDiv;
@@ -21,6 +21,8 @@ class SideBar {
         let res = div.replace("{{files}}", fileDivs);
         let subDivs = "";
         for (let sub of structure.GetChildren()) {
+            if (!sub.HasTests())
+                continue;
             let subDiv = this.GenerateStructure(sub);
             subDivs += subDiv + "\n";
         }

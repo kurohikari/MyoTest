@@ -22,16 +22,16 @@ export class TestCase {
         return this.info;
     }
 
-    public StrictEquals(actual: any, expected: any, message?: string|Error) {
+    public Equals(actual: any, expected: any, message?: string|Error) {
         assert.strictEqual(actual, expected, message);
     }
 
-    public DeepStrictEquals(actual: any, expected: any, message?: string|Error) {
+    public DeepEquals(actual: any, expected: any, message?: string|Error) {
         assert.deepStrictEqual(actual, expected, message);
     }
 
     public async DoesNotReject(block: Function|Promise<any>, message?: string|Error) {
-        await assert.doesNotReject(block, message);
+        await assert.doesNotReject(block, message).catch(error => {throw error});
     }
 
     public DoesNotThrow(block: Function, message?: string|Error) {
@@ -59,7 +59,7 @@ export class TestCase {
     }
 
     public async Rejects(block: Function|Promise<any>, message?: string|Error) {
-        await assert.rejects(block, message);
+        await assert.rejects(block, message).catch(error => {throw error});
     }
 
     public Throws(block: Function, message?: string|Error) {

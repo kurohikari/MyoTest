@@ -20,7 +20,7 @@ export class DirStructure {
     }
 
     public GetFiles() {
-        return this.files;
+        return Object.keys(this.files);
     }
 
     public AddTest(test: TestResult) {
@@ -42,6 +42,16 @@ export class DirStructure {
         if(this.HasFile(file)) return false;
         this.files[file] = [];
         return true;
+    }
+
+    public HasTests() {
+        for(let file of Object.keys(this.files)) {
+            if(this.files[file].length > 0) return true;
+        }
+        for(let child of this.children) {
+            if(child.HasTests()) return true;
+        }
+        return false;
     }
 
     public IsRoot() {

@@ -12,7 +12,7 @@ class DirStructure {
         return this.name;
     }
     GetFiles() {
-        return this.files;
+        return Object.keys(this.files);
     }
     AddTest(test) {
         let testFile = path.basename(test.GetPath());
@@ -32,6 +32,17 @@ class DirStructure {
             return false;
         this.files[file] = [];
         return true;
+    }
+    HasTests() {
+        for (let file of Object.keys(this.files)) {
+            if (this.files[file].length > 0)
+                return true;
+        }
+        for (let child of this.children) {
+            if (child.HasTests())
+                return true;
+        }
+        return false;
     }
     IsRoot() {
         return this.root;
