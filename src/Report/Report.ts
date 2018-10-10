@@ -59,6 +59,7 @@ export class Report {
     }
 
     public Save() {
+        if(!fs.existsSync(this.output)) fs.mkdirSync(this.output);
         let stream = fs.createWriteStream(path.join(this.output, reportName));
         stream.write(JSON.stringify(this.tests), (error) => {
             if(error) {

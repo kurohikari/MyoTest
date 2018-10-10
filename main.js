@@ -31,9 +31,7 @@ async function main() {
     } else if(output === null) {
         throw new Error("No argument passed for test output directory");
     } else {
-        if(!fs.existsSync(output)) {
-            fs.mkdirSync(output);
-        }
+        DeleteOutput(output);
         let structure = new DirStructure("Root", true);
         let report = Report.GetReport();
         report.SetOutput(output);
@@ -45,6 +43,20 @@ async function main() {
         if(generate) {
             ReportParser.ParseReport();
         }
+    }
+}
+
+function DeleteOutput(output) {
+    if(!fs.existsSync(output)) return;
+    if(fs.statSync(output).isDirectory()) {
+        let reads = fs.readdirSync(output);
+        for(let read of reads) {
+            let newPath = path.join(output, read);
+            DeleteOutput(newPath);
+        }
+        fs.rmdirSync(output);
+    } else {
+        fs.unlinkSync(output);
     }
 }
 
@@ -133,4 +145,6 @@ function GetOutput(args, index) {
     return next;
 }
 
-main();
+main().catch(error => {
+    console.error(error);
+});
