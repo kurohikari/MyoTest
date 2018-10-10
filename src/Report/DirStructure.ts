@@ -20,7 +20,7 @@ export class DirStructure {
     }
 
     public GetFiles() {
-        return this.files;
+        return Object.keys(this.files);
     }
 
     public AddTest(test: TestResult) {
