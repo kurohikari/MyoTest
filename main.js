@@ -2,10 +2,12 @@ const exec = require("child_process").exec;
 const path = require("path");
 const fs = require("fs");
 const Report = require("./out/Report/Report").Report;
+const TestResult = require("./out/Report/TestResult").TestResult;
 
-const reserved = ["-s", "-o"];
+const reserved = ["-s", "-o", "-v"];
+let promises = [];
 
-function main() {
+async function main() {
     let args = process.argv;
     let source = null;
     let output = "./myo-test";
@@ -22,12 +24,13 @@ function main() {
     } else if(output === null) {
         throw new Error("No argument passed for test output directory");
     } else {
-        console.log("All okay!");
         if(!fs.existsSync(output)) {
             fs.mkdirSync(output);
         }
         Report.GetReport().SetOutput(output);
         RunTests(source);
+        await Promise.all(promises);
+        Report.GetReport().Save();
     }
 }
 
@@ -55,12 +58,28 @@ function RunTests(testDir) {
 function RunTest(dir, file) {
     let filePath = path.join(dir, file);
     let proc = exec(`node ${filePath}`);
-    proc.stdout.on("data", (data) => {
-        console.log(file + ": " + data);
+    let promise = new Promise((resolve) => {
+        proc.stdout.on("data", (data) => {
+            if(data.toString().indexOf("[") === 0) {
+                let testName = data.toString().split("[")[1].split("]")[0];
+                let message = data.toString().substring(data.toString().indexOf("]")).trim();
+                let result = new TestResult(testName, message, true);
+                Report.GetReport().AddTest(file, result);
+            }
+        });
+        proc.stderr.on("data", (data) => {
+            if(data.toString().indexOf("[") === 0) {
+                let testName = data.toString().split("[")[1].split("]")[0];
+                let message = data.toString().substring(data.toString().indexOf("]")).trim();
+                let result = new TestResult(testName, message, false);
+                Report.GetReport().AddTest(file, result);
+            }
+        });
+        proc.on("close", () => {
+            resolve();
+        });
     });
-    proc.stderr.on("data", (data) => {
-        console.log(file + ": " + data);
-    });
+    promises.push(promise);
 }
 
 function GetSource(args, index) {

@@ -1,10 +1,9 @@
 import * as assert from "assert";
-import { ErrorInfo } from "./ErrorInfo";
 import { Report } from "../Report/Report";
 
 export class TestCase {
 
-    private info: ErrorInfo;
+    private info: Error;
 
     constructor(private name: string) {
         //console.log(process.cwd());
@@ -23,7 +22,7 @@ export class TestCase {
         try {
             assert.strictEqual(actual, expected, message);
         } catch(assertionError) {
-            this.info = new ErrorInfo(assertionError);
+            this.info = assertionError;
             this.FailTest();
         }
     }
@@ -32,7 +31,7 @@ export class TestCase {
         try {
             assert.deepStrictEqual(actual, expected, message);
         } catch(assertionError) {
-            this.info = new ErrorInfo(assertionError);
+            this.info = assertionError;
             this.FailTest();
         }
     }
@@ -41,7 +40,7 @@ export class TestCase {
         try {
             await assert.doesNotReject(block, message);
         } catch(assertionError) {
-            this.info = new ErrorInfo(assertionError);
+            this.info = assertionError;
             this.FailTest();
         }
     }
@@ -50,7 +49,7 @@ export class TestCase {
         try {
             assert.doesNotThrow(block, message);
         } catch(assertionError) {
-            this.info = new ErrorInfo(assertionError);
+            this.info = assertionError;
             this.FailTest();
         }
     }
@@ -59,7 +58,7 @@ export class TestCase {
         try {
             assert.fail(message);
         } catch(assertionError) {
-            this.info = new ErrorInfo(assertionError);
+            this.info = assertionError;
             this.FailTest();
         }
     }
@@ -68,7 +67,7 @@ export class TestCase {
         try {
             assert.ifError(value);
         } catch(assertionError) {
-            this.info = new ErrorInfo(assertionError);
+            this.info = assertionError;
             this.FailTest();
         }
         
@@ -78,7 +77,7 @@ export class TestCase {
         try {
             assert.notStrictEqual(actual, expected, message);
         } catch(assertionError) {
-            this.info = new ErrorInfo(assertionError);
+            this.info = assertionError;
             this.FailTest();
         }
     }
@@ -87,7 +86,7 @@ export class TestCase {
         try {
             assert.notDeepStrictEqual(actual, expected, message);
         } catch(assertionError) {
-            this.info = new ErrorInfo(assertionError);
+            this.info = assertionError;
             this.FailTest();
         }
     }
@@ -96,7 +95,7 @@ export class TestCase {
         try {
             assert.ok(value, message);
         } catch(assertionError) {
-            this.info = new ErrorInfo(assertionError);
+            this.info = assertionError;
             this.FailTest();
         }
     }
@@ -105,7 +104,7 @@ export class TestCase {
         try {
             await assert.rejects(block, message);
         } catch(assertionError) {
-            this.info = new ErrorInfo(assertionError);
+            this.info = assertionError;
             this.FailTest();
         }
     }
@@ -114,7 +113,7 @@ export class TestCase {
         try {
             assert.throws(block, message);
         } catch(assertionError) {
-            this.info = new ErrorInfo(assertionError);
+            this.info = assertionError;
             this.FailTest();
         }
     }
