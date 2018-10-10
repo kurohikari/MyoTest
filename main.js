@@ -34,6 +34,7 @@ async function main() {
             fs.mkdirSync(output);
         }
         Report.GetReport().SetOutput(output);
+        Report.GetReport().SetSource(source);
         RunTests(source);
         await Promise.all(promises);
         Report.GetReport().Save();

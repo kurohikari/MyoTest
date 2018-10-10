@@ -1,12 +1,14 @@
 import { TestResult } from "./TestResult";
 import * as path from "path";
 import * as fs from "fs";
+import { Test } from "../Test/Test";
 
 const reportName: string = "myo-report.json";
 let report: Report = null;
 
 export class Report {
 
+    private source: string;
     private output: string;
     private tests: {[file: string]: TestResult[]};
 
@@ -19,6 +21,14 @@ export class Report {
             this.tests[file] = [];
         }
         this.tests[file].push(testResult);
+    }
+
+    public SetSource(newSource: string) {
+        this.source = newSource;
+    }
+
+    public GetSource() {
+        return this.source;
     }
 
     public SetOutput(newOutput: string) {
@@ -49,3 +59,9 @@ export class Report {
     }
 
 }
+
+Test("Test reports", (test) => {
+    let report1 = Report.GetReport();
+    let report2 = Report.GetReport();
+    test.DeepStrictEquals(report1, report2);
+});

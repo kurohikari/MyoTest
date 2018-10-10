@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
 const fs = require("fs");
+const Test_1 = require("../Test/Test");
 const reportName = "myo-report.json";
 let report = null;
 class Report {
@@ -13,6 +14,12 @@ class Report {
             this.tests[file] = [];
         }
         this.tests[file].push(testResult);
+    }
+    SetSource(newSource) {
+        this.source = newSource;
+    }
+    GetSource() {
+        return this.source;
     }
     SetOutput(newOutput) {
         this.output = newOutput;
@@ -41,3 +48,8 @@ class Report {
     }
 }
 exports.Report = Report;
+Test_1.Test("Test reports", (test) => {
+    let report1 = Report.GetReport();
+    let report2 = Report.GetReport();
+    test.DeepStrictEquals(report1, report2);
+});
