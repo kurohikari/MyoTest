@@ -3,20 +3,26 @@ const path = require("path");
 const fs = require("fs");
 const Report = require("./out/Report/Report").Report;
 const TestResult = require("./out/Report/TestResult").TestResult;
+const ReportParser = require("./out/Html/ReportParser").ReportParser;
 
-const reserved = ["-s", "-o", "-v"];
+const reserved = ["-s", "-o", "-g"];
 let promises = [];
 
 async function main() {
     let args = process.argv;
     let source = null;
     let output = "./myo-test";
+    let generate = false;
     for(let i = 0; i<args.length; i++) {
         let arg = args[i];
         if(arg === "-s") {
             source = GetSource(args, i);
+            i++;
         } else if(arg === "-o") {
             output = GetOutput(args, i);
+            i++;
+        } else if(arg === "-g") {
+            generate = true;
         }
     }
     if(source === null) {
@@ -31,6 +37,9 @@ async function main() {
         RunTests(source);
         await Promise.all(promises);
         Report.GetReport().Save();
+        if(generate) {
+            ReportParser.ParseReport();
+        }
     }
 }
 
@@ -65,6 +74,8 @@ function RunTest(dir, file) {
                 let message = data.toString().substring(data.toString().indexOf("]")+1).trim();
                 let result = new TestResult(testName, message, true);
                 Report.GetReport().AddTest(file, result);
+            } else {
+                console.log(data);
             }
         });
         proc.stderr.on("data", (data) => {
@@ -73,6 +84,8 @@ function RunTest(dir, file) {
                 let message = data.toString().substring(data.toString().indexOf("]")+1).trim();
                 let result = new TestResult(testName, message, false);
                 Report.GetReport().AddTest(file, result);
+            } else {
+                console.error(data);
             }
         });
         proc.on("close", () => {

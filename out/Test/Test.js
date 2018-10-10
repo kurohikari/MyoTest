@@ -9,11 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
-const ErrorInfo_1 = require("./ErrorInfo");
 class TestCase {
     constructor(name) {
         this.name = name;
-        //console.log(process.cwd());
         this.info = null;
     }
     GetName() {
@@ -27,7 +25,9 @@ class TestCase {
             assert.strictEqual(actual, expected, message);
         }
         catch (assertionError) {
-            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -36,7 +36,9 @@ class TestCase {
             assert.deepStrictEqual(actual, expected, message);
         }
         catch (assertionError) {
-            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -46,7 +48,9 @@ class TestCase {
                 yield assert.doesNotReject(block, message);
             }
             catch (assertionError) {
-                this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+                this.info = assertionError;
+                this.info.stackMessage = this.info.stack;
+                this.info.errorMessage = this.info.message;
                 this.FailTest();
             }
         });
@@ -56,7 +60,9 @@ class TestCase {
             assert.doesNotThrow(block, message);
         }
         catch (assertionError) {
-            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -65,7 +71,9 @@ class TestCase {
             assert.fail(message);
         }
         catch (assertionError) {
-            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -74,7 +82,9 @@ class TestCase {
             assert.ifError(value);
         }
         catch (assertionError) {
-            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -83,7 +93,9 @@ class TestCase {
             assert.notStrictEqual(actual, expected, message);
         }
         catch (assertionError) {
-            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -92,7 +104,9 @@ class TestCase {
             assert.notDeepStrictEqual(actual, expected, message);
         }
         catch (assertionError) {
-            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -101,7 +115,9 @@ class TestCase {
             assert.ok(value, message);
         }
         catch (assertionError) {
-            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -111,7 +127,9 @@ class TestCase {
                 yield assert.rejects(block, message);
             }
             catch (assertionError) {
-                this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+                this.info = assertionError;
+                this.info.stackMessage = this.info.stack;
+                this.info.errorMessage = this.info.message;
                 this.FailTest();
             }
         });
@@ -121,7 +139,9 @@ class TestCase {
             assert.throws(block, message);
         }
         catch (assertionError) {
-            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }

@@ -1,12 +1,10 @@
 import * as assert from "assert";
-import { Report } from "../Report/Report";
 
 export class TestCase {
 
-    private info: Error;
+    private info: any;
 
     constructor(private name: string) {
-        //console.log(process.cwd());
         this.info = null;
     }
 
@@ -23,6 +21,8 @@ export class TestCase {
             assert.strictEqual(actual, expected, message);
         } catch(assertionError) {
             this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -32,6 +32,8 @@ export class TestCase {
             assert.deepStrictEqual(actual, expected, message);
         } catch(assertionError) {
             this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -41,6 +43,8 @@ export class TestCase {
             await assert.doesNotReject(block, message);
         } catch(assertionError) {
             this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -50,6 +54,8 @@ export class TestCase {
             assert.doesNotThrow(block, message);
         } catch(assertionError) {
             this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -59,6 +65,8 @@ export class TestCase {
             assert.fail(message);
         } catch(assertionError) {
             this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -68,6 +76,8 @@ export class TestCase {
             assert.ifError(value);
         } catch(assertionError) {
             this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
         
@@ -78,6 +88,8 @@ export class TestCase {
             assert.notStrictEqual(actual, expected, message);
         } catch(assertionError) {
             this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -87,6 +99,8 @@ export class TestCase {
             assert.notDeepStrictEqual(actual, expected, message);
         } catch(assertionError) {
             this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -96,6 +110,8 @@ export class TestCase {
             assert.ok(value, message);
         } catch(assertionError) {
             this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -105,6 +121,8 @@ export class TestCase {
             await assert.rejects(block, message);
         } catch(assertionError) {
             this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
@@ -114,6 +132,8 @@ export class TestCase {
             assert.throws(block, message);
         } catch(assertionError) {
             this.info = assertionError;
+            this.info.stackMessage = this.info.stack;
+            this.info.errorMessage = this.info.message;
             this.FailTest();
         }
     }
