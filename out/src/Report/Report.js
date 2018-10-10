@@ -7,12 +7,25 @@ let report = null;
 class Report {
     constructor() {
         this.tests = {};
+        this.structure = null;
     }
     AddTest(file, testResult) {
         if (!this.tests[file]) {
             this.tests[file] = [];
         }
         this.tests[file].push(testResult);
+    }
+    SetSource(newSource) {
+        this.source = newSource;
+    }
+    GetSource() {
+        return this.source;
+    }
+    SetStructure(newStructure) {
+        this.structure = newStructure;
+    }
+    GetStructure() {
+        return this.structure;
     }
     SetOutput(newOutput) {
         this.output = newOutput;
@@ -29,6 +42,8 @@ class Report {
         return this.tests;
     }
     Save() {
+        if (!fs.existsSync(this.output))
+            fs.mkdirSync(this.output);
         let stream = fs.createWriteStream(path.join(this.output, reportName));
         stream.write(JSON.stringify(this.tests), (error) => {
             if (error) {

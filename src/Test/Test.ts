@@ -1,134 +1,84 @@
 import * as assert from "assert";
-import { Report } from "../Report/Report";
 
 export class TestCase {
 
-    private info: Error;
+    private info: any;
+    private failed: boolean;
 
     constructor(private name: string) {
-        //console.log(process.cwd());
         this.info = null;
+        this.failed = false;
     }
 
     public GetName() {
         return this.name;
     }
 
+    public WasFailed() {
+        return this.failed;
+    }
+
     public GetInfo() {
         return this.info;
     }
 
-    public StrictEquals(actual: any, expected: any, message?: string|Error) {
-        try {
-            assert.strictEqual(actual, expected, message);
-        } catch(assertionError) {
-            this.info = assertionError;
-            this.FailTest();
-        }
+    public Equals(actual: any, expected: any, message?: string|Error) {
+        assert.strictEqual(actual, expected, message);
     }
 
-    public DeepStrictEquals(actual: any, expected: any, message?: string|Error) {
-        try {
-            assert.deepStrictEqual(actual, expected, message);
-        } catch(assertionError) {
-            this.info = assertionError;
-            this.FailTest();
-        }
+    public DeepEquals(actual: any, expected: any, message?: string|Error) {
+        assert.deepStrictEqual(actual, expected, message);
     }
 
     public async DoesNotReject(block: Function|Promise<any>, message?: string|Error) {
-        try {
-            await assert.doesNotReject(block, message);
-        } catch(assertionError) {
-            this.info = assertionError;
-            this.FailTest();
-        }
+        await assert.doesNotReject(block, message).catch(error => {throw error});
     }
 
     public DoesNotThrow(block: Function, message?: string|Error) {
-        try {
-            assert.doesNotThrow(block, message);
-        } catch(assertionError) {
-            this.info = assertionError;
-            this.FailTest();
-        }
+        assert.doesNotThrow(block, message);
     }
 
     public Fail(message?: string|Error) {
-        try {
-            assert.fail(message);
-        } catch(assertionError) {
-            this.info = assertionError;
-            this.FailTest();
-        }
+        assert.fail(message);
     }
 
     public IfError(value: any) {
-        try {
-            assert.ifError(value);
-        } catch(assertionError) {
-            this.info = assertionError;
-            this.FailTest();
-        }
-        
+        assert.ifError(value);
     }
 
     public NotStrictEquals(actual: any, expected: any, message?: string|Error) {
-        try {
-            assert.notStrictEqual(actual, expected, message);
-        } catch(assertionError) {
-            this.info = assertionError;
-            this.FailTest();
-        }
+        assert.notStrictEqual(actual, expected, message);
     }
 
     public NotDeepStrictEquals(actual: any, expected: any, message?: string|Error) {
-        try {
-            assert.notDeepStrictEqual(actual, expected, message);
-        } catch(assertionError) {
-            this.info = assertionError;
-            this.FailTest();
-        }
+        assert.notDeepStrictEqual(actual, expected, message);
     }
 
     public True(value: any, message?: string|Error) {
-        try {
-            assert.ok(value, message);
-        } catch(assertionError) {
-            this.info = assertionError;
-            this.FailTest();
-        }
+        assert.ok(value, message);
     }
 
     public async Rejects(block: Function|Promise<any>, message?: string|Error) {
-        try {
-            await assert.rejects(block, message);
-        } catch(assertionError) {
-            this.info = assertionError;
-            this.FailTest();
-        }
+        await assert.rejects(block, message).catch(error => {throw error});
     }
 
     public Throws(block: Function, message?: string|Error) {
-        try {
-            assert.throws(block, message);
-        } catch(assertionError) {
-            this.info = assertionError;
-            this.FailTest();
-        }
-    }
-
-    private FailTest() {
-        console.error(`[${this.GetName()}] ${JSON.stringify(this.GetInfo())}`);
-        process.exit(1);
+        assert.throws(block, message);
     }
 
 }
 
 let Test = (testName: string, test: (test: TestCase) => void) => {
     let t = new TestCase(testName);
-    test(t);
-    console.log(`[${t.GetName()}] OK`);
+    try {
+        test(t);
+        console.log(`[${t.GetName()}] OK`);
+    } catch(error) {
+        let info = error;
+        info.stackMessage = info.stack;
+        info.errorMessage = info.message;
+        console.error(`[${t.GetName()}] ${JSON.stringify(info)}`);
+    }
 }
 
 export { Test };
