@@ -4,11 +4,13 @@ import * as path from "path";
 export class DirStructure {
 
     private name: string;
+    private root: boolean;
     private files: {[file: string]: TestResult[]};
     private children: DirStructure[];
 
-    constructor(name: string) {
+    constructor(name: string, root: boolean = false) {
         this.name = name;
+        this.root = root;
         this.files = {};
         this.children = [];
     }
@@ -40,6 +42,10 @@ export class DirStructure {
         if(this.HasFile(file)) return false;
         this.files[file] = [];
         return true;
+    }
+
+    public IsRoot() {
+        return this.root;
     }
 
     public AddChild(child: DirStructure) {

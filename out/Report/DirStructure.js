@@ -2,8 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
 class DirStructure {
-    constructor(name) {
+    constructor(name, root = false) {
         this.name = name;
+        this.root = root;
         this.files = {};
         this.children = [];
     }
@@ -31,6 +32,9 @@ class DirStructure {
             return false;
         this.files[file] = [];
         return true;
+    }
+    IsRoot() {
+        return this.root;
     }
     AddChild(child) {
         if (this.HasChild(child))

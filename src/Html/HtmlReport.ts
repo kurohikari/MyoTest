@@ -61,7 +61,7 @@ export class HTMLReport {
         this.testResults.push(test);
     }
 
-    public SaveAsHTML() {
+    public SaveAsHTML(htmlPath: string) {
         let name = this.file.substring(0, this.file.length-3) + ".html";
         let testsStr = "";
         for(let test of this.tests) {
@@ -81,7 +81,7 @@ export class HTMLReport {
         .replace("{{path}}", this.path)
         .replace("{{analysis}}", analysisMessage)
         .replace("{{tests}}", testsStr);
-        let stream = fs.createWriteStream(path.join(Report.GetReport().GetOutput(), name));
+        let stream = fs.createWriteStream(path.join(htmlPath, name));
         stream.write(toWrite, (error) => {
             if(error) {
                 console.error(`Could not write ${name}`);

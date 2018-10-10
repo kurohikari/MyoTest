@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Report_1 = require("../Report/Report");
 const path = require("path");
 const fs = require("fs");
 const html = `
@@ -51,7 +50,7 @@ class HTMLReport {
         }
         this.testResults.push(test);
     }
-    SaveAsHTML() {
+    SaveAsHTML(htmlPath) {
         let name = this.file.substring(0, this.file.length - 3) + ".html";
         let testsStr = "";
         for (let test of this.tests) {
@@ -71,7 +70,7 @@ class HTMLReport {
             .replace("{{path}}", this.path)
             .replace("{{analysis}}", analysisMessage)
             .replace("{{tests}}", testsStr);
-        let stream = fs.createWriteStream(path.join(Report_1.Report.GetReport().GetOutput(), name));
+        let stream = fs.createWriteStream(path.join(htmlPath, name));
         stream.write(toWrite, (error) => {
             if (error) {
                 console.error(`Could not write ${name}`);

@@ -34,7 +34,7 @@ async function main() {
         if(!fs.existsSync(output)) {
             fs.mkdirSync(output);
         }
-        let structure = new DirStructure("root");
+        let structure = new DirStructure("root", true);
         let report = Report.GetReport();
         report.SetOutput(output);
         report.SetSource(source);

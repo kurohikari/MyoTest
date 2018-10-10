@@ -1,3 +1,4 @@
+import { DirStructure } from "../Report/DirStructure";
 import { Report } from "../Report/Report";
 import { HTMLReport } from "./HtmlReport";
 import { Css } from "./Css";
@@ -14,20 +15,35 @@ export class ReportParser {
     }
 
     private Parse() {
-        let tests = this.report.GetTests();
-        if(!fs.existsSync(path.join(this.report.GetOutput(), "myo-css.css"))) {
-            fs.writeFileSync(path.join(this.report.GetOutput(), "myo-css.css"), Css);
+        let structure = this.report.GetStructure();
+        let output = this.report.GetOutput();
+        this.ParseStructure(structure, output);
+    }
+
+    private ParseStructure(structure: DirStructure, currentPath: string) {
+        if(!fs.existsSync(currentPath)) {
+            fs.mkdirSync(currentPath);
         }
-        if(!fs.existsSync(path.join(this.report.GetOutput(), "myo-js.js"))) {
-            fs.writeFileSync(path.join(this.report.GetOutput(), "myo-js.js"), Js);
+        if(!fs.existsSync(path.join(currentPath, "myo-css.jss"))) {
+            fs.writeFileSync(path.join(currentPath, "myo-css.css"), Css);
         }
-        for(let file of Object.keys(tests)) {
-            let results = tests[file];
-            let html = new HTMLReport(file);
-            for(let result of results) {
-                html.AddTest(result);
+        if(!fs.existsSync(path.join(currentPath, "myo-js.js"))) {
+            fs.writeFileSync(path.join(currentPath, "myo-js.js"), Js);
+        }
+        let files = structure.GetFiles();
+        for(let file of Object.keys(files)) {
+            let tests = files[file];
+            if(tests.length > 0) {
+                let htmlReport = new HTMLReport(file);
+                for(let test of tests) {
+                    htmlReport.AddTest(test);
+                }
+                htmlReport.SaveAsHTML(currentPath);
             }
-            html.SaveAsHTML();
+        }
+        for(let sub of structure.GetChildren()) {
+            let newPath = path.join(currentPath, sub.GetName());
+            this.ParseStructure(sub, newPath);
         }
     }
 
