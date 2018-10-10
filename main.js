@@ -4,8 +4,9 @@ const fs = require("fs");
 const Report = require("./out/Report/Report").Report;
 const TestResult = require("./out/Report/TestResult").TestResult;
 const ReportParser = require("./out/Html/ReportParser").ReportParser;
+const DirStructure = require("./out/Report/DirStructure").DirStructure;
 
-const reserved = ["-s", "-o", "-g"];
+const reserved = ["-s", "--source", "-o", "--output", "-g", "--generate"];
 let promises = [];
 
 async function main() {
@@ -15,13 +16,13 @@ async function main() {
     let generate = false;
     for(let i = 0; i<args.length; i++) {
         let arg = args[i];
-        if(arg === "-s") {
+        if(arg === "-s" || arg === "--source") {
             source = GetSource(args, i);
             i++;
-        } else if(arg === "-o") {
+        } else if(arg === "-o" || arg === "--output") {
             output = GetOutput(args, i);
             i++;
-        } else if(arg === "-g") {
+        } else if(arg === "-g" || arg === "--generate") {
             generate = true;
         }
     }
@@ -33,10 +34,12 @@ async function main() {
         if(!fs.existsSync(output)) {
             fs.mkdirSync(output);
         }
+        let structure = new DirStructure("root");
         Report.GetReport().SetOutput(output);
         Report.GetReport().SetSource(source);
-        RunTests(source);
+        RunTests(source, structure);
         await Promise.all(promises);
+        Report.GetReport().SetStructure(structure);
         Report.GetReport().Save();
         if(generate) {
             ReportParser.ParseReport();
@@ -44,7 +47,7 @@ async function main() {
     }
 }
 
-function RunTests(testDir) {
+function RunTests(testDir, structure) {
     let reads = fs.readdirSync(testDir);
     let files = [];
     let dirs = [];
@@ -57,11 +60,17 @@ function RunTests(testDir) {
         }
     }
     for(let file of files) {
+        structure.AddFile(file);
+    }
+    for(let file of files) {
         RunTest(testDir, file);
     }
     for(let dir of dirs) {
+        structure.AddChild(new DirStructure(dir));
+    }
+    for(let dir of dirs) {
         let dirPath = path.join(testDir, dir);
-        RunTests(dirPath);
+        RunTests(dirPath, structure.GetChild(dir));
     }
 }
 

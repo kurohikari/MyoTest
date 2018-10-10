@@ -8,6 +8,7 @@ let report = null;
 class Report {
     constructor() {
         this.tests = {};
+        this.structure = null;
     }
     AddTest(file, testResult) {
         if (!this.tests[file]) {
@@ -20,6 +21,12 @@ class Report {
     }
     GetSource() {
         return this.source;
+    }
+    SetStructure(newStructure) {
+        this.structure = newStructure;
+    }
+    GetStructure() {
+        return this.structure;
     }
     SetOutput(newOutput) {
         this.output = newOutput;

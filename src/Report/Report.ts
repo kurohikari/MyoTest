@@ -2,6 +2,7 @@ import { TestResult } from "./TestResult";
 import * as path from "path";
 import * as fs from "fs";
 import { Test } from "../Test/Test";
+import { DirStructure } from "./DirStructure";
 
 const reportName: string = "myo-report.json";
 let report: Report = null;
@@ -10,10 +11,12 @@ export class Report {
 
     private source: string;
     private output: string;
+    private structure: DirStructure;
     private tests: {[file: string]: TestResult[]};
 
     private constructor() {
         this.tests = {};
+        this.structure = null;
     }
 
     public AddTest(file: string, testResult: TestResult) {
@@ -29,6 +32,14 @@ export class Report {
 
     public GetSource() {
         return this.source;
+    }
+
+    public SetStructure(newStructure: DirStructure) {
+        this.structure = newStructure;
+    }
+
+    public GetStructure() {
+        return this.structure;
     }
 
     public SetOutput(newOutput: string) {
