@@ -2,6 +2,7 @@ import { TestResult } from "../Report/TestResult";
 import { Report } from "../Report/Report";
 import * as path from "path";
 import * as fs from "fs";
+import { SideBar } from "./SideBar";
 
 const html = `
 <!DOCTYPE html>
@@ -14,10 +15,7 @@ const html = `
     <body>
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="#">About</a>
-            <a href="#">Services</a>
-            <a href="#">Clients</a>
-            <a href="#">Contact</a>
+            {{sidebar}}
         </div>
         
         <!-- Use any element to open the sidenav -->
@@ -78,6 +76,7 @@ export class HTMLReport {
         let analysisMessage = (denom > 0) ? `${(num/denom*100).toFixed(2)}% tests passed!`: "No test was run!";
         let toWrite = html.replace("{{filepure}}", this.file.substring(0, this.file.length-3))
         .replace("{{title}}", this.title)
+        .replace("{{sidebar}}", SideBar.GenerateSideBar())
         .replace("{{path}}", this.path)
         .replace("{{analysis}}", analysisMessage)
         .replace("{{tests}}", testsStr);
