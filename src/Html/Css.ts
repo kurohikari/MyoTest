@@ -141,6 +141,23 @@ div.test-name {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
 }
+
+div.sub-div {
+    padding-left: 5px;
+    margin-bottom: 7px;
+    border-left: 1px dotted rgba(100,100,100,1);
+    border-bottom: 1px dotted rgba(150,150,150,1);
+}
+
+div.sub-name {
+    font-size: 75%;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+div.file-div {
+    font-size: 50%;
+}
 `;
 
 export { Css };
