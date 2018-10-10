@@ -21,7 +21,8 @@ const html = `
 class HTMLReport {
     constructor(file) {
         this.file = file;
-        this.title = `<div class="title">${file}</div>`;
+        this.path = "";
+        this.title = `<div class="title">${file} ({{path}})</div>`;
         this.tests = [];
         this.testResults = [];
     }
@@ -29,6 +30,7 @@ class HTMLReport {
         return this.title;
     }
     AddTest(test) {
+        this.path = test.GetPath();
         if (test.IsPassed()) {
             this.tests.push(`<div class="ok-test"><div class="test-name">${test.GetTestName()}</div><div>${test.GetMessage()}</div></div>`);
         }
@@ -55,6 +57,7 @@ class HTMLReport {
         let analysisMessage = (denom > 0) ? `${(num / denom * 100).toFixed(2)}% tests passed!` : "No test was run!";
         let toWrite = html.replace("{{filepure}}", this.file.substring(0, this.file.length - 3))
             .replace("{{title}}", this.title)
+            .replace("{{path}}", this.path)
             .replace("{{analysis}}", analysisMessage)
             .replace("{{tests}}", testsStr);
         let stream = fs.createWriteStream(path.join(Report_1.Report.GetReport().GetOutput(), name));

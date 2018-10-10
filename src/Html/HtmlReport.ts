@@ -22,13 +22,15 @@ const html = `
 export class HTMLReport {
 
     private file: string;
+    private path: string;
     private title: string;
     private tests: string[];
     private testResults: TestResult[];
 
     constructor(file: string) {
         this.file = file;
-        this.title = `<div class="title">${file}</div>`;
+        this.path = "";
+        this.title = `<div class="title">${file} ({{path}})</div>`;
         this.tests = [];
         this.testResults = [];
     }
@@ -38,6 +40,7 @@ export class HTMLReport {
     }
 
     public AddTest(test: TestResult) {
+        this.path = test.GetPath();
         if(test.IsPassed()) {
             this.tests.push(`<div class="ok-test"><div class="test-name">${test.GetTestName()}</div><div>${test.GetMessage()}</div></div>`);
         } else {
@@ -64,6 +67,7 @@ export class HTMLReport {
         let analysisMessage = (denom > 0) ? `${(num/denom*100).toFixed(2)}% tests passed!`: "No test was run!";
         let toWrite = html.replace("{{filepure}}", this.file.substring(0, this.file.length-3))
         .replace("{{title}}", this.title)
+        .replace("{{path}}", this.path)
         .replace("{{analysis}}", analysisMessage)
         .replace("{{tests}}", testsStr);
         let stream = fs.createWriteStream(path.join(Report.GetReport().GetOutput(), name));

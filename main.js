@@ -72,7 +72,7 @@ function RunTest(dir, file) {
             if(data.toString().indexOf("[") === 0) {
                 let testName = data.toString().split("[")[1].split("]")[0];
                 let message = data.toString().substring(data.toString().indexOf("]")+1).trim();
-                let result = new TestResult(testName, message, true);
+                let result = new TestResult(testName, filePath, message, true);
                 Report.GetReport().AddTest(file, result);
             } else {
                 console.log(data);
@@ -82,7 +82,7 @@ function RunTest(dir, file) {
             if(data.toString().indexOf("[") === 0) {
                 let testName = data.toString().split("[")[1].split("]")[0];
                 let message = data.toString().substring(data.toString().indexOf("]")+1).trim();
-                let result = new TestResult(testName, message, false);
+                let result = new TestResult(testName, filePath, message, false);
                 Report.GetReport().AddTest(file, result);
             } else {
                 console.error(data);
