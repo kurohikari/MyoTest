@@ -1,6 +1,7 @@
 import { Report } from "../Report/Report";
 import { HTMLReport } from "./HtmlReport";
 import { Css } from "./Css";
+import { Js } from "./Js";
 import * as path from "path";
 import * as fs from "fs";
 
@@ -16,6 +17,9 @@ export class ReportParser {
         let tests = this.report.GetTests();
         if(!fs.existsSync(path.join(this.report.GetOutput(), "myo-css.css"))) {
             fs.writeFileSync(path.join(this.report.GetOutput(), "myo-css.css"), Css);
+        }
+        if(!fs.existsSync(path.join(this.report.GetOutput(), "myo-js.js"))) {
+            fs.writeFileSync(path.join(this.report.GetOutput(), "myo-js.js"), Js);
         }
         for(let file of Object.keys(tests)) {
             let results = tests[file];

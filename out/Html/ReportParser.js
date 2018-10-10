@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Report_1 = require("../Report/Report");
 const HtmlReport_1 = require("./HtmlReport");
 const Css_1 = require("./Css");
+const Js_1 = require("./Js");
 const path = require("path");
 const fs = require("fs");
 class ReportParser {
@@ -16,6 +17,9 @@ class ReportParser {
         let tests = this.report.GetTests();
         if (!fs.existsSync(path.join(this.report.GetOutput(), "myo-css.css"))) {
             fs.writeFileSync(path.join(this.report.GetOutput(), "myo-css.css"), Css_1.Css);
+        }
+        if (!fs.existsSync(path.join(this.report.GetOutput(), "myo-js.js"))) {
+            fs.writeFileSync(path.join(this.report.GetOutput(), "myo-js.js"), Js_1.Js);
         }
         for (let file of Object.keys(tests)) {
             let results = tests[file];
