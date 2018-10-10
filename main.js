@@ -45,11 +45,11 @@ function RunTest(testDir) {
     }
     for(let file of files) {
         let filePath = path.join(testDir, file);
-        let p = exec(`node ${filePath}`);
-        p.stdout.on("data", (data) => {
+        let proc = exec(`node ${filePath}`);
+        proc.stdout.on("data", (data) => {
             console.log(file + " : " + data);
         });
-        p.stderr.on("data", (data) => {
+        proc.stderr.on("data", (data) => {
             console.log(file + " : " + data);
         });
     }

@@ -28,8 +28,9 @@ class TestCase {
         }
         catch (assertionError) {
             this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
+            process.exit(1);
         }
-        this.PrintResult();
     }
     DeepStrictEquals(actual, expected, message) {
         try {
@@ -37,8 +38,9 @@ class TestCase {
         }
         catch (assertionError) {
             this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
+            process.exit(1);
         }
-        this.PrintResult();
     }
     DoesNotReject(block, message) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -47,8 +49,9 @@ class TestCase {
             }
             catch (assertionError) {
                 this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+                console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
+                process.exit(1);
             }
-            this.PrintResult();
         });
     }
     DoesNotThrow(block, message) {
@@ -57,8 +60,9 @@ class TestCase {
         }
         catch (assertionError) {
             this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
+            process.exit(1);
         }
-        this.PrintResult();
     }
     Fail(message) {
         try {
@@ -66,8 +70,9 @@ class TestCase {
         }
         catch (assertionError) {
             this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
+            process.exit(1);
         }
-        this.PrintResult();
     }
     IfError(value) {
         try {
@@ -75,8 +80,9 @@ class TestCase {
         }
         catch (assertionError) {
             this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
+            process.exit(1);
         }
-        this.PrintResult();
     }
     NotStrictEquals(actual, expected, message) {
         try {
@@ -84,8 +90,9 @@ class TestCase {
         }
         catch (assertionError) {
             this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
+            process.exit(1);
         }
-        this.PrintResult();
     }
     NotDeepStrictEquals(actual, expected, message) {
         try {
@@ -93,8 +100,9 @@ class TestCase {
         }
         catch (assertionError) {
             this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
+            process.exit(1);
         }
-        this.PrintResult();
     }
     True(value, message) {
         try {
@@ -102,8 +110,9 @@ class TestCase {
         }
         catch (assertionError) {
             this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
+            process.exit(1);
         }
-        this.PrintResult();
     }
     Rejects(block, message) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -112,8 +121,9 @@ class TestCase {
             }
             catch (assertionError) {
                 this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+                console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
+                process.exit(1);
             }
-            this.PrintResult();
         });
     }
     Throws(block, message) {
@@ -122,15 +132,8 @@ class TestCase {
         }
         catch (assertionError) {
             this.info = new ErrorInfo_1.ErrorInfo(assertionError);
-        }
-        this.PrintResult();
-    }
-    PrintResult() {
-        if (this.info != null) {
-            console.error(`${this.name}: ${JSON.stringify(this.info)}`);
-        }
-        else {
-            console.log(`${this.name}: Test Passed!`);
+            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
+            process.exit(1);
         }
     }
 }
@@ -138,5 +141,6 @@ exports.TestCase = TestCase;
 let Test = (testName, test) => {
     let t = new TestCase(testName);
     test(t);
+    console.log(`${t.GetName()}: Test Passed!`);
 };
 exports.Test = Test;
