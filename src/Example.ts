@@ -21,6 +21,10 @@ Test("Test valid name", (test) => {
     test.StrictEquals(example.GetName(), "example");
 });
 
+Test("Test fail", (test) => {
+    test.True(1 > 2, "One should be more than two!");
+});
+
 Test("Test changed name", (test) => {
     let example = new Example("example");
     example.SetName("new example");

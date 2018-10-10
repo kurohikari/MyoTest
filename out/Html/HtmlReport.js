@@ -8,6 +8,7 @@ const html = `
 <html>
     <head>
         <title>{{filepure}}</title>
+        <link rel="stylesheet" href="./myo-css.css">
     </head>
     <body>
         {{title}}
@@ -18,7 +19,7 @@ const html = `
 class HTMLReport {
     constructor(file) {
         this.file = file;
-        this.title = `<div>${file}</div>`;
+        this.title = `<div class="title">${file}</div>`;
         this.tests = [];
         this.testResults = [];
     }
@@ -27,11 +28,11 @@ class HTMLReport {
     }
     AddTest(test) {
         if (test.IsPassed()) {
-            this.tests.push(`<div><div>${test.GetTestName()}</div><div>${test.GetMessage()}</div></div>`);
+            this.tests.push(`<div class="ok-test"><div class="test-name">${test.GetTestName()}</div><div>${test.GetMessage()}</div></div>`);
         }
         else {
             let error = JSON.parse(test.GetMessage());
-            this.tests.push(`<div><div><div>${test.GetTestName()}</div><div>${error.errorMessage}</div></div><div>${error.stackMessage}</div></div>`);
+            this.tests.push(`<div class="ko-test"><div class="ko-head"><div class="test-name">${test.GetTestName()}</div><div>${error.errorMessage}</div></div><div><pre>${error.stackMessage}</pre></div></div>`);
         }
         this.testResults.push(test);
     }

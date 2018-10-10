@@ -13,14 +13,20 @@ class TestCase {
     constructor(name) {
         this.name = name;
         this.info = null;
+        this.failed = false;
     }
     GetName() {
         return this.name;
+    }
+    WasFailed() {
+        return this.failed;
     }
     GetInfo() {
         return this.info;
     }
     StrictEquals(actual, expected, message) {
+        if (this.failed)
+            return;
         try {
             assert.strictEqual(actual, expected, message);
         }
@@ -32,6 +38,8 @@ class TestCase {
         }
     }
     DeepStrictEquals(actual, expected, message) {
+        if (this.failed)
+            return;
         try {
             assert.deepStrictEqual(actual, expected, message);
         }
@@ -44,6 +52,8 @@ class TestCase {
     }
     DoesNotReject(block, message) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (this.failed)
+                return;
             try {
                 yield assert.doesNotReject(block, message);
             }
@@ -56,6 +66,8 @@ class TestCase {
         });
     }
     DoesNotThrow(block, message) {
+        if (this.failed)
+            return;
         try {
             assert.doesNotThrow(block, message);
         }
@@ -67,6 +79,8 @@ class TestCase {
         }
     }
     Fail(message) {
+        if (this.failed)
+            return;
         try {
             assert.fail(message);
         }
@@ -78,6 +92,8 @@ class TestCase {
         }
     }
     IfError(value) {
+        if (this.failed)
+            return;
         try {
             assert.ifError(value);
         }
@@ -89,6 +105,8 @@ class TestCase {
         }
     }
     NotStrictEquals(actual, expected, message) {
+        if (this.failed)
+            return;
         try {
             assert.notStrictEqual(actual, expected, message);
         }
@@ -100,6 +118,8 @@ class TestCase {
         }
     }
     NotDeepStrictEquals(actual, expected, message) {
+        if (this.failed)
+            return;
         try {
             assert.notDeepStrictEqual(actual, expected, message);
         }
@@ -111,6 +131,8 @@ class TestCase {
         }
     }
     True(value, message) {
+        if (this.failed)
+            return;
         try {
             assert.ok(value, message);
         }
@@ -123,6 +145,8 @@ class TestCase {
     }
     Rejects(block, message) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (this.failed)
+                return;
             try {
                 yield assert.rejects(block, message);
             }
@@ -135,6 +159,8 @@ class TestCase {
         });
     }
     Throws(block, message) {
+        if (this.failed)
+            return;
         try {
             assert.throws(block, message);
         }
@@ -147,13 +173,14 @@ class TestCase {
     }
     FailTest() {
         console.error(`[${this.GetName()}] ${JSON.stringify(this.GetInfo())}`);
-        process.exit(1);
+        this.failed = true;
     }
 }
 exports.TestCase = TestCase;
 let Test = (testName, test) => {
     let t = new TestCase(testName);
     test(t);
-    console.log(`[${t.GetName()}] OK`);
+    if (!t.WasFailed())
+        console.log(`[${t.GetName()}] OK`);
 };
 exports.Test = Test;
