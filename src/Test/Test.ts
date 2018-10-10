@@ -24,8 +24,7 @@ export class TestCase {
             assert.strictEqual(actual, expected, message);
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
-            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
-            process.exit(1);
+            this.FailTest();
         }
     }
 
@@ -34,8 +33,7 @@ export class TestCase {
             assert.deepStrictEqual(actual, expected, message);
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
-            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
-            process.exit(1);
+            this.FailTest();
         }
     }
 
@@ -44,8 +42,7 @@ export class TestCase {
             await assert.doesNotReject(block, message);
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
-            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
-            process.exit(1);
+            this.FailTest();
         }
     }
 
@@ -54,8 +51,7 @@ export class TestCase {
             assert.doesNotThrow(block, message);
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
-            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
-            process.exit(1);
+            this.FailTest();
         }
     }
 
@@ -64,8 +60,7 @@ export class TestCase {
             assert.fail(message);
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
-            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
-            process.exit(1);
+            this.FailTest();
         }
     }
 
@@ -74,8 +69,7 @@ export class TestCase {
             assert.ifError(value);
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
-            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
-            process.exit(1);
+            this.FailTest();
         }
         
     }
@@ -85,8 +79,7 @@ export class TestCase {
             assert.notStrictEqual(actual, expected, message);
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
-            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
-            process.exit(1);
+            this.FailTest();
         }
     }
 
@@ -95,8 +88,7 @@ export class TestCase {
             assert.notDeepStrictEqual(actual, expected, message);
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
-            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
-            process.exit(1);
+            this.FailTest();
         }
     }
 
@@ -105,8 +97,7 @@ export class TestCase {
             assert.ok(value, message);
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
-            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
-            process.exit(1);
+            this.FailTest();
         }
     }
 
@@ -115,8 +106,7 @@ export class TestCase {
             await assert.rejects(block, message);
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
-            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
-            process.exit(1);
+            this.FailTest();
         }
     }
 
@@ -125,9 +115,13 @@ export class TestCase {
             assert.throws(block, message);
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
-            console.error(`${this.GetName()}: ${JSON.stringify(this.GetInfo())}`);
-            process.exit(1);
+            this.FailTest();
         }
+    }
+
+    private FailTest() {
+        console.error(`[${this.GetName()}] ${JSON.stringify(this.GetInfo())}`);
+        process.exit(1);
     }
 
 }
@@ -135,7 +129,7 @@ export class TestCase {
 let Test = (testName: string, test: (test: TestCase) => void) => {
     let t = new TestCase(testName);
     test(t);
-    console.log(`${t.GetName()}: Test Passed!`);
+    console.log(`[${t.GetName()}] OK`);
 }
 
 export { Test };

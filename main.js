@@ -27,11 +27,11 @@ function main() {
             fs.mkdirSync(output);
         }
         Report.GetReport().SetOutput(output);
-        RunTest(source);
+        RunTests(source);
     }
 }
 
-function RunTest(testDir) {
+function RunTests(testDir) {
     let reads = fs.readdirSync(testDir);
     let files = [];
     let dirs = [];
@@ -44,19 +44,23 @@ function RunTest(testDir) {
         }
     }
     for(let file of files) {
-        let filePath = path.join(testDir, file);
-        let proc = exec(`node ${filePath}`);
-        proc.stdout.on("data", (data) => {
-            console.log(file + " : " + data);
-        });
-        proc.stderr.on("data", (data) => {
-            console.log(file + " : " + data);
-        });
+        RunTest(testDir, file);
     }
     for(let dir of dirs) {
         let dirPath = path.join(testDir, dir);
-        RunTest(dirPath);
+        RunTests(dirPath);
     }
+}
+
+function RunTest(dir, file) {
+    let filePath = path.join(dir, file);
+    let proc = exec(`node ${filePath}`);
+    proc.stdout.on("data", (data) => {
+        console.log(file + ": " + data);
+    });
+    proc.stderr.on("data", (data) => {
+        console.log(file + ": " + data);
+    });
 }
 
 function GetSource(args, index) {
