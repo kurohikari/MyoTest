@@ -24,10 +24,10 @@ class TestCase {
     GetInfo() {
         return this.info;
     }
-    StrictEquals(actual, expected, message) {
+    Equals(actual, expected, message) {
         assert.strictEqual(actual, expected, message);
     }
-    DeepStrictEquals(actual, expected, message) {
+    DeepEquals(actual, expected, message) {
         assert.deepStrictEqual(actual, expected, message);
     }
     DoesNotReject(block, message) {

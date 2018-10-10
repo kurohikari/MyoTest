@@ -22,11 +22,11 @@ export class TestCase {
         return this.info;
     }
 
-    public StrictEquals(actual: any, expected: any, message?: string|Error) {
+    public Equals(actual: any, expected: any, message?: string|Error) {
         assert.strictEqual(actual, expected, message);
     }
 
-    public DeepStrictEquals(actual: any, expected: any, message?: string|Error) {
+    public DeepEquals(actual: any, expected: any, message?: string|Error) {
         assert.deepStrictEqual(actual, expected, message);
     }
 
