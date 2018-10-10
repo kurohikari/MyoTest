@@ -1,5 +1,8 @@
 import { Report } from "../Report/Report";
 import { HTMLReport } from "./HtmlReport";
+import { Css } from "./Css";
+import * as path from "path";
+import * as fs from "fs";
 
 export class ReportParser {
 
@@ -11,6 +14,9 @@ export class ReportParser {
 
     private Parse() {
         let tests = this.report.GetTests();
+        if(!fs.existsSync(path.join(this.report.GetOutput(), "myo-css.css"))) {
+            fs.writeFileSync(path.join(this.report.GetOutput(), "myo-css.css"), Css);
+        }
         for(let file of Object.keys(tests)) {
             let results = tests[file];
             let html = new HTMLReport(file);

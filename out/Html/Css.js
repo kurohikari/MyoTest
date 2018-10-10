@@ -1,3 +1,6 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const Css = `
 html, body {
     width: 100%;
     margin: 0;
@@ -9,10 +12,39 @@ html, body {
 }
 
 div.title {
-    margin-left: 15%;
-    margin-right: 15%;
+    margin-top: 2ch;
+    padding-left: 10%;
+    padding-right: 10%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 0.5ch;
     font-size: 200%;
     font-weight: bold;
+}
+
+div.analysis {
+    width: 80%;
+    padding-top: 1ch;
+    padding-left: 3ch;
+    padding-right: 3ch;
+    padding-bottom: 1ch;
+    margin-left: 10%;
+    margin-bottom: 2ch;
+    border-radius: 1ch;
+    background-color: rgba(230,230,230,1);
+    font-size: 125%;
+}
+
+div.divider {
+    width: 90%;
+    height: 6px;
+    padding-left: 10%;
+    padding-right: 10%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 2ch;
+    border-radius: 3px 3px 3px 3px;
+    background-color: rgba(100,150,255,1);
 }
 
 div.ok-test {
@@ -24,7 +56,7 @@ div.ok-test {
     margin-left: 10%;
     margin-bottom: 0.5ch;
     border-radius: 1ch;
-    background-color: rgba(0,255,0,1);
+    background-color: rgba(70,255,70,1);
     justify-content: center;
     align-items: center;
 }
@@ -37,7 +69,7 @@ div.ko-test {
     margin-left: 10%;
     margin-bottom: 0.5ch;
     border-radius: 1ch;
-    background-color: rgba(255,100,100,1);
+    background-color: rgba(255,150,150,1);
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -50,7 +82,7 @@ div.ko-head {
     padding-top: 1ch;
     padding-left: 10%;
     padding-bottom: 1ch;
-    background-color: rgba(255,0,0,1);
+    background-color: rgba(255,70,70,1);
     justify-content: center;
     align-items: center;
 }
@@ -61,3 +93,5 @@ div.test-name {
     text-align: left;
     text-decoration: underline;
 }
+`;
+exports.Css = Css;

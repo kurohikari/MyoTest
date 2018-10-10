@@ -12,6 +12,8 @@ const html = `
     </head>
     <body>
         {{title}}
+        <div class="divider"></div>
+        <div class="analysis">{{analysis}}</div>
         {{tests}}
     </body>
 </html>
@@ -51,8 +53,18 @@ export class HTMLReport {
         for(let test of this.tests) {
             testsStr += test + "\n";
         }
+        let num = 0;
+        let denom = 0;
+        for(let res of this.testResults) {
+            denom++;
+            if(res.IsPassed()) {
+                num++;
+            }
+        }
+        let analysisMessage = (denom > 0) ? `${(num/denom*100).toFixed(2)}% tests passed!`: "No test was run!";
         let toWrite = html.replace("{{filepure}}", this.file.substring(0, this.file.length-3))
         .replace("{{title}}", this.title)
+        .replace("{{analysis}}", analysisMessage)
         .replace("{{tests}}", testsStr);
         let stream = fs.createWriteStream(path.join(Report.GetReport().GetOutput(), name));
         stream.write(toWrite, (error) => {
