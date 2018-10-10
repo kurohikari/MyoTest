@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require("fs");
 
 const reserved = ["-s", "-o"];
 
@@ -30,6 +31,9 @@ function GetSource(args, index) {
     let next = args[index+1];
     if(reserved.indexOf(next) > -1) {
         throw new Error("No argument passed for test source directory");
+    }
+    if(!fs.existsSync(next)) {
+        throw new Error("Source directory does not exist!");
     }
     return next;
 }
