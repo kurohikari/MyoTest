@@ -25,162 +25,55 @@ class TestCase {
         return this.info;
     }
     StrictEquals(actual, expected, message) {
-        if (this.failed)
-            return;
-        try {
-            assert.strictEqual(actual, expected, message);
-        }
-        catch (assertionError) {
-            this.info = assertionError;
-            this.info.stackMessage = this.info.stack;
-            this.info.errorMessage = this.info.message;
-            this.FailTest();
-        }
+        assert.strictEqual(actual, expected, message);
     }
     DeepStrictEquals(actual, expected, message) {
-        if (this.failed)
-            return;
-        try {
-            assert.deepStrictEqual(actual, expected, message);
-        }
-        catch (assertionError) {
-            this.info = assertionError;
-            this.info.stackMessage = this.info.stack;
-            this.info.errorMessage = this.info.message;
-            this.FailTest();
-        }
+        assert.deepStrictEqual(actual, expected, message);
     }
     DoesNotReject(block, message) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.failed)
-                return;
-            try {
-                yield assert.doesNotReject(block, message);
-            }
-            catch (assertionError) {
-                this.info = assertionError;
-                this.info.stackMessage = this.info.stack;
-                this.info.errorMessage = this.info.message;
-                this.FailTest();
-            }
+            yield assert.doesNotReject(block, message);
         });
     }
     DoesNotThrow(block, message) {
-        if (this.failed)
-            return;
-        try {
-            assert.doesNotThrow(block, message);
-        }
-        catch (assertionError) {
-            this.info = assertionError;
-            this.info.stackMessage = this.info.stack;
-            this.info.errorMessage = this.info.message;
-            this.FailTest();
-        }
+        assert.doesNotThrow(block, message);
     }
     Fail(message) {
-        if (this.failed)
-            return;
-        try {
-            assert.fail(message);
-        }
-        catch (assertionError) {
-            this.info = assertionError;
-            this.info.stackMessage = this.info.stack;
-            this.info.errorMessage = this.info.message;
-            this.FailTest();
-        }
+        assert.fail(message);
     }
     IfError(value) {
-        if (this.failed)
-            return;
-        try {
-            assert.ifError(value);
-        }
-        catch (assertionError) {
-            this.info = assertionError;
-            this.info.stackMessage = this.info.stack;
-            this.info.errorMessage = this.info.message;
-            this.FailTest();
-        }
+        assert.ifError(value);
     }
     NotStrictEquals(actual, expected, message) {
-        if (this.failed)
-            return;
-        try {
-            assert.notStrictEqual(actual, expected, message);
-        }
-        catch (assertionError) {
-            this.info = assertionError;
-            this.info.stackMessage = this.info.stack;
-            this.info.errorMessage = this.info.message;
-            this.FailTest();
-        }
+        assert.notStrictEqual(actual, expected, message);
     }
     NotDeepStrictEquals(actual, expected, message) {
-        if (this.failed)
-            return;
-        try {
-            assert.notDeepStrictEqual(actual, expected, message);
-        }
-        catch (assertionError) {
-            this.info = assertionError;
-            this.info.stackMessage = this.info.stack;
-            this.info.errorMessage = this.info.message;
-            this.FailTest();
-        }
+        assert.notDeepStrictEqual(actual, expected, message);
     }
     True(value, message) {
-        if (this.failed)
-            return;
-        try {
-            assert.ok(value, message);
-        }
-        catch (assertionError) {
-            this.info = assertionError;
-            this.info.stackMessage = this.info.stack;
-            this.info.errorMessage = this.info.message;
-            this.FailTest();
-        }
+        assert.ok(value, message);
     }
     Rejects(block, message) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.failed)
-                return;
-            try {
-                yield assert.rejects(block, message);
-            }
-            catch (assertionError) {
-                this.info = assertionError;
-                this.info.stackMessage = this.info.stack;
-                this.info.errorMessage = this.info.message;
-                this.FailTest();
-            }
+            yield assert.rejects(block, message);
         });
     }
     Throws(block, message) {
-        if (this.failed)
-            return;
-        try {
-            assert.throws(block, message);
-        }
-        catch (assertionError) {
-            this.info = assertionError;
-            this.info.stackMessage = this.info.stack;
-            this.info.errorMessage = this.info.message;
-            this.FailTest();
-        }
-    }
-    FailTest() {
-        console.error(`[${this.GetName()}] ${JSON.stringify(this.GetInfo())}`);
-        this.failed = true;
+        assert.throws(block, message);
     }
 }
 exports.TestCase = TestCase;
 let Test = (testName, test) => {
     let t = new TestCase(testName);
-    test(t);
-    if (!t.WasFailed())
+    try {
+        test(t);
         console.log(`[${t.GetName()}] OK`);
+    }
+    catch (error) {
+        let info = error;
+        info.stackMessage = info.stack;
+        info.errorMessage = info.message;
+        console.error(`[${t.GetName()}] ${JSON.stringify(info)}`);
+    }
 };
 exports.Test = Test;
