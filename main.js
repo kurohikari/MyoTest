@@ -6,6 +6,8 @@ const TestResult = require("./out/src/Report/TestResult").TestResult;
 const ReportParser = require("./out/src/Html/ReportParser").ReportParser;
 const DirStructure = require("./out/src/Report/DirStructure").DirStructure;
 
+module.exports = require("./out/src/Test/Test").Test;
+
 const reserved = ["-s", "--source", "-o", "--output", "-g", "--generate"];
 let promises = [];
 
