@@ -63,13 +63,14 @@ class HTMLReport {
             }
         }
         let analysisMessage = (denom > 0) ? `${(num / denom * 100).toFixed(2)}% tests passed!` : "No test was run!";
+        let filePath = path.join(htmlPath, name);
         let toWrite = html.replace("{{filepure}}", this.file.substring(0, this.file.length - 3))
             .replace("{{title}}", this.title)
-            .replace("{{sidebar}}", SideBar_1.SideBar.GenerateSideBar())
+            .replace("{{sidebar}}", SideBar_1.SideBar.GenerateSideBar(filePath))
             .replace("{{path}}", this.path)
             .replace("{{analysis}}", analysisMessage)
             .replace("{{tests}}", testsStr);
-        let stream = fs.createWriteStream(path.join(htmlPath, name));
+        let stream = fs.createWriteStream(filePath);
         stream.write(toWrite, (error) => {
             if (error) {
                 console.error(`Could not write ${name}`);
