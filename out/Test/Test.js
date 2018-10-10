@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
-const ErrorInfo_1 = require("./ErrorInfo");
 class TestCase {
     constructor(name) {
         this.name = name;
@@ -23,7 +22,6 @@ class TestCase {
             assert.strictEqual(actual, expected, message);
         }
         catch (assertionError) {
-            let info = new ErrorInfo_1.ErrorInfo(assertionError);
         }
     }
     DeepStrictEquals(actual, expected, message) {
