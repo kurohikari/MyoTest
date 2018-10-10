@@ -9,19 +9,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
+const ErrorInfo_1 = require("./ErrorInfo");
 class TestCase {
     constructor(name) {
         this.name = name;
         //console.log(process.cwd());
+        this.info = null;
     }
     GetName() {
         return this.name;
+    }
+    GetInfo() {
+        return this.info;
     }
     StrictEquals(actual, expected, message) {
         try {
             assert.strictEqual(actual, expected, message);
         }
         catch (assertionError) {
+            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.FailTest();
         }
     }
     DeepStrictEquals(actual, expected, message) {
@@ -29,6 +36,8 @@ class TestCase {
             assert.deepStrictEqual(actual, expected, message);
         }
         catch (assertionError) {
+            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.FailTest();
         }
     }
     DoesNotReject(block, message) {
@@ -37,6 +46,8 @@ class TestCase {
                 yield assert.doesNotReject(block, message);
             }
             catch (assertionError) {
+                this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+                this.FailTest();
             }
         });
     }
@@ -45,6 +56,8 @@ class TestCase {
             assert.doesNotThrow(block, message);
         }
         catch (assertionError) {
+            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.FailTest();
         }
     }
     Fail(message) {
@@ -52,6 +65,8 @@ class TestCase {
             assert.fail(message);
         }
         catch (assertionError) {
+            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.FailTest();
         }
     }
     IfError(value) {
@@ -59,6 +74,8 @@ class TestCase {
             assert.ifError(value);
         }
         catch (assertionError) {
+            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.FailTest();
         }
     }
     NotStrictEquals(actual, expected, message) {
@@ -66,6 +83,8 @@ class TestCase {
             assert.notStrictEqual(actual, expected, message);
         }
         catch (assertionError) {
+            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.FailTest();
         }
     }
     NotDeepStrictEquals(actual, expected, message) {
@@ -73,6 +92,8 @@ class TestCase {
             assert.notDeepStrictEqual(actual, expected, message);
         }
         catch (assertionError) {
+            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.FailTest();
         }
     }
     True(value, message) {
@@ -80,6 +101,8 @@ class TestCase {
             assert.ok(value, message);
         }
         catch (assertionError) {
+            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.FailTest();
         }
     }
     Rejects(block, message) {
@@ -88,6 +111,8 @@ class TestCase {
                 yield assert.rejects(block, message);
             }
             catch (assertionError) {
+                this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+                this.FailTest();
             }
         });
     }
@@ -96,11 +121,19 @@ class TestCase {
             assert.throws(block, message);
         }
         catch (assertionError) {
+            this.info = new ErrorInfo_1.ErrorInfo(assertionError);
+            this.FailTest();
         }
     }
+    FailTest() {
+        console.error(`[${this.GetName()}] ${JSON.stringify(this.GetInfo())}`);
+        process.exit(1);
+    }
 }
+exports.TestCase = TestCase;
 let Test = (testName, test) => {
     let t = new TestCase(testName);
     test(t);
+    console.log(`[${t.GetName()}] OK`);
 };
 exports.Test = Test;
