@@ -92,6 +92,26 @@ div.test-name {
     text-decoration: underline;
 }
 
+div.open-button {
+    width: 3ch;
+    height: 3ch;
+    margin-top: 10px;
+    margin-left: 10px;
+    border-radius: 50%;
+    background-color: #111;
+    color: #818181;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 3ch;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+div.open-button:hover {
+    color: #f1f1f1;
+}
+
 /* The side navigation menu */
 .sidenav {
     height: 100%; /* 100% Full-height */

@@ -19,7 +19,7 @@ const html = `
         </div>
         
         <!-- Use any element to open the sidenav -->
-        <span onclick="openNav()">open</span>
+        <div class="open-button" onclick="openNav()">&lt;</div>
         {{title}}
         <div class="divider"></div>
         <div class="analysis">{{analysis}}</div>
