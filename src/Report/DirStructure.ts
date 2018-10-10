@@ -44,6 +44,16 @@ export class DirStructure {
         return true;
     }
 
+    public HasTests() {
+        for(let file of Object.keys(this.files)) {
+            if(this.files[file].length > 0) return true;
+        }
+        for(let child of this.children) {
+            if(child.HasTests()) return true;
+        }
+        return false;
+    }
+
     public IsRoot() {
         return this.root;
     }
