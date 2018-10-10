@@ -1,15 +1,20 @@
 {
   "name": "myotest",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Unit Testing",
   "main": "main.js",
   "scripts": {
-    "test": "tsc & node main.js -s ./out -g"
+    "test": "node main.js -s ./out -g",
+    "install": "tsc"
   },
   "keywords": [
     "\"Unit Testing\"",
     "\"Testing\""
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kurohikari/MyoTest.git"
+  },
   "author": "Arthur Geneau",
   "license": "ISC",
   "devDependencies": {
