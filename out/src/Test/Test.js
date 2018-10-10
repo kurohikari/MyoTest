@@ -32,7 +32,7 @@ class TestCase {
     }
     DoesNotReject(block, message) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield assert.doesNotReject(block, message);
+            yield assert.doesNotReject(block, message).catch(error => { throw error; });
         });
     }
     DoesNotThrow(block, message) {
@@ -55,7 +55,7 @@ class TestCase {
     }
     Rejects(block, message) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield assert.rejects(block, message);
+            yield assert.rejects(block, message).catch(error => { throw error; });
         });
     }
     Throws(block, message) {

@@ -5,6 +5,6 @@
         "module": "commonjs",
         "target": "ES6",
         "outDir": "out",
-        "rootDir": "src"
+        "rootDir": "."
     }
 }

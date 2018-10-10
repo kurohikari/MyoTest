@@ -31,8 +31,8 @@ export class ReportParser {
             fs.writeFileSync(path.join(currentPath, "myo-js.js"), Js);
         }
         let files = structure.GetFiles();
-        for(let file of Object.keys(files)) {
-            let tests = files[file];
+        for(let file of files) {
+            let tests = structure.GetTests(file);
             if(tests.length > 0) {
                 let htmlReport = new HTMLReport(file);
                 for(let test of tests) {
@@ -42,6 +42,7 @@ export class ReportParser {
             }
         }
         for(let sub of structure.GetChildren()) {
+            if(!sub.HasTests()) continue;
             let newPath = path.join(currentPath, sub.GetName());
             this.ParseStructure(sub, newPath);
         }

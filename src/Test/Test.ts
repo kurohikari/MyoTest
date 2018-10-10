@@ -31,7 +31,7 @@ export class TestCase {
     }
 
     public async DoesNotReject(block: Function|Promise<any>, message?: string|Error) {
-        await assert.doesNotReject(block, message);
+        await assert.doesNotReject(block, message).catch(error => {throw error});
     }
 
     public DoesNotThrow(block: Function, message?: string|Error) {
@@ -59,7 +59,7 @@ export class TestCase {
     }
 
     public async Rejects(block: Function|Promise<any>, message?: string|Error) {
-        await assert.rejects(block, message);
+        await assert.rejects(block, message).catch(error => {throw error});
     }
 
     public Throws(block: Function, message?: string|Error) {
