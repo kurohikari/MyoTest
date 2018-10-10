@@ -9,47 +9,91 @@ class TestCase {
     }
 
     public StrictEquals(actual: any, expected: any, message?: string|Error) {
-        assert.strictEqual(actual, expected, message);
+        try {
+            assert.strictEqual(actual, expected, message);
+        } catch(assertionError) {
+            console.log(assertionError)
+        }
     }
 
     public DeepStrictEquals(actual: any, expected: any, message?: string|Error) {
-        assert.deepStrictEqual(actual, expected, message);
+        try {
+            assert.deepStrictEqual(actual, expected, message);
+        } catch(assertionError) {
+
+        }
     }
 
     public async DoesNotReject(block: Function|Promise<any>, message?: string|Error) {
-        await assert.doesNotReject(block, message);
+        try {
+            await assert.doesNotReject(block, message);
+        } catch(assertionError) {
+
+        }
     }
 
     public DoesNotThrow(block: Function, message?: string|Error) {
-        assert.doesNotThrow(block, message);
+        try {
+            assert.doesNotThrow(block, message);
+        } catch(assertionError) {
+
+        }
     }
 
     public Fail(message?: string|Error) {
-        assert.fail(message);
+        try {
+            assert.fail(message);
+        } catch(assertionError) {
+
+        }
     }
 
     public IfError(value: any) {
-        assert.ifError(value);
+        try {
+            assert.ifError(value);
+        } catch(assertionError) {
+
+        }
     }
 
     public NotStrictEquals(actual: any, expected: any, message?: string|Error) {
-        assert.notStrictEqual(actual, expected, message);
+        try {
+            assert.notStrictEqual(actual, expected, message);
+        } catch(assertionError) {
+
+        }
     }
 
     public NotDeepStrictEquals(actual: any, expected: any, message?: string|Error) {
-        assert.notDeepStrictEqual(actual, expected, message);
+        try {
+            assert.notDeepStrictEqual(actual, expected, message);
+        } catch(assertionError) {
+
+        }
     }
 
     public True(value: any, message?: string|Error) {
-        assert.ok(value, message)
+        try {
+            assert.ok(value, message);
+        } catch(assertionError) {
+            
+        }
     }
 
     public async Rejects(block: Function|Promise<any>, message?: string|Error) {
-        await assert.rejects(block, message);
+        try {
+            await assert.rejects(block, message);
+        } catch(assertionError) {
+
+        }
     }
 
     public Throws(block: Function, message?: string|Error) {
-        assert.throws(block, message);
+        try {
+            assert.throws(block, message);
+        } catch(assertionError) {
+
+        }
     }
 
 }
