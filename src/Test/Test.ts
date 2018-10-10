@@ -25,7 +25,7 @@ export class TestCase {
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
         }
-        Report.GetReport().AddTestCase(this);
+        this.PrintResult();
     }
 
     public DeepStrictEquals(actual: any, expected: any, message?: string|Error) {
@@ -34,7 +34,7 @@ export class TestCase {
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
         }
-        Report.GetReport().AddTestCase(this);
+        this.PrintResult();
     }
 
     public async DoesNotReject(block: Function|Promise<any>, message?: string|Error) {
@@ -43,7 +43,7 @@ export class TestCase {
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
         }
-        Report.GetReport().AddTestCase(this);
+        this.PrintResult();
     }
 
     public DoesNotThrow(block: Function, message?: string|Error) {
@@ -52,7 +52,7 @@ export class TestCase {
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
         }
-        Report.GetReport().AddTestCase(this);
+        this.PrintResult();
     }
 
     public Fail(message?: string|Error) {
@@ -61,7 +61,7 @@ export class TestCase {
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
         }
-        Report.GetReport().AddTestCase(this);
+        this.PrintResult();
     }
 
     public IfError(value: any) {
@@ -70,7 +70,7 @@ export class TestCase {
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
         }
-        Report.GetReport().AddTestCase(this);
+        this.PrintResult();
     }
 
     public NotStrictEquals(actual: any, expected: any, message?: string|Error) {
@@ -79,7 +79,7 @@ export class TestCase {
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
         }
-        Report.GetReport().AddTestCase(this);
+        this.PrintResult();
     }
 
     public NotDeepStrictEquals(actual: any, expected: any, message?: string|Error) {
@@ -88,7 +88,7 @@ export class TestCase {
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
         }
-        Report.GetReport().AddTestCase(this);
+        this.PrintResult();
     }
 
     public True(value: any, message?: string|Error) {
@@ -97,7 +97,7 @@ export class TestCase {
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
         }
-        Report.GetReport().AddTestCase(this);
+        this.PrintResult();
     }
 
     public async Rejects(block: Function|Promise<any>, message?: string|Error) {
@@ -106,7 +106,7 @@ export class TestCase {
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
         }
-        Report.GetReport().AddTestCase(this);
+        this.PrintResult();
     }
 
     public Throws(block: Function, message?: string|Error) {
@@ -115,7 +115,15 @@ export class TestCase {
         } catch(assertionError) {
             this.info = new ErrorInfo(assertionError);
         }
-        Report.GetReport().AddTestCase(this);
+        this.PrintResult();
+    }
+
+    private PrintResult() {
+        if(this.info != null) {
+            console.error(`${this.name}: ${JSON.stringify(this.info)}`);
+        } else {
+            console.log(`${this.name}: Test Passed!`);
+        }
     }
 
 }

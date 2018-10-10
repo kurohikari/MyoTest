@@ -1,3 +1,5 @@
+import { Test } from "./Test/Test";
+
 export class Example {
 
     constructor(private name: string) {
@@ -13,3 +15,9 @@ export class Example {
     }
 
 }
+
+Test("Test changed name", (test) => {
+    let example = new Example("example");
+    example.SetName("new example");
+    test.StrictEquals(example.GetName(), "new example");
+});

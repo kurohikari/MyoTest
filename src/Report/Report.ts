@@ -5,9 +5,17 @@ let report: Report = null;
 export class Report {
 
     private testCases: TestCase[];
+    private output: string;
 
     private constructor() {
+    }
 
+    public SetOutput(newOutput: string) {
+        this.output = newOutput;
+    }
+
+    public GetOutput() {
+        return this.output;
     }
 
     public static GetReport() {

@@ -4,6 +4,12 @@ let report = null;
 class Report {
     constructor() {
     }
+    SetOutput(newOutput) {
+        this.output = newOutput;
+    }
+    GetOutput() {
+        return this.output;
+    }
     static GetReport() {
         if (report === null)
             report = new Report();
