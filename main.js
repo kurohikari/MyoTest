@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const Report = require("./out/src/Report/Report").Report;
 const TestResult = require("./out/src/Report/TestResult").TestResult;
+const TestSuite = require("./out/src/Report/TestSuite").TestSuite;
 const ReportParser = require("./out/src/Html/ReportParser").ReportParser;
 const DirStructure = require("./out/src/Report/DirStructure").DirStructure;
 
@@ -73,21 +74,18 @@ function RunTests(testDir, structure) {
         }
     }
     for(let file of files) {
-        structure.AddFile(file);
-    }
-    for(let file of files) {
-        RunTest(testDir, file, structure);
+        let testSuite = new TestSuite(file);
+        structure.AddTestSuite(testSuite);
+        RunTest(testDir, file, structure, testSuite);
     }
     for(let dir of dirs) {
         structure.AddChild(new DirStructure(dir));
-    }
-    for(let dir of dirs) {
         let dirPath = path.join(testDir, dir);
         RunTests(dirPath, structure.GetChild(dir));
     }
 }
 
-function RunTest(dir, file, structure) {
+function RunTest(dir, file, structure, suite) {
     let filePath = path.join(dir, file);
     let proc = exec(`node ${filePath}`);
     let promise = new Promise((resolve) => {
@@ -96,8 +94,7 @@ function RunTest(dir, file, structure) {
                 let testName = data.toString().split("[")[1].split("]")[0];
                 let message = data.toString().substring(data.toString().indexOf("]")+1).trim();
                 let result = new TestResult(testName, filePath, message, true);
-                structure.AddTest(result);
-                Report.GetReport().AddTest(file, result);
+                suite.AddTest(result);
             } else {
                 console.log(data);
             }
@@ -107,8 +104,7 @@ function RunTest(dir, file, structure) {
                 let testName = data.toString().split("[")[1].split("]")[0];
                 let message = data.toString().substring(data.toString().indexOf("]")+1).trim();
                 let result = new TestResult(testName, filePath, message, false);
-                structure.AddTest(result);
-                Report.GetReport().AddTest(file, result);
+                suite.AddTest(result);
             } else {
                 console.error(data);
             }

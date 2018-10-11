@@ -1,18 +1,69 @@
 import { TestResult } from "./TestResult";
+import { TestSuite } from "./TestSuite";
 import * as path from "path";
 
 export class DirStructure {
 
     private name: string;
     private root: boolean;
-    private files: {[file: string]: TestResult[]};
+    private testSuites: TestSuite[];
     private children: DirStructure[];
 
     constructor(name: string, root: boolean = false) {
         this.name = name;
         this.root = root;
-        this.files = {};
         this.children = [];
+        this.testSuites = [];
+    }
+
+    /**
+     * Adds a test suite to the report
+     * @param testSuite test suite to add
+     * @param mergeIfExist default to true. Adds merge test results to existing test suite when there is already one for the same file. Do nothing when it is false.
+     */
+    public AddTestSuite(testSuite: TestSuite, mergeIfExist = true) {
+        if(this.HasTestSuite(testSuite) && !mergeIfExist) return false;
+        else if(this.HasTestSuite(testSuite) && mergeIfExist) {
+            for(let suite of this.testSuites) {
+                if(suite.GetFileName() === testSuite.GetFileName()) {
+                    testSuite.MergeInto(suite);
+                    break;
+                }
+            }
+        } else {
+            this.testSuites.push(testSuite);
+        }
+    }
+
+    /**
+     * Returns true when the report contains a test suite for the same file as the one passed
+     * @param testSuite test suite to check
+     */
+    public HasTestSuite(testSuite: TestSuite) {
+        for(let suite of this.testSuites) {
+            if(suite.GetFileName() === testSuite.GetFileName()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns true when the directory has a test suite with the given filename
+     * @param file filename to check
+     */
+    public HasTestSuiteForFile(file: string) {
+        for(let suite of this.testSuites) {
+            if(suite.GetFileName() === file) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get the test suite in the current directory
+     */
+    public GetTestSuites() {
+        return this.testSuites;
     }
     
     /**
@@ -23,32 +74,6 @@ export class DirStructure {
     }
 
     /**
-     * Get the files of the directory
-     */
-    public GetFiles() {
-        return Object.keys(this.files);
-    }
-
-    /**
-     * Add a test result in the directory
-     * @param test the test to add
-     */
-    public AddTest(test: TestResult) {
-        let testFile = path.basename(test.GetPath());
-        this.AddFile(testFile);
-        this.files[testFile].push(test);
-    }
-
-    /**
-     * Get the tests in the directory for the given file
-     * @param file the file tested
-     */
-    public GetTests(file: string) {
-        if(!this.HasFile(file)) return null;
-        return this.files[file];
-    }
-
-    /**
      * Get the list of child directories
      */
     public GetChildren() {
@@ -56,21 +81,11 @@ export class DirStructure {
     }
 
     /**
-     * Add a file to the directory
-     * @param file the name of the file to add
-     */
-    public AddFile(file: string) {
-        if(this.HasFile(file)) return false;
-        this.files[file] = [];
-        return true;
-    }
-
-    /**
      * Check if the directory or any of its subdirectories contains tests
      */
     public HasTests() {
-        for(let file of Object.keys(this.files)) {
-            if(this.files[file].length > 0) return true;
+        for(let suite of this.testSuites) {
+            if(suite.HasTests()) return true;
         }
         for(let child of this.children) {
             if(child.HasTests()) return true;
@@ -93,14 +108,6 @@ export class DirStructure {
         if(this.HasChild(child)) return false;
         this.children.push(child);
         return true;
-    }
-
-    /**
-     * Checks if the directory contains a file with the given name
-     * @param file name of the file
-     */
-    public HasFile(file: string) {
-        return (Object.keys(this.files).indexOf(file) > -1);
     }
 
     /**
@@ -130,19 +137,6 @@ export class DirStructure {
     }
 
     /**
-     * Returns true when the given file didn't generate any error
-     * @param file name of the file
-     */
-    public HasNoErrors(file: string) {
-        if(!this.HasFile(file)) throw new Error(`No such file in directory: ${file}`);
-        let tests = this.GetTests(file);
-        for(let test of tests) {
-            if(!test.IsPassed()) return false;
-        }
-        return true;
-    }
-
-    /**
      * Prints the structure from the current directory
      * TODO: return a string
      */
@@ -162,14 +156,12 @@ export class DirStructure {
         }
         console.log(`${indents}[${dir.GetName()}]`);
         indents += "\t";
-        let files = dir.GetFiles();
-        for(let file of Object.keys(files)) {
-            let tests = files[file]
+        for(let suite of dir.GetTestSuites()) {
             let testsStr = "";
-            for(let test of tests) {
+            for(let test of suite.GetTests()) {
                 testsStr += `<${test.GetTestName()}> `;
             }
-            console.log(`${indents}"${file}" - ${testsStr}`);
+            console.log(`${indents}"${suite.GetFileName()}" - ${testsStr}`);
         }
         for(let subDir of dir.GetChildren()) {
             this.toStringify(indentLevel+1, subDir);

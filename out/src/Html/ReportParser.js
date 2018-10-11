@@ -36,13 +36,11 @@ class ReportParser {
         if (!fs.existsSync(path.join(currentPath, "myo-js.js"))) {
             fs.writeFileSync(path.join(currentPath, "myo-js.js"), Js_1.Js);
         }
-        let files = structure.GetFiles();
-        for (let file of files) {
-            let tests = structure.GetTests(file);
-            if (tests.length > 0) {
-                let htmlReport = new HtmlReport_1.HTMLReport(file);
-                for (let test of tests) {
-                    htmlReport.AddTest(test, file);
+        for (let suite of structure.GetTestSuites()) {
+            if (suite.HasTests()) {
+                let htmlReport = new HtmlReport_1.HTMLReport(suite.GetFileName());
+                for (let test of suite.GetTests()) {
+                    htmlReport.AddTest(test, suite.GetFileName());
                 }
                 htmlReport.SaveAsHTML(currentPath);
             }
