@@ -48,15 +48,16 @@ div.divider {
 div.ok-test {
     display: flex;
     width: 80%;
-    padding-top: 1ch;
-    padding-bottom: 1ch;
+    padding-bottom: 2ch;
     margin-top: 0.5ch;
     margin-left: 10%;
     margin-bottom: 0.5ch;
     border-radius: 1ch;
-    background-color: rgba(70,255,70,1);
+    background-color: rgba(150,255,150,1);
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow-y: hidden;
 }
 
 div.ko-test {
@@ -72,6 +73,18 @@ div.ko-test {
     justify-content: center;
     align-items: center;
     overflow-y: hidden;
+}
+
+div.ok-head {
+    display: flex;
+    width: 100%;
+    padding-top: 1ch;
+    padding-left: 10%;
+    padding-bottom: 1ch;
+    margin-bottom: 2ch;
+    background-color: rgba(70,255,70,1);
+    justify-content: center;
+    align-items: center;
 }
 
 div.ko-head {
@@ -106,6 +119,11 @@ div.open-button {
     line-height: 3ch;
     transition: 0.3s;
     cursor: pointer;
+}
+
+div.code-line {
+    width: 75%;
+    text-align: left;
 }
 
 div.open-button:hover {
