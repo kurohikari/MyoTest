@@ -13,11 +13,19 @@ class ReportParser {
     static ParseReport() {
         (new ReportParser(Report_1.Report.GetReport())).Parse();
     }
+    /**
+     * Parse the current report
+     */
     Parse() {
         let structure = this.report.GetStructure();
         let output = this.report.GetOutput();
         this.ParseStructure(structure, output);
     }
+    /**
+     * Parse the structure and its children into the report folder recursively
+     * @param structure structure to follow
+     * @param currentPath path where to output report
+     */
     ParseStructure(structure, currentPath) {
         if (!fs.existsSync(currentPath)) {
             fs.mkdirSync(currentPath);

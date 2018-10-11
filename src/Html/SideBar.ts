@@ -7,6 +7,17 @@ import * as path from "path";
  */
 const basicHtml = `<div class="sub-div">\n<a href="#"><div class="sub-name">{{structure}}</div></a>\n{{files}}{{dirs}}</div>`;
 
+/**
+ * base html to add check mark next to a test suite with no failures
+ */
+const sideCheckMark = `<span class="check-mark">&#10003;</span>`
+
+
+/**
+ * base html to add a fail mark next to a test suite with at least one failure
+ */
+const sideFailMark = `<span class="fail-mark">&#10007;</span>`;
+
 export class SideBar {
 
     /**
@@ -34,7 +45,8 @@ export class SideBar {
             let tests = structure.GetTests(file);
             if(tests.length > 0) {
                 let href = path.join(path.relative(path.dirname(currentPath), outputPath), file.replace(path.parse(file).ext, ".html"));
-                let fileDiv = `<a href="${href}"><div class="file-div">${file}</div></a>\n`;
+                let mark = (structure.HasNoErrors(file)) ? sideCheckMark : sideFailMark;
+                let fileDiv = `<a href="${href}"><div class="file-div">${file} ${mark}</div></a>\n`;
                 fileDivs += fileDiv;
             }
         }

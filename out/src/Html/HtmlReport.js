@@ -1,8 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const SideBar_1 = require("./SideBar");
 const path = require("path");
 const fs = require("fs");
-const SideBar_1 = require("./SideBar");
+/**
+ * base html to use to create the html file
+ */
 const html = `
 <!DOCTYPE html>
 <html>
@@ -34,9 +37,16 @@ class HTMLReport {
         this.tests = [];
         this.testResults = [];
     }
+    /**
+     * Get the title of the html report
+     */
     GetTitle() {
         return this.title;
     }
+    /**
+     * Adds a test result to the report
+     * @param test test result to add
+     */
     AddTest(test) {
         this.path = test.GetPath();
         if (test.IsPassed()) {
@@ -48,6 +58,10 @@ class HTMLReport {
         }
         this.testResults.push(test);
     }
+    /**
+     * Parse and save the report as an html at the given path
+     * @param htmlPath path where to save report
+     */
     SaveAsHTML(htmlPath) {
         let name = this.file.substring(0, this.file.length - 3) + ".html";
         let testsStr = "";

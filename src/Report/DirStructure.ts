@@ -130,6 +130,19 @@ export class DirStructure {
     }
 
     /**
+     * Returns true when the given file didn't generate any error
+     * @param file name of the file
+     */
+    public HasNoErrors(file: string) {
+        if(!this.HasFile(file)) throw new Error(`No such file in directory: ${file}`);
+        let tests = this.GetTests(file);
+        for(let test of tests) {
+            if(!test.IsPassed()) return false;
+        }
+        return true;
+    }
+
+    /**
      * Prints the structure from the current directory
      * TODO: return a string
      */

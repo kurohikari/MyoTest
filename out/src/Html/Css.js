@@ -180,5 +180,13 @@ div.sub-name {
 div.file-div {
     font-size: 50%;
 }
+
+span.check-mark {
+    color: rgba(0,255,0,1);
+}
+
+span.fail-mark {
+    color: rgba(255,0,0,1);
+}
 `;
 exports.Css = Css;
