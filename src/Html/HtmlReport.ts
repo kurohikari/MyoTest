@@ -37,6 +37,8 @@ export class HTMLReport {
     private path: string;
     private title: string;
     private tests: string[];
+    private testsPassed: TestResult[];
+    private testsFailed: TestResult[];
     private testResults: TestResult[];
 
     constructor(file: string) {
@@ -44,6 +46,8 @@ export class HTMLReport {
         this.path = "";
         this.title = `<div class="title">${file} ({{path}})</div>`;
         this.tests = [];
+        this.testsPassed = [];
+        this.testsFailed = [];
         this.testResults = [];
     }
 
@@ -59,6 +63,8 @@ export class HTMLReport {
      * @param test test result to add
      */
     public AddTest(test: TestResult, file: string) {
+        if(test.IsPassed()) this.testsPassed.push(test);
+        else this.testsFailed.push(test);
         this.path = test.GetPath();
         if(test.IsPassed()) {
             let infos = JSON.parse(test.GetMessage());
@@ -85,21 +91,12 @@ export class HTMLReport {
         for(let test of this.tests) {
             testsStr += test + "\n";
         }
-        let num = 0;
-        let denom = 0;
-        for(let res of this.testResults) {
-            denom++;
-            if(res.IsPassed()) {
-                num++;
-            }
-        }
-        let analysisMessage = (denom > 0) ? `${(num/denom*100).toFixed(2)}% tests passed!`: "No test was run!";
         let filePath = path.join(htmlPath, name);
         let toWrite = html.replace("{{filepure}}", this.file.substring(0, this.file.length-3))
         .replace("{{title}}", this.title)
         .replace("{{sidebar}}", SideBar.GenerateSideBar(filePath))
         .replace("{{path}}", this.path)
-        .replace("{{analysis}}", analysisMessage)
+        .replace("{{analysis}}", this.GenerateAnalysis())
         .replace("{{tests}}", testsStr);
         let stream = fs.createWriteStream(filePath);
         stream.write(toWrite, (error) => {
@@ -108,6 +105,36 @@ export class HTMLReport {
                 console.error(error);
             } else stream.close();
         });
+    }
+
+    /**
+     * Generates the analysis part of the html
+     */
+    private GenerateAnalysis() {
+        let numPasses = this.testsPassed.length;
+        let numFails = this.testsFailed.length;
+        let tot = numPasses + numFails;
+        if(numFails === 0 && numPasses === 0) return "No test was run!";
+        else {
+            let percentage = (numPasses*100/tot).toFixed(2);
+            let passes = (numPasses === 1) ? "1 test passed!" : `${numPasses} tests passed!`;
+            let fails = (numFails === 1) ? "1 test failed!" : `${numFails} tests failed!`;
+            return `${percentage}%   ${passes}   ${fails}`;
+        }
+    }
+
+    /**
+     * Get the list of tests passed in the html report
+     */
+    public GetTestsPassed() {
+        return this.testsPassed;
+    }
+
+    /**
+     * Get the list of tests failed in the html report
+     */
+    public GetTestsFailed() {
+        return this.testsFailed;
     }
 
 }
