@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
 const fs = require("fs");
+/**
+ * Name used for the report file
+ */
 const reportName = "myo-report.json";
 let report = null;
 class Report {
@@ -66,12 +69,6 @@ class Report {
         if (report === null)
             report = new Report();
         return report;
-    }
-    /**
-     * Return the tests of the Reprt
-     */
-    GetTests() {
-        return this.tests;
     }
     /**
      * Save the report as a json file

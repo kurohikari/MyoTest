@@ -1,9 +1,13 @@
+import { DirStructure } from "./DirStructure";
 import { TestResult } from "./TestResult";
 import * as path from "path";
 import * as fs from "fs";
-import { DirStructure } from "./DirStructure";
 
+/**
+ * Name used for the report file
+ */
 const reportName: string = "myo-report.json";
+
 let report: Report = null;
 
 export class Report {
@@ -81,13 +85,6 @@ export class Report {
     public static GetReport() {
         if(report === null) report = new Report();
         return report;
-    }
-
-    /**
-     * Return the tests of the Reprt
-     */
-    public GetTests() {
-        return this.tests;
     }
 
     /**
