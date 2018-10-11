@@ -44,7 +44,7 @@ export class ReportParser {
             if(tests.length > 0) {
                 let htmlReport = new HTMLReport(file);
                 for(let test of tests) {
-                    htmlReport.AddTest(test);
+                    htmlReport.AddTest(test, file);
                 }
                 htmlReport.SaveAsHTML(currentPath);
             }

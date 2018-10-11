@@ -2,6 +2,7 @@ import { TestResult } from "../Report/TestResult";
 import { SideBar } from "./SideBar";
 import * as path from "path";
 import * as fs from "fs";
+import { CodeInfo } from "../Report/CodeInfo";
 
 /**
  * base html to use to create the html file
@@ -57,10 +58,17 @@ export class HTMLReport {
      * Adds a test result to the report
      * @param test test result to add
      */
-    public AddTest(test: TestResult) {
+    public AddTest(test: TestResult, file: string) {
         this.path = test.GetPath();
         if(test.IsPassed()) {
-            this.tests.push(`<div class="ok-test"><div class="test-name">${test.GetTestName()}</div><div>${test.GetMessage()}</div></div>`);
+            let infos = JSON.parse(test.GetMessage());
+            let infosStr = "";
+            for(let info of infos) {
+                let codeInfo = new CodeInfo(info["paths"], file);
+                let codeLine = codeInfo.GetCodeLine();
+                infosStr += `<div class="code-line">${codeLine} [${codeInfo.GetLine()}]</div>\n`;
+            }
+            this.tests.push(`<div class="ok-test"><div class="test-name">${test.GetTestName()}</div>${infosStr}</div>`);
         } else {
             let error = JSON.parse(test.GetMessage());
             this.tests.push(`<div class="ko-test"><div class="ko-head"><div class="test-name">${test.GetTestName()}</div><div>${error.errorMessage}</div></div><div><pre>${error.stackMessage}</pre></div></div>`);

@@ -41,14 +41,8 @@ class TestCase {
      */
     Equals(actual, expected, message) {
         assert.strictEqual(actual, expected, message);
-        let infoLine = ((new Error().stack).split("at ")[3]).trim();
-        infoLine = infoLine.substring(infoLine.indexOf("(") + 1, infoLine.lastIndexOf(")"));
-        let lines = infoLine.match(/(:\d+:\d+)/)[0];
-        infoLine = infoLine.substring(0, infoLine.indexOf(lines));
-        this.info.push({
-            "path": infoLine,
-            "lines": lines
-        });
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({ "paths": infoLine });
     }
     /**
      * Performs a strict deep equals assertion
@@ -58,14 +52,8 @@ class TestCase {
      */
     DeepEquals(actual, expected, message) {
         assert.deepStrictEqual(actual, expected, message);
-        let infoLine = ((new Error().stack).split("at ")[3]).trim();
-        infoLine = infoLine.substring(infoLine.indexOf("(") + 1, infoLine.lastIndexOf(")"));
-        let lines = infoLine.match(/(:\d+:\d+)/)[0];
-        infoLine = infoLine.substring(0, infoLine.indexOf(lines));
-        this.info.push({
-            "path": infoLine,
-            "lines": lines
-        });
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({ "paths": infoLine });
     }
     /**
      * Checks if the block or promise tested does not reject
@@ -75,14 +63,8 @@ class TestCase {
     DoesNotReject(block, message) {
         return __awaiter(this, void 0, void 0, function* () {
             yield assert.doesNotReject(block, message).catch(error => { throw error; });
-            let infoLine = ((new Error().stack).split("at ")[3]).trim();
-            infoLine = infoLine.substring(infoLine.indexOf("(") + 1, infoLine.lastIndexOf(")"));
-            let lines = infoLine.match(/(:\d+:\d+)/)[0];
-            infoLine = infoLine.substring(0, infoLine.indexOf(lines));
-            this.info.push({
-                "path": infoLine,
-                "lines": lines
-            });
+            let infoLine = (new Error().stack).split("at ");
+            this.info.push({ "paths": infoLine });
         });
     }
     /**
@@ -92,14 +74,8 @@ class TestCase {
      */
     DoesNotThrow(block, message) {
         assert.doesNotThrow(block, message);
-        let infoLine = ((new Error().stack).split("at ")[3]).trim();
-        infoLine = infoLine.substring(infoLine.indexOf("(") + 1, infoLine.lastIndexOf(")"));
-        let lines = infoLine.match(/(:\d+:\d+)/)[0];
-        infoLine = infoLine.substring(0, infoLine.indexOf(lines));
-        this.info.push({
-            "path": infoLine,
-            "lines": lines
-        });
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({ "paths": infoLine });
     }
     /**
      * Fail a test case
@@ -107,14 +83,8 @@ class TestCase {
      */
     Fail(message) {
         assert.fail(message);
-        let infoLine = ((new Error().stack).split("at ")[3]).trim();
-        infoLine = infoLine.substring(infoLine.indexOf("(") + 1, infoLine.lastIndexOf(")"));
-        let lines = infoLine.match(/(:\d+:\d+)/)[0];
-        infoLine = infoLine.substring(0, infoLine.indexOf(lines));
-        this.info.push({
-            "path": infoLine,
-            "lines": lines
-        });
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({ "paths": infoLine });
     }
     /**
      * Checks if valued passed is not null of undefined
@@ -122,14 +92,8 @@ class TestCase {
      */
     IfError(value) {
         assert.ifError(value);
-        let infoLine = ((new Error().stack).split("at ")[3]).trim();
-        infoLine = infoLine.substring(infoLine.indexOf("(") + 1, infoLine.lastIndexOf(")"));
-        let lines = infoLine.match(/(:\d+:\d+)/)[0];
-        infoLine = infoLine.substring(0, infoLine.indexOf(lines));
-        this.info.push({
-            "path": infoLine,
-            "lines": lines
-        });
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({ "paths": infoLine });
     }
     /**
      * Performs a not strict equals assertion
@@ -139,14 +103,8 @@ class TestCase {
      */
     NotEquals(actual, expected, message) {
         assert.notStrictEqual(actual, expected, message);
-        let infoLine = ((new Error().stack).split("at ")[3]).trim();
-        infoLine = infoLine.substring(infoLine.indexOf("(") + 1, infoLine.lastIndexOf(")"));
-        let lines = infoLine.match(/(:\d+:\d+)/)[0];
-        infoLine = infoLine.substring(0, infoLine.indexOf(lines));
-        this.info.push({
-            "path": infoLine,
-            "lines": lines
-        });
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({ "paths": infoLine });
     }
     /**
      * Performs a not strict deep equals assertion
@@ -154,16 +112,10 @@ class TestCase {
      * @param expected value expected
      * @param message error message
      */
-    NotStrictEquals(actual, expected, message) {
+    NotDeepEquals(actual, expected, message) {
         assert.notDeepStrictEqual(actual, expected, message);
-        let infoLine = ((new Error().stack).split("at ")[3]).trim();
-        infoLine = infoLine.substring(infoLine.indexOf("(") + 1, infoLine.lastIndexOf(")"));
-        let lines = infoLine.match(/(:\d+:\d+)/)[0];
-        infoLine = infoLine.substring(0, infoLine.indexOf(lines));
-        this.info.push({
-            "path": infoLine,
-            "lines": lines
-        });
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({ "paths": infoLine });
     }
     /**
      * Checks if a value is true
@@ -172,14 +124,8 @@ class TestCase {
      */
     True(value, message) {
         assert.ok(value, message);
-        let infoLine = ((new Error().stack).split("at ")[3]).trim();
-        infoLine = infoLine.substring(infoLine.indexOf("(") + 1, infoLine.lastIndexOf(")"));
-        let lines = infoLine.match(/(:\d+:\d+)/)[0];
-        infoLine = infoLine.substring(0, infoLine.indexOf(lines));
-        this.info.push({
-            "path": infoLine,
-            "lines": lines
-        });
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({ "paths": infoLine });
     }
     /**
      * Checks that the block of Promise rejects
@@ -189,14 +135,8 @@ class TestCase {
     Rejects(block, message) {
         return __awaiter(this, void 0, void 0, function* () {
             yield assert.rejects(block, message).catch(error => { throw error; });
-            let infoLine = ((new Error().stack).split("at ")[3]).trim();
-            infoLine = infoLine.substring(infoLine.indexOf("(") + 1, infoLine.lastIndexOf(")"));
-            let lines = infoLine.match(/(:\d+:\d+)/)[0];
-            infoLine = infoLine.substring(0, infoLine.indexOf(lines));
-            this.info.push({
-                "path": infoLine,
-                "lines": lines
-            });
+            let infoLine = (new Error().stack).split("at ");
+            this.info.push({ "paths": infoLine });
         });
     }
     /**
@@ -206,14 +146,8 @@ class TestCase {
      */
     Throws(block, message) {
         assert.throws(block, message);
-        let infoLine = ((new Error().stack).split("at ")[3]).trim();
-        infoLine = infoLine.substring(infoLine.indexOf("(") + 1, infoLine.lastIndexOf(")"));
-        let lines = infoLine.match(/(:\d+:\d+)/)[0];
-        infoLine = infoLine.substring(0, infoLine.indexOf(lines));
-        this.info.push({
-            "path": infoLine,
-            "lines": lines
-        });
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({ "paths": infoLine });
     }
 }
 exports.TestCase = TestCase;

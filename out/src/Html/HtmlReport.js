@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const SideBar_1 = require("./SideBar");
 const path = require("path");
 const fs = require("fs");
+const CodeInfo_1 = require("../Report/CodeInfo");
 /**
  * base html to use to create the html file
  */
@@ -47,10 +48,17 @@ class HTMLReport {
      * Adds a test result to the report
      * @param test test result to add
      */
-    AddTest(test) {
+    AddTest(test, file) {
         this.path = test.GetPath();
         if (test.IsPassed()) {
-            this.tests.push(`<div class="ok-test"><div class="test-name">${test.GetTestName()}</div><div>${test.GetMessage()}</div></div>`);
+            let infos = JSON.parse(test.GetMessage());
+            let infosStr = "";
+            for (let info of infos) {
+                let codeInfo = new CodeInfo_1.CodeInfo(info["paths"], file);
+                let codeLine = codeInfo.GetCodeLine();
+                infosStr += `<div class="code-line">${codeLine} [${codeInfo.GetLine()}]</div>\n`;
+            }
+            this.tests.push(`<div class="ok-test"><div class="test-name">${test.GetTestName()}</div>${infosStr}</div>`);
         }
         else {
             let error = JSON.parse(test.GetMessage());
