@@ -19,6 +19,18 @@ div.title {
     font-weight: bold;
 }
 
+div.divider {
+    width: 90%;
+    height: 6px;
+    padding-left: 10%;
+    padding-right: 10%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 2ch;
+    border-radius: 3px 3px 3px 3px;
+    background-color: rgba(100,150,255,1);
+}
+
 div.analysis {
     width: 80%;
     padding-top: 1ch;
@@ -32,16 +44,26 @@ div.analysis {
     font-size: 125%;
 }
 
-div.divider {
-    width: 90%;
-    height: 6px;
-    padding-left: 10%;
-    padding-right: 10%;
-    margin-left: 5%;
-    margin-right: 5%;
-    margin-bottom: 2ch;
-    border-radius: 3px 3px 3px 3px;
-    background-color: rgba(100,150,255,1);
+div.tests-passed {
+    display: inline-block;
+    padding-top: 0.5ch;
+    padding-left: 1ch;
+    padding-right: 1ch;
+    padding-bottom: 0.5ch;
+    margin-left: 3ch;
+    margin-right: 3ch;
+    border: 1px solid rgba(70,255,70,1);
+}
+
+div.tests-failed {
+    display: inline-block;
+    padding-top: 0.5ch;
+    padding-left: 1ch;
+    padding-right: 1ch;
+    padding-bottom: 0.5ch;
+    margin-left: 3ch;
+    margin-right: 3ch;
+    border: 1px solid rgba(255,0,0,1);
 }
 
 div.ok-test {

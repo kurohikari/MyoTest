@@ -119,7 +119,7 @@ export class HTMLReport {
             let percentage = (numPasses*100/tot).toFixed(2);
             let passes = (numPasses === 1) ? "1 test passed!" : `${numPasses} tests passed!`;
             let fails = (numFails === 1) ? "1 test failed!" : `${numFails} tests failed!`;
-            return `${percentage}%   ${passes}   ${fails}`;
+            return `${percentage}%<div class="tests-passed">${passes}</div><div class="tests-failed">${fails}</div>`;
         }
     }
 
