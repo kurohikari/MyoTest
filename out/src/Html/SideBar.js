@@ -2,14 +2,35 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Report_1 = require("../Report/Report");
 const path = require("path");
+/**
+ * base html to use to create the sidebar
+ */
 const basicHtml = `<div class="sub-div">\n<a href="#"><div class="sub-name">{{structure}}</div></a>\n{{files}}{{dirs}}</div>`;
+/**
+ * base html to add check mark next to a test suite with no failures
+ */
+const sideCheckMark = `<span class="check-mark">&#10003;</span>`;
+/**
+ * base html to add a fail mark next to a test suite with at least one failure
+ */
+const sideFailMark = `<span class="fail-mark">&#10007;</span>`;
 class SideBar {
+    /**
+     * Returns an html string containing the sidebar html content
+     * @param currentPath path use for creating relative references to other tests
+     */
     static GenerateSideBar(currentPath) {
         let report = Report_1.Report.GetReport();
         let structure = report.GetStructure();
         let output = report.GetOutput();
         return this.GenerateStructure(structure, output, currentPath);
     }
+    /**
+     * Recursively generates the sidebar html content to reflect the test structure
+     * @param structure structure to follow
+     * @param outputPath path to file output
+     * @param currentPath current path of the file using the sidebar
+     */
     static GenerateStructure(structure, outputPath, currentPath) {
         let div = basicHtml.replace("{{structure}}", structure.GetName());
         let files = structure.GetFiles();
@@ -18,7 +39,8 @@ class SideBar {
             let tests = structure.GetTests(file);
             if (tests.length > 0) {
                 let href = path.join(path.relative(path.dirname(currentPath), outputPath), file.replace(path.parse(file).ext, ".html"));
-                let fileDiv = `<a href="${href}"><div class="file-div">${file}</div></a>\n`;
+                let mark = (structure.HasNoErrors(file)) ? sideCheckMark : sideFailMark;
+                let fileDiv = `<a href="${href}"><div class="file-div">${file} ${mark}</div></a>\n`;
                 fileDivs += fileDiv;
             }
         }

@@ -4,3 +4,9 @@ const Test_1 = require("../../src/Test/Test");
 Test_1.Test("OK", (test) => {
     test.True(true);
 });
+Test_1.Test("OK", (test) => {
+    test.True(false);
+});
+Test_1.Test("OK", (test) => {
+    test.True(false);
+});
