@@ -2,10 +2,17 @@ import { Report } from "../Report/Report";
 import { DirStructure } from "../Report/DirStructure";
 import * as path from "path";
 
+/**
+ * base html to use to create the sidebar
+ */
 const basicHtml = `<div class="sub-div">\n<a href="#"><div class="sub-name">{{structure}}</div></a>\n{{files}}{{dirs}}</div>`;
 
 export class SideBar {
 
+    /**
+     * Returns an html string containing the sidebar html content
+     * @param currentPath path use for creating relative references to other tests
+     */
     public static GenerateSideBar(currentPath: string) {
         let report = Report.GetReport();
         let structure = report.GetStructure();
@@ -13,6 +20,12 @@ export class SideBar {
         return this.GenerateStructure(structure, output, currentPath);
     }
 
+    /**
+     * Recursively generates the sidebar html content to reflect the test structure
+     * @param structure structure to follow
+     * @param outputPath path to file output
+     * @param currentPath current path of the file using the sidebar
+     */
     private static GenerateStructure(structure: DirStructure, outputPath: string, currentPath: string) {
         let div = basicHtml.replace("{{structure}}", structure.GetName());
         let files = structure.GetFiles();

@@ -1,9 +1,11 @@
 import { TestResult } from "../Report/TestResult";
-import { Report } from "../Report/Report";
+import { SideBar } from "./SideBar";
 import * as path from "path";
 import * as fs from "fs";
-import { SideBar } from "./SideBar";
 
+/**
+ * base html to use to create the html file
+ */
 const html = `
 <!DOCTYPE html>
 <html>
@@ -44,10 +46,17 @@ export class HTMLReport {
         this.testResults = [];
     }
 
+    /**
+     * Get the title of the html report
+     */
     public GetTitle() {
         return this.title;
     }
 
+    /**
+     * Adds a test result to the report
+     * @param test test result to add
+     */
     public AddTest(test: TestResult) {
         this.path = test.GetPath();
         if(test.IsPassed()) {
@@ -59,6 +68,10 @@ export class HTMLReport {
         this.testResults.push(test);
     }
 
+    /**
+     * Parse and save the report as an html at the given path
+     * @param htmlPath path where to save report
+     */
     public SaveAsHTML(htmlPath: string) {
         let name = this.file.substring(0, this.file.length-3) + ".html";
         let testsStr = "";

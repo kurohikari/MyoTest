@@ -6,17 +6,11 @@ const TestResult = require("./out/src/Report/TestResult").TestResult;
 const ReportParser = require("./out/src/Html/ReportParser").ReportParser;
 const DirStructure = require("./out/src/Report/DirStructure").DirStructure;
 
-module.exports = require("./out/src/Test/Test").Test;
-
 const reserved = ["-s", "--source", "-o", "--output", "-g", "--generate"];
 let promises = [];
 
 async function main() {
     let args = process.argv;
-    if(args.length == 2) {
-        console.log("no arg");
-        return 0;
-    }
     let source = null;
     let output = "./myo-test";
     let generate = false;

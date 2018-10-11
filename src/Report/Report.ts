@@ -18,6 +18,11 @@ export class Report {
         this.structure = null;
     }
 
+    /**
+     * Add a test result to the report
+     * @param file file of the test
+     * @param testResult the test result to add
+     */
     public AddTest(file: string, testResult: TestResult) {
         if(!this.tests[file]) {
             this.tests[file] = [];
@@ -25,39 +30,69 @@ export class Report {
         this.tests[file].push(testResult);
     }
 
+    /**
+     * Set the source folder of the tests
+     * @param newSource 
+     */
     public SetSource(newSource: string) {
         this.source = newSource;
     }
 
+    /**
+     * Get the source folder of the tests
+     */
     public GetSource() {
         return this.source;
     }
 
+    /**
+     * Set the structure the report
+     * @param newStructure structure of the report
+     */
     public SetStructure(newStructure: DirStructure) {
         this.structure = newStructure;
     }
 
+    /**
+     * Get the report structure
+     */
     public GetStructure() {
         return this.structure;
     }
 
+    /**
+     * Set the output folder for the report
+     * @param newOutput 
+     */
     public SetOutput(newOutput: string) {
         this.output = newOutput;
     }
 
+    /**
+     * Get the output folder for the project
+     */
     public GetOutput() {
         return this.output;
     }
 
+    /**
+     * Get the singleton instance of the Report
+     */
     public static GetReport() {
         if(report === null) report = new Report();
         return report;
     }
 
+    /**
+     * Return the tests of the Reprt
+     */
     public GetTests() {
         return this.tests;
     }
 
+    /**
+     * Save the report as a json file
+     */
     public Save() {
         if(!fs.existsSync(this.output)) fs.mkdirSync(this.output);
         let stream = fs.createWriteStream(path.join(this.output, reportName));
