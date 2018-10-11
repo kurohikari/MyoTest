@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const SideBar_1 = require("./SideBar");
 const path = require("path");
 const fs = require("fs");
+const CodeInfo_1 = require("../Report/CodeInfo");
 /**
  * base html to use to create the html file
  */
@@ -47,14 +48,20 @@ class HTMLReport {
      * Adds a test result to the report
      * @param test test result to add
      */
-    AddTest(test) {
+    AddTest(test, file) {
         this.path = test.GetPath();
         if (test.IsPassed()) {
-            this.tests.push(`<div class="ok-test"><div class="test-name">${test.GetTestName()}</div><div>${test.GetMessage()}</div></div>`);
+            let infos = JSON.parse(test.GetMessage());
+            let infosStr = "";
+            for (let info of infos) {
+                let codeInfo = new CodeInfo_1.CodeInfo(info["paths"], file);
+                infosStr += `<div class="code-line">${codeInfo.GetCodeLine()} [${codeInfo.GetLine()}]</div>\n`;
+            }
+            this.tests.push(`<div class="ok-test"><div class="ok-head"><div class="test-name">${test.GetTestName()}</div></div>${infosStr}</div>`);
         }
         else {
             let error = JSON.parse(test.GetMessage());
-            this.tests.push(`<div class="ko-test"><div class="ko-head"><div class="test-name">${test.GetTestName()}</div><div>${error.errorMessage}</div></div><div><pre>${error.stackMessage}</pre></div></div>`);
+            this.tests.push(`<div class="ko-test"><div class="ko-head"><div class="test-name">${test.GetTestName()}</div></div><div><pre>${error.stackMessage}</pre></div></div>`);
         }
         this.testResults.push(test);
     }

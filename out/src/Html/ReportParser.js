@@ -42,7 +42,7 @@ class ReportParser {
             if (tests.length > 0) {
                 let htmlReport = new HtmlReport_1.HTMLReport(file);
                 for (let test of tests) {
-                    htmlReport.AddTest(test);
+                    htmlReport.AddTest(test, file);
                 }
                 htmlReport.SaveAsHTML(currentPath);
             }

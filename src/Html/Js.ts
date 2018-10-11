@@ -1,21 +1,22 @@
-const Js: string = `
-/* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
-function openNav() {
-    document.getElementById("mySidenav").style.width = "250px";
-    document.getElementById("mySidenav").style.overflow = "auto";
-    //document.getElementById("main").style.marginLeft = "250px";
+import * as path from "path";
+import * as fs from "fs";
+
+function FindResources(searchPath: string) {
+    let reads = fs.readdirSync(searchPath);
+    for(let read of reads) {
+        if(read === "resources") {
+            let resourcesPath = path.join(searchPath, read);
+            if(fs.statSync(resourcesPath).isDirectory()) {
+                return resourcesPath;
+            }
+        }
+    }
+    let newPath = path.join(searchPath, "..");
+    return FindResources(newPath);
 }
 
-/* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
-function closeNav() {
-    document.getElementById("mySidenav").style.width = "0";
-    document.getElementById("mySidenav").style.overflow = "hidden";
-    //document.getElementById("main").style.marginLeft = "0";
-}
+let resourcesFolderPath = FindResources(`${__dirname}`);
 
-document.addEventListener("DOMContentLoaded", () => {
-    closeNav();
-})
-`;
+const Js: string = fs.readFileSync(path.join(resourcesFolderPath, "myo-js.js")).toString();
 
 export { Js };

@@ -6,7 +6,7 @@ export class TestCase {
     private failed: boolean;
 
     constructor(private name: string) {
-        this.info = null;
+        this.info = [];
         this.failed = false;
     }
 
@@ -39,6 +39,8 @@ export class TestCase {
      */
     public Equals(actual: any, expected: any, message?: string|Error) {
         assert.strictEqual(actual, expected, message);
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -49,6 +51,8 @@ export class TestCase {
      */
     public DeepEquals(actual: any, expected: any, message?: string|Error) {
         assert.deepStrictEqual(actual, expected, message);
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -58,6 +62,8 @@ export class TestCase {
      */
     public async DoesNotReject(block: Function|Promise<any>, message?: string|Error) {
         await assert.doesNotReject(block, message).catch(error => {throw error});
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -67,6 +73,8 @@ export class TestCase {
      */
     public DoesNotThrow(block: Function, message?: string|Error) {
         assert.doesNotThrow(block, message);
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -75,6 +83,8 @@ export class TestCase {
      */
     public Fail(message?: string|Error) {
         assert.fail(message);
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -83,6 +93,8 @@ export class TestCase {
      */
     public IfError(value: any) {
         assert.ifError(value);
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -93,6 +105,8 @@ export class TestCase {
      */
     public NotEquals(actual: any, expected: any, message?: string|Error) {
         assert.notStrictEqual(actual, expected, message);
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -101,8 +115,10 @@ export class TestCase {
      * @param expected value expected
      * @param message error message
      */
-    public NotStrictEquals(actual: any, expected: any, message?: string|Error) {
+    public NotDeepEquals(actual: any, expected: any, message?: string|Error) {
         assert.notDeepStrictEqual(actual, expected, message);
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -112,6 +128,8 @@ export class TestCase {
      */
     public True(value: any, message?: string|Error) {
         assert.ok(value, message);
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -121,6 +139,8 @@ export class TestCase {
      */
     public async Rejects(block: Function|Promise<any>, message?: string|Error) {
         await assert.rejects(block, message).catch(error => {throw error});
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -130,6 +150,8 @@ export class TestCase {
      */
     public Throws(block: Function, message?: string|Error) {
         assert.throws(block, message);
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({"paths": infoLine});
     }
 
 }
@@ -138,7 +160,7 @@ let Test = (testName: string, test: (test: TestCase) => void) => {
     let t = new TestCase(testName);
     try {
         test(t);
-        console.log(`[${t.GetName()}] OK`);
+        console.log(`[${t.GetName()}] ${JSON.stringify(t.GetInfo())}`);
     } catch(error) {
         let info = error;
         info.stackMessage = info.stack;
