@@ -9,7 +9,7 @@ const DirStructure = require("./out/src/Report/DirStructure").DirStructure;
 
 const reserved = ["-s", "--source", "-o", "--output", "-g", "--generate"];
 let promises = [];
-
+//
 async function main() {
     let args = process.argv;
     let source = null;
