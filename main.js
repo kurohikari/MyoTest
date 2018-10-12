@@ -15,7 +15,7 @@ async function main() {
     let source = null;
     let output = "./myo-test";
     let generate = false;
-    let ifVerbose = false ; 
+    let verbose = false ; 
     for(let i = 0; i<args.length; i++) {
         let arg = args[i];
         if(arg === "-s" || arg === "--source") {
@@ -27,7 +27,7 @@ async function main() {
         } else if(arg === "-g" || arg === "--generate") {
             generate = true;
         } else if(arg === "-v" || arg === "--verbose") {
-            ifVerbose = true;
+            verbose = true;
         }
     }
     if(source === null) {
@@ -48,7 +48,7 @@ async function main() {
             ReportParser.ParseReport();
         } 
         
-        if(ifVerbose){
+        if(verbose){
             report.Verbose();
         }
     }
