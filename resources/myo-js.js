@@ -15,33 +15,49 @@ function closeNav() {
 /* Shows the failures divs and hides the successes. Shows all if Successes are already hidden */
 function ShowFailures() {
     let oks = document.querySelectorAll("div.ok-test");
-    let kos = document.querySelectorAll("ko-test");
+    let kos = document.querySelectorAll("div.ko-test");
+
+    // Don't do anything when there is either no failure or pass
+    if(oks.length === 0 || kos.length === 0) return false;
+
     // Checks if successes are already hidden
-    if(oks[1].style.height === "0px") ShowAll();
+    if(oks[0].style.display === "none") return ShowAll();
     else {
-        for(let ok of oks) ok.style.height = "0px";
-        for(let ko of kos) ko.style.height = "auto";
+        for(let ok of oks) ok.style.display = "none";
+        for(let ko of kos) ko.style.display = "flex";
+        return false;
     }
 }
 
 /* Shows the successes divs and hides the failures. Shows all if failures are already hidden */
 function ShowSuccesses() {
     let oks = document.querySelectorAll("div.ok-test");
-    let kos = document.querySelectorAll("ko-test");
+    let kos = document.querySelectorAll("div.ko-test");
+
+    // Don't do anything when there is either no failure or pass
+    if(oks.length === 0 || kos.length === 0) return false;
+
     // Checks if successes are already hidden
-    if(kos[1].style.height === "0px") ShowAll();
+    if(kos[0].style.display === "none") return ShowAll();
     else {
-        for(let ok of oks) ok.style.height = "auto";
-        for(let ko of kos) ko.style.height = "0px";
+        for(let ok of oks) ok.style.display = "flex";
+        for(let ko of kos) ko.style.display = "none";
+        return false;
     }
 }
 
 /* Shows all failures and successes */
 function ShowAll() {
+    console.log("???");
     let oks = document.querySelectorAll("div.ok-test");
-    let kos = document.querySelectorAll("ko-test");
-    for(let ok of oks) ok.style.height = "auto";
-    for(let ko of kos) ko.style.height = "auto";
+    let kos = document.querySelectorAll("div.ko-test");
+
+    // Don't do anything when there is either no failure or pass
+    if(oks.length === 0 || kos.length === 0) return false;
+
+    for(let ok of oks) ok.style.display = "flex";
+    for(let ko of kos) ko.style.display = "flex";
+    return false;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
