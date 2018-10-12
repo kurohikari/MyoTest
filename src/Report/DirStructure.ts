@@ -60,6 +60,34 @@ export class DirStructure {
     }
 
     /**
+     * Get the total number of passes from test suites of this directory and its children
+     */
+    public GetTotalPasses(): number {
+        let tot = 0;
+        for(let suite of this.testSuites) {
+            tot += suite.GetPassCount();
+        }
+        for(let child of this.children) {
+            tot += child.GetTotalPasses();
+        }
+        return tot;
+    }
+
+    /**
+     * Get the total number of passes from test suites of this directory and its children
+     */
+    public GetTotalFails(): number {
+        let tot = 0;
+        for(let suite of this.testSuites) {
+            tot += suite.GetFailCount();
+        }
+        for(let child of this.children) {
+            tot += child.GetTotalFails();
+        }
+        return tot;
+    }
+
+    /**
      * Get the test suite in the current directory
      */
     public GetTestSuites() {
