@@ -102,6 +102,7 @@ div.ok-test {
     justify-content: center;
     align-items: center;
     overflow-y: hidden;
+    transition: 0.3s;
 }
 
 div.ko-test {
@@ -117,6 +118,7 @@ div.ko-test {
     justify-content: center;
     align-items: center;
     overflow-y: hidden;
+    transition: 0.3s;
 }
 
 div.ok-head {
