@@ -24,4 +24,8 @@ const Html = {
     suite: fs.readFileSync(path.join(resourcesFolderPath, "html_suite.html")).toString()
 }
 
-export { Js, Css, Html }
+const Directory = {
+    dirLink: fs.readFileSync(path.join(resourcesFolderPath, "html_dir_link.html")).toString()
+}
+
+export { Js, Css, Html, Directory }
