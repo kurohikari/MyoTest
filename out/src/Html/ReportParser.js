@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const Resources_1 = require("../Resources/Resources");
+const HtmlDirectory_1 = require("./HtmlDirectory");
 const Report_1 = require("../Report/Report");
 const HtmlReport_1 = require("./HtmlReport");
-const Css_1 = require("./Css");
-const Js_1 = require("./Js");
 const path = require("path");
 const fs = require("fs");
 class ReportParser {
@@ -31,10 +31,10 @@ class ReportParser {
             fs.mkdirSync(currentPath);
         }
         if (!fs.existsSync(path.join(currentPath, "myo-css.jss"))) {
-            fs.writeFileSync(path.join(currentPath, "myo-css.css"), Css_1.Css);
+            fs.writeFileSync(path.join(currentPath, "myo-css.css"), Resources_1.Css);
         }
         if (!fs.existsSync(path.join(currentPath, "myo-js.js"))) {
-            fs.writeFileSync(path.join(currentPath, "myo-js.js"), Js_1.Js);
+            fs.writeFileSync(path.join(currentPath, "myo-js.js"), Resources_1.Js);
         }
         for (let suite of structure.GetTestSuites()) {
             if (suite.HasTests()) {
@@ -45,6 +45,7 @@ class ReportParser {
                 htmlReport.SaveAsHTML(currentPath);
             }
         }
+        (new HtmlDirectory_1.HtmlDirectory(structure)).SaveAsHTML(currentPath);
         for (let sub of structure.GetChildren()) {
             if (!sub.HasTests())
                 continue;

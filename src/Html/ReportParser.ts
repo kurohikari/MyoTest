@@ -1,8 +1,8 @@
 import { DirStructure } from "../Report/DirStructure";
+import { Js, Css } from "../Resources/Resources";
+import { HtmlDirectory } from "./HtmlDirectory";
 import { Report } from "../Report/Report";
 import { HTMLReport } from "./HtmlReport";
-import { Css } from "./Css";
-import { Js } from "./Js";
 import * as path from "path";
 import * as fs from "fs";
 
@@ -47,6 +47,7 @@ export class ReportParser {
                 htmlReport.SaveAsHTML(currentPath);
             }
         }
+        (new HtmlDirectory(structure)).SaveAsHTML(currentPath);
         for(let sub of structure.GetChildren()) {
             if(!sub.HasTests()) continue;
             let newPath = path.join(currentPath, sub.GetName());

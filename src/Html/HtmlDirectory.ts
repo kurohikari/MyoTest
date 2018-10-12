@@ -1,6 +1,6 @@
-import { DirStructure } from "./DirStructure";
-import { TestSuite } from "./TestSuite";
-import { SideBar } from "../Html/SideBar";
+import { DirStructure } from "../Report/DirStructure";
+import { TestSuite } from "../Report/TestSuite";
+import { SideBar } from "./SideBar";
 import { Html } from "../Resources/Resources";
 import * as fs from "fs";
 import * as path from "path";
@@ -53,9 +53,9 @@ export class HtmlDirectory {
      * @param filePath path to save to
      */
     public SaveAsHTML(filePath: string) {
-        let toWrite = this.GenerateHTML(filePath);
-        filePath = path.join(filePath, `dir_${this.directory.GetName()}.html`);
-        let stream = fs.createWriteStream(filePath);
+        let fPath = path.join(filePath, `dir_${this.directory.GetName()}.html`);
+        let toWrite = this.GenerateHTML(fPath);
+        let stream = fs.createWriteStream(fPath);
         stream.write(toWrite, (error) => {
             if(error) {
                 console.error(`Could not write ${name}`);
