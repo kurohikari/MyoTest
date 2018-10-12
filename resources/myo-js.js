@@ -59,6 +59,7 @@ function ShowAll() {
     return false;
 }
 
+/* Toggle / Expand comments on a test */
 function Toggle(event) {
     let elem = event.target;
     while(!(elem.classList.contains("ko-test") || elem.classList.contains("ok-test"))) {
