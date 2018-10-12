@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Resources_1 = require("../Resources/Resources");
 const HtmlDirectory_1 = require("./HtmlDirectory");
 const Report_1 = require("../Report/Report");
-const HtmlReport_1 = require("./HtmlReport");
+const HtmlSuite_1 = require("./HtmlSuite");
 const path = require("path");
 const fs = require("fs");
 class ReportParser {
@@ -38,11 +38,8 @@ class ReportParser {
         }
         for (let suite of structure.GetTestSuites()) {
             if (suite.HasTests()) {
-                let htmlReport = new HtmlReport_1.HTMLReport(suite.GetFileName());
-                for (let test of suite.GetTests()) {
-                    htmlReport.AddTest(test, suite.GetFileName());
-                }
-                htmlReport.SaveAsHTML(currentPath);
+                let htmlSuite = new HtmlSuite_1.HTMLSuite(suite);
+                htmlSuite.SaveAsHTML(currentPath);
             }
         }
         (new HtmlDirectory_1.HtmlDirectory(structure)).SaveAsHTML(currentPath);

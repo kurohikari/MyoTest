@@ -51,6 +51,9 @@ class HTMLReport {
         }
         this.testResults.push(test);
     }
+    /**
+     * Returns an html string describing the path to the suite with links to prior directories
+     */
     GetPathWithLinks() {
         let items = this.path.split(path.sep);
         let links = [];

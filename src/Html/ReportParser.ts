@@ -2,7 +2,7 @@ import { DirStructure } from "../Report/DirStructure";
 import { Js, Css } from "../Resources/Resources";
 import { HtmlDirectory } from "./HtmlDirectory";
 import { Report } from "../Report/Report";
-import { HTMLReport } from "./HtmlReport";
+import { HTMLSuite } from "./HtmlSuite";
 import * as path from "path";
 import * as fs from "fs";
 
@@ -40,11 +40,8 @@ export class ReportParser {
         }
         for(let suite of structure.GetTestSuites()) {
             if(suite.HasTests()) {
-                let htmlReport = new HTMLReport(suite.GetFileName());
-                for(let test of suite.GetTests()) {
-                    htmlReport.AddTest(test, suite.GetFileName());
-                }
-                htmlReport.SaveAsHTML(currentPath);
+                let htmlSuite = new HTMLSuite(suite);
+                htmlSuite.SaveAsHTML(currentPath);
             }
         }
         (new HtmlDirectory(structure)).SaveAsHTML(currentPath);
