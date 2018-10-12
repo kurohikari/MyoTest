@@ -76,6 +76,7 @@ div.tests-passed {
     margin-left: 3ch;
     margin-right: 3ch;
     border: 1px solid rgba(70,255,70,1);
+    cursor: pointer;
 }
 
 div.tests-failed {
@@ -87,6 +88,7 @@ div.tests-failed {
     margin-left: 3ch;
     margin-right: 3ch;
     border: 1px solid rgba(255,0,0,1);
+    cursor: pointer;
 }
 
 div.ok-test {
