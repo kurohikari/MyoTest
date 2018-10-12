@@ -12,6 +12,22 @@ function closeNav() {
     //document.getElementById("main").style.marginLeft = "0";
 }
 
+function ShowFailures() {
+
+}
+
+function ShowSuccesses() {
+
+}
+
+function HideFailures() {
+
+}
+
+function HideSuccesses() {
+    
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     closeNav();
 });
