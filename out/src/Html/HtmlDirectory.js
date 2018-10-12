@@ -34,7 +34,7 @@ class HtmlDirectory {
      */
     GenerateTestSuiteLink(suite) {
         let htmlLink = `./${suite.GetFileName().replace(path.parse(suite.GetFileName()).ext, ".html")}`;
-        return `<a href="${htmlLink}"><div class="test-suite">${suite.GetFileName()}</div></a>\n`;
+        return `<a href="${htmlLink}"><div class="test-suite">${suite.GetFileName()}<div>${suite.GetPassCount()} <span class="good-fisheye">&#9673;</span> ${suite.GetFailCount()} <span class="fail-mark">&#10007;</span></div></div></a>\n`;
     }
     /**
      * Generates an <a> tag for a test directory
@@ -42,7 +42,7 @@ class HtmlDirectory {
      */
     GenerateDirectoryLink(dir) {
         let htmlLink = `./${dir.GetName()}/dir_${dir.GetName()}.html`;
-        return `<a href="${htmlLink}"><div class="directory">${dir.GetName()}</div></a>\n`;
+        return `<a href="${htmlLink}"><div class="directory">${dir.GetName()}<div>${dir.GetTotalPasses()} <span class="good-fisheye">&#9673;</span> ${dir.GetTotalFails()} <span class="fail-mark">&#10007;</span></div></div></a>\n`;
     }
     /**
      * Saves the directory as an html file at the corresponding path

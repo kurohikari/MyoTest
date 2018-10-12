@@ -1,35 +1,9 @@
 import { TestResult } from "../Report/TestResult";
 import { CodeInfo } from "../Report/CodeInfo";
+import { Html } from "../Resources/Resources";
 import { SideBar } from "./SideBar";
 import * as path from "path";
 import * as fs from "fs";
-
-/**
- * base html to use to create the html file
- */
-const html = `
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>{{filepure}}</title>
-        <link rel="stylesheet" href="./myo-css.css">
-        <script src="./myo-js.js"></script>
-    </head>
-    <body>
-        <div id="mySidenav" class="sidenav">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            {{sidebar}}
-        </div>
-        
-        <!-- Use any element to open the sidenav -->
-        <div class="open-button" onclick="openNav()">&lt;</div>
-        {{title}}
-        <div class="divider"></div>
-        <div class="analysis">{{analysis}}</div>
-        {{tests}}
-    </body>
-</html>
-`;
 
 export class HTMLReport {
 
@@ -99,7 +73,7 @@ export class HTMLReport {
             testsStr += test + "\n";
         }
         let filePath = path.join(htmlPath, name);
-        let toWrite = html.replace("{{filepure}}", this.file.substring(0, this.file.length-3))
+        let toWrite = Html.suite.replace("{{filepure}}", this.file.substring(0, this.file.length-3))
         .replace("{{title}}", this.title)
         .replace("{{sidebar}}", SideBar.GenerateSideBar(filePath))
         .replace("{{path}}", this.path)

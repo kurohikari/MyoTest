@@ -51,6 +51,32 @@ class DirStructure {
         return false;
     }
     /**
+     * Get the total number of passes from test suites of this directory and its children
+     */
+    GetTotalPasses() {
+        let tot = 0;
+        for (let suite of this.testSuites) {
+            tot += suite.GetPassCount();
+        }
+        for (let child of this.children) {
+            tot += child.GetTotalPasses();
+        }
+        return tot;
+    }
+    /**
+     * Get the total number of passes from test suites of this directory and its children
+     */
+    GetTotalFails() {
+        let tot = 0;
+        for (let suite of this.testSuites) {
+            tot += suite.GetFailCount();
+        }
+        for (let child of this.children) {
+            tot += child.GetTotalFails();
+        }
+        return tot;
+    }
+    /**
      * Get the test suite in the current directory
      */
     GetTestSuites() {
