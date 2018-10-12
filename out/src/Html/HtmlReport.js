@@ -66,8 +66,15 @@ class HTMLReport {
             this.tests.push(`<div class="ok-test"><div class="ok-head"><div class="test-name">${test.GetTestName()}</div></div>${infosStr}</div>`);
         }
         else {
-            let error = JSON.parse(test.GetMessage());
-            this.tests.push(`<div class="ko-test"><div class="ko-head"><div class="test-name">${test.GetTestName()}</div></div><div><pre>${error.stackMessage}</pre></div></div>`);
+            let obj = JSON.parse(test.GetMessage());
+            let infos = obj["info"];
+            let err = obj["err"];
+            let infosStr = "";
+            for (let info of infos) {
+                let codeInfo = new CodeInfo_1.CodeInfo(info["paths"], file);
+                infosStr += `<div class="code-line"><span class="good-fisheye">&#9673;&nbsp;&nbsp;</span>${codeInfo.GetCodeLine()} [${codeInfo.GetLine()}]</div>\n`;
+            }
+            this.tests.push(`<div class="ko-test"><div class="ko-head"><div class="test-name">${test.GetTestName()}</div></div><div>${infosStr}\n<pre>${err.stackMessage}</pre></div></div>`);
         }
         this.testResults.push(test);
     }

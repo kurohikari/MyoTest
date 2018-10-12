@@ -137,6 +137,7 @@ div.ko-head {
     padding-top: 1ch;
     padding-left: 10%;
     padding-bottom: 1ch;
+    margin-bottom: 2ch;
     background-color: rgba(255,70,70,1);
     justify-content: center;
     align-items: center;
@@ -288,4 +289,8 @@ div.directory {
 
 div.test-suite:hover, div.directory:hover {
     transform: scale(1.1, 1.1);
+}
+
+span.good-fisheye {
+    color: rgba(70,255,70,1);
 }
