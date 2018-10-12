@@ -1,3 +1,4 @@
+[wiki](https://github.com/kurohikari/MyoTest/wiki)
 # How to use
 `node main.js`
 # Arguments
