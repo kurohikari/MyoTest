@@ -54,9 +54,8 @@ class HTMLReport {
     GetPathWithLinks() {
         let items = this.path.split(path.sep);
         let links = [];
-        console.log(this.path);
         for (let i = 0; i < items.length; i++) {
-            let item = items.pop();
+            let item = items[items.length - 1 - i];
             if (i === 0) {
                 links.unshift(`<a href="#">${item}</a>`);
             }

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const path = require("path");
 class DirStructure {
     constructor(name, root = false) {
         this.name = name;
@@ -135,6 +136,44 @@ class DirStructure {
             }
         }
         return false;
+    }
+    /**
+     * Returns true when the directory has a child with the given name
+     * @param childName name to look for
+     */
+    HasChildWithName(childName) {
+        for (let child of this.children) {
+            if (child.GetName() === childName)
+                return true;
+        }
+        return false;
+    }
+    /**
+     * Returns true when the directory has a descendant with the given name
+     * @param descendantName name to look for
+     */
+    HasDescendantWithName(descendantName) {
+        for (let child of this.children) {
+            if (child.HasChildWithName(descendantName) || child.HasDescendantWithName(descendantName))
+                return true;
+        }
+        return false;
+    }
+    /**
+     * Returns the path to the descendant name given
+     * @param descendantName name to look for
+     */
+    FindPathToDescendant(descendantName) {
+        if (this.HasChildWithName(descendantName))
+            return this.name;
+        else if (this.HasDescendantWithName(descendantName)) {
+            for (let child of this.children) {
+                if (child.HasDescendantWithName(descendantName)) {
+                    return path.join(this.name, child.FindPathToDescendant(descendantName));
+                }
+            }
+        }
+        throw new Error(`Directory does not have a descendant with name: ${descendantName}!`);
     }
     /**
      * Return the child directory with the given name
