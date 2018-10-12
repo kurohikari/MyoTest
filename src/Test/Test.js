@@ -158,10 +158,10 @@ let Test = (testName, test) => {
         console.log(`[${t.GetName()}] ${JSON.stringify(t.GetInfo())}`);
     }
     catch (error) {
-        let info = error;
-        info.stackMessage = info.stack;
-        info.errorMessage = info.message;
-        console.error(`[${t.GetName()}] ${JSON.stringify(info)}`);
+        let err = error;
+        err.stackMessage = err.stack;
+        err.errorMessage = err.message;
+        console.error(`[${t.GetName()}] ${JSON.stringify({ "info": t.GetInfo(), "err": err })}`);
     }
 };
 exports.Test = Test;
