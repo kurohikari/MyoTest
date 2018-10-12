@@ -1,9 +1,9 @@
 import { DirStructure } from "../Report/DirStructure";
 import { TestSuite } from "../Report/TestSuite";
-import { SideBar } from "./SideBar";
 import { Html } from "../Resources/Resources";
-import * as fs from "fs";
+import { SideBar } from "./SideBar";
 import * as path from "path";
+import * as fs from "fs";
 
 export class HtmlDirectory {
 

@@ -5,7 +5,7 @@ import * as path from "path";
 /**
  * base html to use to create the sidebar
  */
-const basicHtml = `<div class="sub-div">\n<a href="#"><div class="sub-name">{{structure}}</div></a>\n{{files}}{{dirs}}</div>`;
+const basicHtml = `<div class="sub-div">\n<div class="sub-name">{{structure}}</div>\n{{files}}{{dirs}}</div>`;
 
 /**
  * base html to add check mark next to a test suite with no failures
@@ -38,12 +38,14 @@ export class SideBar {
      * @param currentPath current path of the file using the sidebar
      */
     private static GenerateStructure(structure: DirStructure, outputPath: string, currentPath: string) {
-        let div = basicHtml.replace("{{structure}}", structure.GetName());
+        let dirName = structure.GetName();
+        let href = path.join(path.relative(path.dirname(currentPath), outputPath), `dir_${dirName}.html`);
+        let div = basicHtml.replace("{{structure}}", `<a href="${href}">${dirName}</a>`);
         let fileDivs = "";
         for(let suite of structure.GetTestSuites()) {
             if(suite.HasTests()) {
                 let file = suite.GetFileName();
-                let href = path.join(path.relative(path.dirname(currentPath), outputPath), file.replace(path.parse(file).ext, ".html"));
+                href = path.join(path.relative(path.dirname(currentPath), outputPath), file.replace(path.parse(file).ext, ".html"));
                 let mark = (suite.IsClean()) ? sideCheckMark : sideFailMark;
                 let fileDiv = `<a href="${href}"><div class="file-div">${file} ${mark}</div></a>\n`;
                 fileDivs += fileDiv;
