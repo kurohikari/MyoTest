@@ -21,6 +21,7 @@ exports.Js = Js;
 const Css = fs.readFileSync(path.join(resourcesFolderPath, "myo-css.css")).toString();
 exports.Css = Css;
 const Html = {
-    directory: fs.readFileSync(path.join(resourcesFolderPath, "html_directory.html")).toString()
+    directory: fs.readFileSync(path.join(resourcesFolderPath, "html_directory.html")).toString(),
+    suite: fs.readFileSync(path.join(resourcesFolderPath, "html_suite.html")).toString()
 };
 exports.Html = Html;

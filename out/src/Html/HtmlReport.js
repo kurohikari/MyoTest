@@ -1,35 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const CodeInfo_1 = require("../Report/CodeInfo");
+const Resources_1 = require("../Resources/Resources");
 const SideBar_1 = require("./SideBar");
 const path = require("path");
 const fs = require("fs");
-/**
- * base html to use to create the html file
- */
-const html = `
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>{{filepure}}</title>
-        <link rel="stylesheet" href="./myo-css.css">
-        <script src="./myo-js.js"></script>
-    </head>
-    <body>
-        <div id="mySidenav" class="sidenav">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            {{sidebar}}
-        </div>
-        
-        <!-- Use any element to open the sidenav -->
-        <div class="open-button" onclick="openNav()">&lt;</div>
-        {{title}}
-        <div class="divider"></div>
-        <div class="analysis">{{analysis}}</div>
-        {{tests}}
-    </body>
-</html>
-`;
 class HTMLReport {
     constructor(file) {
         this.file = file;
@@ -89,7 +64,7 @@ class HTMLReport {
             testsStr += test + "\n";
         }
         let filePath = path.join(htmlPath, name);
-        let toWrite = html.replace("{{filepure}}", this.file.substring(0, this.file.length - 3))
+        let toWrite = Resources_1.Html.suite.replace("{{filepure}}", this.file.substring(0, this.file.length - 3))
             .replace("{{title}}", this.title)
             .replace("{{sidebar}}", SideBar_1.SideBar.GenerateSideBar(filePath))
             .replace("{{path}}", this.path)

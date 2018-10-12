@@ -20,7 +20,8 @@ let resourcesFolderPath = FindResources(`${__dirname}`);
 const Js: string = fs.readFileSync(path.join(resourcesFolderPath, "myo-js.js")).toString();
 const Css: string = fs.readFileSync(path.join(resourcesFolderPath, "myo-css.css")).toString();
 const Html = {
-    directory: fs.readFileSync(path.join(resourcesFolderPath, "html_directory.html")).toString()
+    directory: fs.readFileSync(path.join(resourcesFolderPath, "html_directory.html")).toString(),
+    suite: fs.readFileSync(path.join(resourcesFolderPath, "html_suite.html")).toString()
 }
 
 export { Js, Css, Html }
