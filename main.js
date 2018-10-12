@@ -43,7 +43,8 @@ async function main() {
         report.Save();
         if(generate) {
             ReportParser.ParseReport();
-        }
+        } 
+        report.Verbose();
     }
 }
 

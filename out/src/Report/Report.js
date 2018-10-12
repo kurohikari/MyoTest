@@ -75,5 +75,21 @@ class Report {
                 stream.close();
         });
     }
+    Verbose(structure = this.structure) {
+        console.log(structure.GetName());
+        let suites = structure.GetTestSuites();
+        for (let suite of suites) {
+            console.log("=== " + suite.GetFileName() + " ===");
+            let tests = suite.GetTests();
+            for (let test of tests) {
+                let ifPassMsg = test.IsPassed() ? "OK" : "KO";
+                console.log("\t--- " + test.GetTestName() + ": " + ifPassMsg);
+            }
+        }
+        let children = structure.GetChildren();
+        for (let child of children) {
+            this.Verbose(child);
+        }
+    }
 }
 exports.Report = Report;
