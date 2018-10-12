@@ -34,7 +34,7 @@ class HtmlDirectory {
      */
     GenerateTestSuiteLink(suite) {
         let htmlLink = `./${suite.GetFileName().replace(path.parse(suite.GetFileName()).ext, ".html")}`;
-        return `<a href="${htmlLink}"><div class="test-suite">${suite.GetFileName()}</div></a>\n`;
+        return `<a href="${htmlLink}"><div class="test-suite">${suite.GetFileName()}<div>${suite.GetPassCount()} <span class="good-fisheye">&#9673;</span> ${suite.GetFailCount()} <span class="fail-mark">&#10007;</span></div></div></a>\n`;
     }
     /**
      * Generates an <a> tag for a test directory
