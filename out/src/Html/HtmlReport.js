@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const CodeInfo_1 = require("../Report/CodeInfo");
 const SideBar_1 = require("./SideBar");
 const path = require("path");
 const fs = require("fs");
-const CodeInfo_1 = require("../Report/CodeInfo");
 /**
  * base html to use to create the html file
  */

@@ -18,3 +18,9 @@ function FindResources(searchPath) {
 let resourcesFolderPath = FindResources(`${__dirname}`);
 const Js = fs.readFileSync(path.join(resourcesFolderPath, "myo-js.js")).toString();
 exports.Js = Js;
+const Css = fs.readFileSync(path.join(resourcesFolderPath, "myo-css.css")).toString();
+exports.Css = Css;
+const Html = {
+    directory: fs.readFileSync(path.join(resourcesFolderPath, "html_directory.html")).toString()
+};
+exports.Html = Html;
