@@ -112,7 +112,8 @@ export class HTMLSuite {
             let item = items[items.length-1-i];
             if(i === 0) {
                 links.unshift(
-                    `<a href="#">${item}</a>`
+                    Suite.titleLink.replace("{{pathtofile}}", "#")
+                        .replace("{{item}}", item)
                 );
             } else {
                 let pathToFile = "";
@@ -121,7 +122,8 @@ export class HTMLSuite {
                 }
                 pathToFile = path.join(pathToFile, `dir_${item}.html`);
                 links.unshift(
-                    `<a href="${pathToFile}">${item}</a>`
+                    Suite.titleLink.replace("{{pathtofile}}", pathToFile)
+                        .replace("{{item}}", item)
                 );
             }
         }
@@ -135,12 +137,14 @@ export class HTMLSuite {
         let numPasses = this.suite.GetPassCount();
         let numFails = this.suite.GetFailCount();
         let tot = numPasses + numFails;
-        if(numFails === 0 && numPasses === 0) return "No test was run!";
+        if(numFails === 0 && numPasses === 0) return '<div class="analysis">No test was run!</div>';
         else {
             let percentage = (numPasses*100/tot).toFixed(2);
             let passes = (numPasses === 1) ? "1 test passed!" : `${numPasses} tests passed!`;
             let fails = (numFails === 1) ? "1 test failed!" : `${numFails} tests failed!`;
-            return `${percentage}%<div class="tests-passed" onclick="ShowSuccesses()">${passes}</div><div class="tests-failed" onclick="ShowFailures()">${fails}</div>`;
+            return Suite.analysis.replace("{{percentage}}", percentage)
+                .replace("{{passes}}", passes)
+                .replace("{{fails}}", fails);
         }
     }
 

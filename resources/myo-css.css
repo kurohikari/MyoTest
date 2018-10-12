@@ -19,6 +19,10 @@ div.title {
     font-weight: bold;
 }
 
+div.title > a {
+    color: black;
+}
+
 div.sub-title {
     margin-top: 2ch;
     padding-left: 10%;
