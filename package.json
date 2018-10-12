@@ -1,10 +1,10 @@
 {
   "name": "myotest",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Unit Testing",
   "main": "main.js",
   "scripts": {
-    "test": "node main.js -s ./out -g"
+    "test": "node main.js -s ./out -g -v"
   },
   "keywords": [
     "\"Unit Testing\"",
