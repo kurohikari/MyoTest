@@ -38,7 +38,7 @@ class HTMLReport {
                 let codeInfo = new CodeInfo_1.CodeInfo(info["paths"], file);
                 infosStr += `<div class="code-line">${codeInfo.GetCodeLine()} [${codeInfo.GetLine()}]</div>\n`;
             }
-            this.tests.push(`<div class="ok-test"><div class="ok-head"><div class="test-name">${test.GetTestName()}</div></div>${infosStr}</div>`);
+            this.tests.push(`<div class="ok-test"><div class="ok-head" onclick="Toggle(event)"><div class="test-name">${test.GetTestName()}</div></div><div class="toggable">${infosStr}</div></div>`);
         }
         else {
             let obj = JSON.parse(test.GetMessage());
@@ -49,7 +49,7 @@ class HTMLReport {
                 let codeInfo = new CodeInfo_1.CodeInfo(info["paths"], file);
                 infosStr += `<div class="code-line"><span class="good-fisheye">&#9673;&nbsp;&nbsp;</span>${codeInfo.GetCodeLine()} [${codeInfo.GetLine()}]</div>\n`;
             }
-            this.tests.push(`<div class="ko-test"><div class="ko-head"><div class="test-name">${test.GetTestName()}</div></div><div>${infosStr}\n<pre>${err.stackMessage}</pre></div></div>`);
+            this.tests.push(`<div class="ko-test"><div class="ko-head" onclick="Toggle(event)"><div class="test-name">${test.GetTestName()}</div></div><div class="toggable">${infosStr}\n<pre>${err.stackMessage}</pre></div></div>`);
         }
         this.testResults.push(test);
     }

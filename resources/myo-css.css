@@ -104,6 +104,7 @@ div.ok-test {
     justify-content: center;
     align-items: center;
     overflow-y: hidden;
+    cursor: pointer;
 }
 
 div.ko-test {
@@ -119,6 +120,7 @@ div.ko-test {
     justify-content: center;
     align-items: center;
     overflow-y: hidden;
+    cursor: pointer;
 }
 
 div.ok-head {

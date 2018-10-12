@@ -59,6 +59,17 @@ function ShowAll() {
     return false;
 }
 
+function Toggle(event) {
+    let elem = event.target;
+    while(!(elem.classList.contains("ko-test") || elem.classList.contains("ok-test"))) {
+        elem = elem.parentElement;
+    }
+    console.log(elem);
+    elem = elem.querySelector("div.toggable");
+    if(elem.style.display === "none") elem.style.display = "block";
+    else elem.style.display = "none";
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     closeNav();
 });
