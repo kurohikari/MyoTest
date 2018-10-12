@@ -90,15 +90,17 @@ export class Report {
     }
 
     public Verbose(structure = this.structure) {
-        console.log(structure.GetName());
+        console.log("["+structure.GetName()+"]"+"\n");
         let suites : TestSuite[] = structure.GetTestSuites();
         for(let suite of suites){
-            console.log("=== "+suite.GetFileName()+" ===");
+            console.log("=== "+suite.GetFileName()+" ===" +"\n");
+            
             let tests : TestResult[] = suite.GetTests();
             for(let test of tests){
                 let ifPassMsg : string = test.IsPassed() ? "OK":"KO";
                 console.log("\t--- " + test.GetTestName()+": "+ ifPassMsg);
             }
+            console.log("\n");
         }
 
         let children : DirStructure[] = structure.GetChildren();

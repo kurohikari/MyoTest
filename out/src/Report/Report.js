@@ -76,15 +76,16 @@ class Report {
         });
     }
     Verbose(structure = this.structure) {
-        console.log(structure.GetName());
+        console.log("[" + structure.GetName() + "]" + "\n");
         let suites = structure.GetTestSuites();
         for (let suite of suites) {
-            console.log("=== " + suite.GetFileName() + " ===");
+            console.log("=== " + suite.GetFileName() + " ===" + "\n");
             let tests = suite.GetTests();
             for (let test of tests) {
                 let ifPassMsg = test.IsPassed() ? "OK" : "KO";
                 console.log("\t--- " + test.GetTestName() + ": " + ifPassMsg);
             }
+            console.log("\n");
         }
         let children = structure.GetChildren();
         for (let child of children) {
