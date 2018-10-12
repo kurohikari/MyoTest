@@ -290,3 +290,7 @@ div.directory {
 div.test-suite:hover, div.directory:hover {
     transform: scale(1.1, 1.1);
 }
+
+span.good-fisheye {
+    color: rgba(70,255,70,1);
+}
