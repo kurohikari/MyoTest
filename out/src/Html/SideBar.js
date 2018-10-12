@@ -33,13 +33,12 @@ class SideBar {
      */
     static GenerateStructure(structure, outputPath, currentPath) {
         let div = basicHtml.replace("{{structure}}", structure.GetName());
-        let files = structure.GetFiles();
         let fileDivs = "";
-        for (let file of files) {
-            let tests = structure.GetTests(file);
-            if (tests.length > 0) {
+        for (let suite of structure.GetTestSuites()) {
+            if (suite.HasTests()) {
+                let file = suite.GetFileName();
                 let href = path.join(path.relative(path.dirname(currentPath), outputPath), file.replace(path.parse(file).ext, ".html"));
-                let mark = (structure.HasNoErrors(file)) ? sideCheckMark : sideFailMark;
+                let mark = (suite.IsClean()) ? sideCheckMark : sideFailMark;
                 let fileDiv = `<a href="${href}"><div class="file-div">${file} ${mark}</div></a>\n`;
                 fileDivs += fileDiv;
             }

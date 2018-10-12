@@ -9,19 +9,7 @@ const reportName = "myo-report.json";
 let report = null;
 class Report {
     constructor() {
-        this.tests = {};
         this.structure = null;
-    }
-    /**
-     * Add a test result to the report
-     * @param file file of the test
-     * @param testResult the test result to add
-     */
-    AddTest(file, testResult) {
-        if (!this.tests[file]) {
-            this.tests[file] = [];
-        }
-        this.tests[file].push(testResult);
     }
     /**
      * Set the source folder of the tests
@@ -74,10 +62,11 @@ class Report {
      * Save the report as a json file
      */
     Save() {
+        this.structure.Clean();
         if (!fs.existsSync(this.output))
             fs.mkdirSync(this.output);
         let stream = fs.createWriteStream(path.join(this.output, reportName));
-        stream.write(JSON.stringify(this.tests), (error) => {
+        stream.write(JSON.stringify(this.structure), (error) => {
             if (error) {
                 console.error("Error saving report!");
                 console.error(error);
