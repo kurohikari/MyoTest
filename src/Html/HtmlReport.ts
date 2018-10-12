@@ -66,6 +66,29 @@ export class HTMLReport {
         this.testResults.push(test);
     }
 
+    private GetPathWithLinks(): string {
+        let items = this.path.split(path.sep);
+        let links: string[] = [];
+        for(let i=0; i<items.length; i++) {
+            let item = items.pop();
+            if(i === 0) {
+                links.unshift(
+                    `<a href="#">${item}</a>`
+                );
+            } else {
+                let pathToFile = "";
+                for(let j=0; j<i-1; j++) {
+                    pathToFile = path.join(pathToFile, "..");
+                }
+                pathToFile = path.join(pathToFile, `dir_${item}.html`);
+                links.unshift(
+                    `<a href="${pathToFile}">${item}</a>`
+                );
+            }
+        }
+        return links.join(path.sep);
+    }
+
     /**
      * Parse and save the report as an html at the given path
      * @param htmlPath path where to save report
@@ -78,11 +101,11 @@ export class HTMLReport {
         }
         let filePath = path.join(htmlPath, name);
         let toWrite = Suite.base.replace("{{filepure}}", this.file.substring(0, this.file.length-3))
-        .replace("{{title}}", this.file)
-        .replace("{{sidebar}}", SideBar.GenerateSideBar(filePath))
-        .replace("{{path}}", this.path)
-        .replace("{{analysis}}", this.GenerateAnalysis())
-        .replace("{{tests}}", testsStr);
+            .replace("{{title}}", this.file)
+            .replace("{{sidebar}}", SideBar.GenerateSideBar(filePath))
+            .replace("{{path}}", this.GetPathWithLinks())
+            .replace("{{analysis}}", this.GenerateAnalysis())
+            .replace("{{tests}}", testsStr);
         let stream = fs.createWriteStream(filePath);
         stream.write(toWrite, (error) => {
             if(error) {

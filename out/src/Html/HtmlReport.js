@@ -51,6 +51,26 @@ class HTMLReport {
         }
         this.testResults.push(test);
     }
+    GetPathWithLinks() {
+        let items = this.path.split(path.sep);
+        let links = [];
+        console.log(this.path);
+        for (let i = 0; i < items.length; i++) {
+            let item = items.pop();
+            if (i === 0) {
+                links.unshift(`<a href="#">${item}</a>`);
+            }
+            else {
+                let pathToFile = "";
+                for (let j = 0; j < i - 1; j++) {
+                    pathToFile = path.join(pathToFile, "..");
+                }
+                pathToFile = path.join(pathToFile, `dir_${item}.html`);
+                links.unshift(`<a href="${pathToFile}">${item}</a>`);
+            }
+        }
+        return links.join(path.sep);
+    }
     /**
      * Parse and save the report as an html at the given path
      * @param htmlPath path where to save report
@@ -65,7 +85,7 @@ class HTMLReport {
         let toWrite = Resources_1.Suite.base.replace("{{filepure}}", this.file.substring(0, this.file.length - 3))
             .replace("{{title}}", this.file)
             .replace("{{sidebar}}", SideBar_1.SideBar.GenerateSideBar(filePath))
-            .replace("{{path}}", this.path)
+            .replace("{{path}}", this.GetPathWithLinks())
             .replace("{{analysis}}", this.GenerateAnalysis())
             .replace("{{tests}}", testsStr);
         let stream = fs.createWriteStream(filePath);
