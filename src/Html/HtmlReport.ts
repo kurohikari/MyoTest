@@ -1,6 +1,6 @@
 import { TestResult } from "../Report/TestResult";
 import { CodeInfo } from "../Report/CodeInfo";
-import { Html } from "../Resources/Resources";
+import { Suite } from "../Resources/Resources";
 import { SideBar } from "./SideBar";
 import * as path from "path";
 import * as fs from "fs";
@@ -9,7 +9,6 @@ export class HTMLReport {
 
     private file: string;
     private path: string;
-    private title: string;
     private tests: string[];
     private testsPassed: TestResult[];
     private testsFailed: TestResult[];
@@ -18,18 +17,10 @@ export class HTMLReport {
     constructor(file: string) {
         this.file = file;
         this.path = "";
-        this.title = `<div class="title">${file} ({{path}})</div>`;
         this.tests = [];
         this.testsPassed = [];
         this.testsFailed = [];
         this.testResults = [];
-    }
-
-    /**
-     * Get the title of the html report
-     */
-    public GetTitle() {
-        return this.title;
     }
 
     /**
@@ -73,8 +64,8 @@ export class HTMLReport {
             testsStr += test + "\n";
         }
         let filePath = path.join(htmlPath, name);
-        let toWrite = Html.suite.replace("{{filepure}}", this.file.substring(0, this.file.length-3))
-        .replace("{{title}}", this.title)
+        let toWrite = Suite.base.replace("{{filepure}}", this.file.substring(0, this.file.length-3))
+        .replace("{{title}}", this.file)
         .replace("{{sidebar}}", SideBar.GenerateSideBar(filePath))
         .replace("{{path}}", this.path)
         .replace("{{analysis}}", this.GenerateAnalysis())
