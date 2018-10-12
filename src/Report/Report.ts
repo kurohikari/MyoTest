@@ -1,5 +1,4 @@
 import { DirStructure } from "./DirStructure";
-import { TestResult } from "./TestResult";
 import * as path from "path";
 import * as fs from "fs";
 
@@ -15,23 +14,9 @@ export class Report {
     private source: string;
     private output: string;
     private structure: DirStructure;
-    private tests: {[file: string]: TestResult[]};
 
     private constructor() {
-        this.tests = {};
         this.structure = null;
-    }
-
-    /**
-     * Add a test result to the report
-     * @param file file of the test
-     * @param testResult the test result to add
-     */
-    public AddTest(file: string, testResult: TestResult) {
-        if(!this.tests[file]) {
-            this.tests[file] = [];
-        }
-        this.tests[file].push(testResult);
     }
 
     /**
@@ -91,9 +76,10 @@ export class Report {
      * Save the report as a json file
      */
     public Save() {
+        this.structure.Clean();
         if(!fs.existsSync(this.output)) fs.mkdirSync(this.output);
         let stream = fs.createWriteStream(path.join(this.output, reportName));
-        stream.write(JSON.stringify(this.tests), (error) => {
+        stream.write(JSON.stringify(this.structure), (error) => {
             if(error) {
                 console.error("Error saving report!");
                 console.error(error);

@@ -123,6 +123,28 @@ class DirStructure {
         throw new Error(`Structure does not have child ${childName}!`);
     }
     /**
+     * Cleans the directory by removing empty test suites and directories
+     * @param recursive when set to true (default), this will also clean the child directories
+     */
+    Clean(recursive = true) {
+        let newSuites = [];
+        let newChildren = [];
+        for (let suite of this.testSuites) {
+            if (suite.HasTests()) {
+                newSuites.push(suite);
+            }
+        }
+        for (let child of this.children) {
+            if (child.HasTests()) {
+                if (recursive)
+                    child.Clean();
+                newChildren.push(child);
+            }
+        }
+        this.testSuites = newSuites;
+        this.children = newChildren;
+    }
+    /**
      * Prints the structure from the current directory
      * TODO: return a string
      */
