@@ -48,7 +48,6 @@ function ShowSuccesses() {
 
 /* Shows all failures and successes */
 function ShowAll() {
-    console.log("???");
     let oks = document.querySelectorAll("div.ok-test");
     let kos = document.querySelectorAll("div.ko-test");
 
