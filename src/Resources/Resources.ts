@@ -27,7 +27,11 @@ const Directory = {
 }
 
 const Suite = {
-    base: fs.readFileSync(path.join(resourcesFolderPath, "html_suite.html")).toString()
+    base: fs.readFileSync(path.join(resourcesFolderPath, "html_suite.html")).toString(),
+    okTest: fs.readFileSync(path.join(resourcesFolderPath, "html_ok_test.html")).toString(),
+    okLine: fs.readFileSync(path.join(resourcesFolderPath, "html_ok_line.html")).toString(),
+    koTest: fs.readFileSync(path.join(resourcesFolderPath, "html_ko_test.html")).toString(),
+    koLine: fs.readFileSync(path.join(resourcesFolderPath, "html_ko_line.html")).toString()
 }
 
 export { Js, Css, Directory, Suite }

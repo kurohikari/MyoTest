@@ -33,22 +33,35 @@ export class HTMLReport {
         this.path = test.GetPath();
         if(test.IsPassed()) {
             let infos = JSON.parse(test.GetMessage());
-            let infosStr = "";
+            let infosStr = [];
             for(let info of infos) {
                 let codeInfo = new CodeInfo(info["paths"], file);
-                infosStr += `<div class="code-line">${codeInfo.GetCodeLine()} [${codeInfo.GetLine()}]</div>\n`;
+                infosStr.push(
+                    Suite.okLine.replace("{{codeline}}", codeInfo.GetCodeLine())
+                        .replace("{{linenumber}}", `${codeInfo.GetLine()}`)
+                );
             }
-            this.tests.push(`<div class="ok-test"><div class="ok-head" onclick="Toggle(event)"><div class="test-name">${test.GetTestName()}</div></div><div class="toggable">${infosStr}</div></div>`);
+            this.tests.push(
+                Suite.okTest.replace("{{testname}}", test.GetTestName())
+                    .replace("{{info}}", infosStr.join("\n"))
+            );
         } else {
             let obj = JSON.parse(test.GetMessage());
             let infos = obj["info"];
             let err = obj["err"];
-            let infosStr = "";
+            let infosStr = [];
             for(let info of infos) {
                 let codeInfo = new CodeInfo(info["paths"], file);
-                infosStr += `<div class="code-line"><span class="good-fisheye">&#9673;&nbsp;&nbsp;</span>${codeInfo.GetCodeLine()} [${codeInfo.GetLine()}]</div>\n`;
+                infosStr.push(
+                    Suite.koLine.replace("{{codeline}}", codeInfo.GetCodeLine())
+                        .replace("{{linenumber}}", `${codeInfo.GetLine()}`)
+                );
             }
-            this.tests.push(`<div class="ko-test"><div class="ko-head" onclick="Toggle(event)"><div class="test-name">${test.GetTestName()}</div></div><div class="toggable">${infosStr}\n<pre>${err.stackMessage}</pre></div></div>`);
+            this.tests.push(
+                Suite.koTest.replace("{{name}}", test.GetTestName())
+                    .replace("{{lines}}", infosStr.join("\n"))
+                    .replace("{{error}", err.stackMessage)
+            );
         }
         this.testResults.push(test);
     }
