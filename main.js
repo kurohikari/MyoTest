@@ -7,14 +7,15 @@ const TestSuite = require("./out/src/Report/TestSuite").TestSuite;
 const ReportParser = require("./out/src/Html/ReportParser").ReportParser;
 const DirStructure = require("./out/src/Report/DirStructure").DirStructure;
 
-const reserved = ["-s", "--source", "-o", "--output", "-g", "--generate"];
+const reserved = ["-s", "--source", "-o", "--output", "-g", "--generate", "-v", "--verbose"];
 let promises = [];
-
+//
 async function main() {
     let args = process.argv;
     let source = null;
     let output = "./myo-test";
     let generate = false;
+    let verbose = false ; 
     for(let i = 0; i<args.length; i++) {
         let arg = args[i];
         if(arg === "-s" || arg === "--source") {
@@ -25,6 +26,8 @@ async function main() {
             i++;
         } else if(arg === "-g" || arg === "--generate") {
             generate = true;
+        } else if(arg === "-v" || arg === "--verbose") {
+            verbose = true;
         }
     }
     if(source === null) {
@@ -43,6 +46,10 @@ async function main() {
         report.Save();
         if(generate) {
             ReportParser.ParseReport();
+        } 
+        
+        if(verbose){
+            report.Verbose();
         }
     }
 }
