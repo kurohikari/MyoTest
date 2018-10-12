@@ -20,8 +20,17 @@ const Js = fs.readFileSync(path.join(resourcesFolderPath, "myo-js.js")).toString
 exports.Js = Js;
 const Css = fs.readFileSync(path.join(resourcesFolderPath, "myo-css.css")).toString();
 exports.Css = Css;
-const Html = {
-    directory: fs.readFileSync(path.join(resourcesFolderPath, "html_directory.html")).toString(),
-    suite: fs.readFileSync(path.join(resourcesFolderPath, "html_suite.html")).toString()
+const Directory = {
+    base: fs.readFileSync(path.join(resourcesFolderPath, "html_directory.html")).toString(),
+    dirLink: fs.readFileSync(path.join(resourcesFolderPath, "html_dir_link.html")).toString(),
+    suiteLink: fs.readFileSync(path.join(resourcesFolderPath, "html_suite_link.html")).toString()
 };
-exports.Html = Html;
+exports.Directory = Directory;
+const Suite = {
+    base: fs.readFileSync(path.join(resourcesFolderPath, "html_suite.html")).toString(),
+    okTest: fs.readFileSync(path.join(resourcesFolderPath, "html_ok_test.html")).toString(),
+    okLine: fs.readFileSync(path.join(resourcesFolderPath, "html_ok_line.html")).toString(),
+    koTest: fs.readFileSync(path.join(resourcesFolderPath, "html_ko_test.html")).toString(),
+    koLine: fs.readFileSync(path.join(resourcesFolderPath, "html_ko_line.html")).toString()
+};
+exports.Suite = Suite;

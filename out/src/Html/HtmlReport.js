@@ -9,17 +9,10 @@ class HTMLReport {
     constructor(file) {
         this.file = file;
         this.path = "";
-        this.title = `<div class="title">${file} ({{path}})</div>`;
         this.tests = [];
         this.testsPassed = [];
         this.testsFailed = [];
         this.testResults = [];
-    }
-    /**
-     * Get the title of the html report
-     */
-    GetTitle() {
-        return this.title;
     }
     /**
      * Adds a test result to the report
@@ -33,23 +26,28 @@ class HTMLReport {
         this.path = test.GetPath();
         if (test.IsPassed()) {
             let infos = JSON.parse(test.GetMessage());
-            let infosStr = "";
+            let infosStr = [];
             for (let info of infos) {
                 let codeInfo = new CodeInfo_1.CodeInfo(info["paths"], file);
-                infosStr += `<div class="code-line">${codeInfo.GetCodeLine()} [${codeInfo.GetLine()}]</div>\n`;
+                infosStr.push(Resources_1.Suite.okLine.replace("{{codeline}}", codeInfo.GetCodeLine())
+                    .replace("{{linenumber}}", `${codeInfo.GetLine()}`));
             }
-            this.tests.push(`<div class="ok-test"><div class="ok-head"><div class="test-name">${test.GetTestName()}</div></div>${infosStr}</div>`);
+            this.tests.push(Resources_1.Suite.okTest.replace("{{testname}}", test.GetTestName())
+                .replace("{{info}}", infosStr.join("\n")));
         }
         else {
             let obj = JSON.parse(test.GetMessage());
             let infos = obj["info"];
             let err = obj["err"];
-            let infosStr = "";
+            let infosStr = [];
             for (let info of infos) {
                 let codeInfo = new CodeInfo_1.CodeInfo(info["paths"], file);
-                infosStr += `<div class="code-line"><span class="good-fisheye">&#9673;&nbsp;&nbsp;</span>${codeInfo.GetCodeLine()} [${codeInfo.GetLine()}]</div>\n`;
+                infosStr.push(Resources_1.Suite.koLine.replace("{{codeline}}", codeInfo.GetCodeLine())
+                    .replace("{{linenumber}}", `${codeInfo.GetLine()}`));
             }
-            this.tests.push(`<div class="ko-test"><div class="ko-head"><div class="test-name">${test.GetTestName()}</div></div><div>${infosStr}\n<pre>${err.stackMessage}</pre></div></div>`);
+            this.tests.push(Resources_1.Suite.koTest.replace("{{name}}", test.GetTestName())
+                .replace("{{lines}}", infosStr.join("\n"))
+                .replace("{{error}", err.stackMessage));
         }
         this.testResults.push(test);
     }
@@ -64,8 +62,8 @@ class HTMLReport {
             testsStr += test + "\n";
         }
         let filePath = path.join(htmlPath, name);
-        let toWrite = Resources_1.Html.suite.replace("{{filepure}}", this.file.substring(0, this.file.length - 3))
-            .replace("{{title}}", this.title)
+        let toWrite = Resources_1.Suite.base.replace("{{filepure}}", this.file.substring(0, this.file.length - 3))
+            .replace("{{title}}", this.file)
             .replace("{{sidebar}}", SideBar_1.SideBar.GenerateSideBar(filePath))
             .replace("{{path}}", this.path)
             .replace("{{analysis}}", this.GenerateAnalysis())

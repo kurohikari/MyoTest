@@ -1,6 +1,6 @@
 import { TestResult } from "../Report/TestResult";
 import { CodeInfo } from "../Report/CodeInfo";
-import { Html } from "../Resources/Resources";
+import { Suite } from "../Resources/Resources";
 import { SideBar } from "./SideBar";
 import * as path from "path";
 import * as fs from "fs";
@@ -9,7 +9,6 @@ export class HTMLReport {
 
     private file: string;
     private path: string;
-    private title: string;
     private tests: string[];
     private testsPassed: TestResult[];
     private testsFailed: TestResult[];
@@ -18,18 +17,10 @@ export class HTMLReport {
     constructor(file: string) {
         this.file = file;
         this.path = "";
-        this.title = `<div class="title">${file} ({{path}})</div>`;
         this.tests = [];
         this.testsPassed = [];
         this.testsFailed = [];
         this.testResults = [];
-    }
-
-    /**
-     * Get the title of the html report
-     */
-    public GetTitle() {
-        return this.title;
     }
 
     /**
@@ -42,22 +33,35 @@ export class HTMLReport {
         this.path = test.GetPath();
         if(test.IsPassed()) {
             let infos = JSON.parse(test.GetMessage());
-            let infosStr = "";
+            let infosStr = [];
             for(let info of infos) {
                 let codeInfo = new CodeInfo(info["paths"], file);
-                infosStr += `<div class="code-line">${codeInfo.GetCodeLine()} [${codeInfo.GetLine()}]</div>\n`;
+                infosStr.push(
+                    Suite.okLine.replace("{{codeline}}", codeInfo.GetCodeLine())
+                        .replace("{{linenumber}}", `${codeInfo.GetLine()}`)
+                );
             }
-            this.tests.push(`<div class="ok-test"><div class="ok-head"><div class="test-name">${test.GetTestName()}</div></div>${infosStr}</div>`);
+            this.tests.push(
+                Suite.okTest.replace("{{testname}}", test.GetTestName())
+                    .replace("{{info}}", infosStr.join("\n"))
+            );
         } else {
             let obj = JSON.parse(test.GetMessage());
             let infos = obj["info"];
             let err = obj["err"];
-            let infosStr = "";
+            let infosStr = [];
             for(let info of infos) {
                 let codeInfo = new CodeInfo(info["paths"], file);
-                infosStr += `<div class="code-line"><span class="good-fisheye">&#9673;&nbsp;&nbsp;</span>${codeInfo.GetCodeLine()} [${codeInfo.GetLine()}]</div>\n`;
+                infosStr.push(
+                    Suite.koLine.replace("{{codeline}}", codeInfo.GetCodeLine())
+                        .replace("{{linenumber}}", `${codeInfo.GetLine()}`)
+                );
             }
-            this.tests.push(`<div class="ko-test"><div class="ko-head"><div class="test-name">${test.GetTestName()}</div></div><div>${infosStr}\n<pre>${err.stackMessage}</pre></div></div>`);
+            this.tests.push(
+                Suite.koTest.replace("{{name}}", test.GetTestName())
+                    .replace("{{lines}}", infosStr.join("\n"))
+                    .replace("{{error}", err.stackMessage)
+            );
         }
         this.testResults.push(test);
     }
@@ -73,8 +77,8 @@ export class HTMLReport {
             testsStr += test + "\n";
         }
         let filePath = path.join(htmlPath, name);
-        let toWrite = Html.suite.replace("{{filepure}}", this.file.substring(0, this.file.length-3))
-        .replace("{{title}}", this.title)
+        let toWrite = Suite.base.replace("{{filepure}}", this.file.substring(0, this.file.length-3))
+        .replace("{{title}}", this.file)
         .replace("{{sidebar}}", SideBar.GenerateSideBar(filePath))
         .replace("{{path}}", this.path)
         .replace("{{analysis}}", this.GenerateAnalysis())

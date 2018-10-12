@@ -1,6 +1,6 @@
 import { DirStructure } from "../Report/DirStructure";
 import { TestSuite } from "../Report/TestSuite";
-import { Html } from "../Resources/Resources";
+import { Directory } from "../Resources/Resources";
 import { SideBar } from "./SideBar";
 import * as path from "path";
 import * as fs from "fs";
@@ -23,7 +23,7 @@ export class HtmlDirectory {
         for(let child of this.directory.GetChildren()) {
             directories += this.GenerateDirectoryLink(child);
         }
-        return Html.directory.replace("{{pagetitle}}", this.directory.GetName())
+        return Directory.base.replace("{{pagetitle}}", this.directory.GetName())
             .replace("{{sidebar}}", sidebar)
             .replace("{{title}}", this.directory.GetName())
             .replace("{{testsuites}}", suites)
@@ -36,7 +36,10 @@ export class HtmlDirectory {
      */
     private GenerateTestSuiteLink(suite: TestSuite) {
         let htmlLink = `./${suite.GetFileName().replace(path.parse(suite.GetFileName()).ext, ".html")}`;
-        return `<a href="${htmlLink}"><div class="test-suite">${suite.GetFileName()}<div>${suite.GetPassCount()} <span class="good-fisheye">&#9673;</span> ${suite.GetFailCount()} <span class="fail-mark">&#10007;</span></div></div></a>\n`;
+        return Directory.suiteLink.replace("{{htmllink}}", htmlLink)
+            .replace("{{name}}", suite.GetFileName())
+            .replace("{{passes}}", `${suite.GetPassCount()}`)
+            .replace("{{fails}}", `${suite.GetFailCount()}`);
     }
 
     /**
@@ -45,7 +48,10 @@ export class HtmlDirectory {
      */
     private GenerateDirectoryLink(dir: DirStructure) {
         let htmlLink = `./${dir.GetName()}/dir_${dir.GetName()}.html`;
-        return `<a href="${htmlLink}"><div class="directory">${dir.GetName()}<div>${dir.GetTotalPasses()} <span class="good-fisheye">&#9673;</span> ${dir.GetTotalFails()} <span class="fail-mark">&#10007;</span></div></div></a>\n`;
+        return Directory.dirLink.replace("{{htmllink}}", htmlLink)
+            .replace("{{name}}", dir.GetName())
+            .replace("{{numpasses}}", `${dir.GetTotalPasses()}`)
+            .replace("{{numfails}}", `${dir.GetTotalFails()}`);
     }
 
     /**
