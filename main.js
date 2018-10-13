@@ -36,7 +36,7 @@ async function main() {
         throw new Error("No argument passed for test output directory");
     } else {
         DeleteOutput(output);
-        let structure = new DirStructure("Root", true);
+        let structure = new DirStructure(path.normalize(source), true);
         let report = Report.GetReport();
         report.SetOutput(output);
         report.SetSource(source);

@@ -152,6 +152,43 @@ export class DirStructure {
     }
 
     /**
+     * Returns true when the directory has a child with the given name
+     * @param childName name to look for
+     */
+    public HasChildWithName(childName: string): boolean {
+        for(let child of this.children) {
+            if(child.GetName() === childName) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns true when the directory has a descendant with the given name
+     * @param descendantName name to look for
+     */
+    public HasDescendantWithName(descendantName: string): boolean {
+        for(let child of this.children) {
+            if(child.HasChildWithName(descendantName) || child.HasDescendantWithName(descendantName)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns the path to the descendant name given
+     * @param descendantName name to look for
+     */
+    public FindPathToDescendant(descendantName: string): string {
+        if(this.HasChildWithName(descendantName)) return this.name;
+        else if(this.HasDescendantWithName(descendantName)) {
+            for(let child of this.children) {
+                if(child.HasDescendantWithName(descendantName)) {
+                    return path.join(this.name, child.FindPathToDescendant(descendantName));
+                }
+            }
+        } throw new Error(`Directory does not have a descendant with name: ${descendantName}!`);
+    }
+
+    /**
      * Return the child directory with the given name
      * @param childName  name of the child directory
      */

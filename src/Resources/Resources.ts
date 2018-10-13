@@ -31,7 +31,9 @@ const Suite = {
     okTest: fs.readFileSync(path.join(resourcesFolderPath, "html_ok_test.html")).toString(),
     okLine: fs.readFileSync(path.join(resourcesFolderPath, "html_ok_line.html")).toString(),
     koTest: fs.readFileSync(path.join(resourcesFolderPath, "html_ko_test.html")).toString(),
-    koLine: fs.readFileSync(path.join(resourcesFolderPath, "html_ko_line.html")).toString()
+    koLine: fs.readFileSync(path.join(resourcesFolderPath, "html_ko_line.html")).toString(),
+    titleLink: fs.readFileSync(path.join(resourcesFolderPath, "html_title_link.html")).toString(),
+    analysis: fs.readFileSync(path.join(resourcesFolderPath, "html_suite_analysis.html")).toString()
 }
 
 export { Js, Css, Directory, Suite }
