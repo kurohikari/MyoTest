@@ -9,7 +9,7 @@ const DirStructure = require("./out/src/Report/DirStructure").DirStructure;
 
 const reserved = ["-s", "--source", "-o", "--output", "-g", "--generate", "-v", "--verbose"];
 let promises = [];
-//
+
 async function main() {
     let args = process.argv;
     let source = null;
@@ -36,7 +36,7 @@ async function main() {
         throw new Error("No argument passed for test output directory");
     } else {
         DeleteOutput(output);
-        let structure = new DirStructure(path.normalize(source), true);
+        let structure = new DirStructure(path.parse(source).base, true);
         let report = Report.GetReport();
         report.SetOutput(output);
         report.SetSource(source);

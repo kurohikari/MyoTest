@@ -4,7 +4,7 @@
   "description": "Unit Testing",
   "main": "main.js",
   "scripts": {
-    "test": "node main.js -s ./out -g"
+    "test": "node main.js -s ./out/tests -g"
   },
   "keywords": [
     "\"Unit Testing\"",

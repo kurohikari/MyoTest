@@ -1,11 +1,10 @@
 import { TestResult } from "../Report/TestResult";
 import { Test } from "../Resources/Resources";
+import * as fs from "fs";
 
 export class HTMLTest {
 
-    constructor(private test: TestResult) {
-
-    }
+    constructor(private test: TestResult) {}
 
     private GenerateAnalysis() {
         let passedClass = "";
@@ -22,13 +21,15 @@ export class HTMLTest {
         return Test.analysis.replace("{{passedclass}}", passedClass)
             .replace("{{ispassed}}", isPassed)
             .replace("{{message}}", "");
-
     }
 
-    public SaveAsHTML() {
+    public SaveAsHTML(htmlPath: string) {
         let toWrite = Test.base.replace("{{filepure}}", this.test.GetTestName())
             .replace("{{title}}", this.test.GetTestName())
-            .replace("{{path}}", this.test.GetPath());
+            .replace("{{path}}", this.test.GetPath())
+            .replace("{{analysis}}", "")
+            .replace("{{code}}", "");
+        fs.writeFileSync(htmlPath, toWrite);
     }
 
 }
