@@ -36,4 +36,8 @@ const Suite = {
     analysis: fs.readFileSync(path.join(resourcesFolderPath, "html_suite_analysis.html")).toString()
 }
 
-export { Js, Css, Directory, Suite }
+const Test = {
+    base: fs.readFileSync(path.join(resourcesFolderPath, "html_test.html")).toString()
+}
+
+export { Js, Css, Directory, Suite, Test }
