@@ -5,6 +5,7 @@ import { SideBar } from "./SideBar";
 import * as path from "path";
 import * as fs from "fs";
 import { TestSuite } from "../Report/TestSuite";
+import { TestPortion } from "../Report/TestPortion";
 
 export class HTMLSuite {
 
@@ -98,6 +99,9 @@ export class HTMLSuite {
      * @param info 
      */
     private GenerateKOLine(info: CodeInfo): string {
+        let portion = new TestPortion(info);
+        console.log(portion.GetCodeLines());
+        console.log("nya");
         return Suite.koLine.replace("{{codeline}}", info.GetCodeLine())
             .replace("{{linenumber}}", `${info.GetLine()}`);
     }

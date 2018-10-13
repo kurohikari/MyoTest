@@ -36,3 +36,8 @@ const Suite = {
     analysis: fs.readFileSync(path.join(resourcesFolderPath, "html_suite_analysis.html")).toString()
 };
 exports.Suite = Suite;
+const Test = {
+    base: fs.readFileSync(path.join(resourcesFolderPath, "html_test.html")).toString(),
+    analysis: fs.readFileSync(path.join(resourcesFolderPath, "html_test_analysis.html")).toString()
+};
+exports.Test = Test;
