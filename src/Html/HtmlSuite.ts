@@ -99,9 +99,6 @@ export class HTMLSuite {
      * @param info 
      */
     private GenerateKOLine(info: CodeInfo): string {
-        let portion = new TestPortion(info);
-        console.log(portion.GetCodeLines());
-        console.log("nya");
         return Suite.koLine.replace("{{codeline}}", info.GetCodeLine())
             .replace("{{linenumber}}", `${info.GetLine()}`);
     }

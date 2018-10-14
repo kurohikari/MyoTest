@@ -5,7 +5,6 @@ const Resources_1 = require("../Resources/Resources");
 const SideBar_1 = require("./SideBar");
 const path = require("path");
 const fs = require("fs");
-const TestPortion_1 = require("../Report/TestPortion");
 class HTMLSuite {
     constructor(suite) {
         this.suite = suite;
@@ -89,9 +88,6 @@ class HTMLSuite {
      * @param info
      */
     GenerateKOLine(info) {
-        let portion = new TestPortion_1.TestPortion(info);
-        console.log(portion.GetCodeLines());
-        console.log("nya");
         return Resources_1.Suite.koLine.replace("{{codeline}}", info.GetCodeLine())
             .replace("{{linenumber}}", `${info.GetLine()}`);
     }

@@ -9,6 +9,10 @@ export class TestPortion {
         this.RetrieveCodeLines(info);
     }
 
+    /**
+     * Find the lines of code from the source where the test code is described
+     * @param info 
+     */
     private RetrieveCodeLines(info: CodeInfo): void {
         let lines = fs.readFileSync(info.GetPath()).toString().split("\n");
         lines = lines.slice(info.GetTestStartLine()-1);
@@ -36,6 +40,9 @@ export class TestPortion {
         this.codeLines = codeLines;
     }
 
+    /**
+     * Get the lines of code of the test
+     */
     public GetCodeLines(): string[] {
         return this.codeLines;
     }

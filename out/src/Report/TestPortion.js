@@ -5,6 +5,10 @@ class TestPortion {
     constructor(info) {
         this.RetrieveCodeLines(info);
     }
+    /**
+     * Find the lines of code from the source where the test code is described
+     * @param info
+     */
     RetrieveCodeLines(info) {
         let lines = fs.readFileSync(info.GetPath()).toString().split("\n");
         lines = lines.slice(info.GetTestStartLine() - 1);
@@ -33,6 +37,9 @@ class TestPortion {
         }
         this.codeLines = codeLines;
     }
+    /**
+     * Get the lines of code of the test
+     */
     GetCodeLines() {
         return this.codeLines;
     }
