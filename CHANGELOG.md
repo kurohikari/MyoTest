@@ -1,4 +1,9 @@
 # ChangeLog
+## V0.0.11 Add test detail (13 / 10 / 2018)
+### New Functionality
+* Users can now click on a link on a test to see the test definition
+### Bug fix
+* Handling path with descendants for the source folder
 ## V0.0.11 Add links to path (13 / 10 / 2018)
 ### New Functionalities
 * Users can now click on links in the path in the title of a suite to go to the directory
