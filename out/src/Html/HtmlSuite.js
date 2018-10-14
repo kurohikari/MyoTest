@@ -35,6 +35,7 @@ class HTMLSuite {
     GenerateOKTest(test) {
         let codeLines = this.GenerateOKLines(test);
         return Resources_1.Suite.okTest.replace("{{testname}}", test.GetTestName())
+            .replace("{{testlink}}", path.join(".", "testcases", `${test.GetTestName()}.html`))
             .replace("{{info}}", codeLines.join("\n"));
     }
     /**
@@ -68,6 +69,7 @@ class HTMLSuite {
         let error = object["err"];
         let codeLines = this.GenerateKOLines(messages);
         return Resources_1.Suite.koTest.replace("{{name}}", test.GetTestName())
+            .replace("{{testlink}}", path.join(".", "testcases", `${test.GetTestName()}.html`))
             .replace("{{lines}}", codeLines.join("\n"))
             .replace("{{error}", error.stackMessage);
     }

@@ -308,3 +308,36 @@ span.good-fisheye {
 div.toggable {
     width: 75%;
 }
+
+div.code-viewer {
+    display: flex;
+    width: 80%;
+    padding: 1ch;
+    margin-left: 10%;
+    border: 1px solid rgba(200,200,200,1);
+    background-color: rgba(220,220,220,1);
+    justify-content: center;
+    align-items: left;
+    flex-direction: column;
+}
+
+div.code-viewer-line {
+    display: flex;
+    height: 2ch;
+    align-items: center;
+}
+
+div.line-number {
+    width: 5ch;
+    padding-left: 1ch;
+    padding-right: 1ch;
+    margin-right: 2ch;
+    border-right: 1px solid black;
+    text-align: right;
+}
+
+a.test-link {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}

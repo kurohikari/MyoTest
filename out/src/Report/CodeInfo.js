@@ -5,19 +5,45 @@ class CodeInfo {
     constructor(stackLines, file) {
         this.stackLines = stackLines;
         this.file = file;
+        this.RetrieveFileLines();
         this.RetrieveStackLine();
         this.RetrievePathAndLineNumber();
         this.RetrieveCodeLine();
+        this.RetrieveTestStart();
+    }
+    /**
+     * Finds the lines in the stack trace containing the file with the test
+     */
+    RetrieveFileLines() {
+        this.fileLines = [];
+        for (let line of this.stackLines) {
+            if (line.indexOf(this.file) > -1) {
+                this.fileLines.push(line);
+            }
+        }
+    }
+    /**
+     * Finds the start of the test from the stacklines
+     */
+    RetrieveTestStart() {
+        if (this.fileLines.length < 2)
+            throw new Error("Test start not found in stack trace!");
+        else {
+            let line = this.fileLines[1];
+            let linecol = line.match(/:\d+:\d+/)[0];
+            this.testStartLine = parseInt(linecol.split(":")[1]);
+            this.testStartColumn = parseInt(linecol.split(":")[2]);
+        }
     }
     /**
      * Find the specific stack line corresponding to the test that succeeded
      */
     RetrieveStackLine() {
-        for (let line of this.stackLines) {
-            if (line.indexOf(this.file) > -1) {
-                this.stackLine = line;
-                break;
-            }
+        if (this.fileLines.length > 0) {
+            this.stackLine = this.fileLines[0];
+        }
+        else {
+            throw new Error(`The stack trace does not contain the file: ${this.file}`);
         }
     }
     /**
@@ -58,6 +84,30 @@ class CodeInfo {
      */
     GetFile() {
         return this.file;
+    }
+    /**
+     * Get the path of the file containing the test
+     */
+    GetPath() {
+        return this.path;
+    }
+    /**
+     * Get the lines in the stack trace containing the file
+     */
+    GetFileLines() {
+        return this.fileLines;
+    }
+    /**
+     * Get the line where the test starts according to the stack trace
+     */
+    GetTestStartLine() {
+        return this.testStartLine;
+    }
+    /**
+     * Get the column where the test starts according to the stack trace
+     */
+    GetTestStartColumn() {
+        return this.testStartColumn;
     }
 }
 exports.CodeInfo = CodeInfo;

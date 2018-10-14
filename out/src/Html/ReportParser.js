@@ -4,6 +4,7 @@ const Resources_1 = require("../Resources/Resources");
 const HtmlDirectory_1 = require("./HtmlDirectory");
 const Report_1 = require("../Report/Report");
 const HtmlSuite_1 = require("./HtmlSuite");
+const HtmlTest_1 = require("./HtmlTest");
 const path = require("path");
 const fs = require("fs");
 class ReportParser {
@@ -36,10 +37,22 @@ class ReportParser {
         if (!fs.existsSync(path.join(currentPath, "myo-js.js"))) {
             fs.writeFileSync(path.join(currentPath, "myo-js.js"), Resources_1.Js);
         }
+        let casesPath = path.join(currentPath, "testcases");
+        fs.mkdirSync(casesPath);
+        if (!fs.existsSync(path.join(casesPath, "myo-css.jss"))) {
+            fs.writeFileSync(path.join(casesPath, "myo-css.css"), Resources_1.Css);
+        }
+        if (!fs.existsSync(path.join(casesPath, "myo-js.js"))) {
+            fs.writeFileSync(path.join(casesPath, "myo-js.js"), Resources_1.Js);
+        }
         for (let suite of structure.GetTestSuites()) {
             if (suite.HasTests()) {
                 let htmlSuite = new HtmlSuite_1.HTMLSuite(suite);
                 htmlSuite.SaveAsHTML(currentPath);
+                for (let test of suite.GetTests()) {
+                    let htmlTest = new HtmlTest_1.HTMLTest(test);
+                    htmlTest.SaveAsHTML(casesPath);
+                }
             }
         }
         (new HtmlDirectory_1.HtmlDirectory(structure)).SaveAsHTML(currentPath);

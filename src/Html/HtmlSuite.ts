@@ -5,6 +5,7 @@ import { SideBar } from "./SideBar";
 import * as path from "path";
 import * as fs from "fs";
 import { TestSuite } from "../Report/TestSuite";
+import { TestPortion } from "../Report/TestPortion";
 
 export class HTMLSuite {
 
@@ -40,6 +41,7 @@ export class HTMLSuite {
     private GenerateOKTest(test: TestResult): string {
         let codeLines = this.GenerateOKLines(test);
         return Suite.okTest.replace("{{testname}}", test.GetTestName())
+            .replace("{{testlink}}", path.join(".", "testcases", `${test.GetTestName()}.html`))
             .replace("{{info}}", codeLines.join("\n"));
     }
 
@@ -76,6 +78,7 @@ export class HTMLSuite {
         let error = object["err"];
         let codeLines = this.GenerateKOLines(messages);
         return Suite.koTest.replace("{{name}}", test.GetTestName())
+            .replace("{{testlink}}", path.join(".", "testcases", `${test.GetTestName()}.html`))
             .replace("{{lines}}", codeLines.join("\n"))
             .replace("{{error}", error.stackMessage)
     }
