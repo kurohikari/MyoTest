@@ -10,23 +10,6 @@ class HTMLTest {
     constructor(test) {
         this.test = test;
     }
-    GenerateAnalysis() {
-        let passedClass = "";
-        let isPassed = "";
-        let message = "";
-        if (this.test.IsPassed()) {
-            passedClass = "test-passed";
-            isPassed = "Passed:";
-            message = "";
-        }
-        else {
-            passedClass = "test-failed";
-            isPassed = "Failed:";
-        }
-        return Resources_1.Test.analysis.replace("{{passedclass}}", passedClass)
-            .replace("{{ispassed}}", isPassed)
-            .replace("{{message}}", "");
-    }
     GenerateCodeLines(info) {
         let portion = new TestPortion_1.TestPortion(info);
         let lines = [];
@@ -49,7 +32,6 @@ class HTMLTest {
             .replace("{{title}}", this.test.GetTestName())
             .replace("{{path}}", this.test.GetPath())
             .replace("{{sidebar}}", SideBar_1.SideBar.GenerateSideBar(filePath))
-            .replace("{{analysis}}", "")
             .replace("{{code}}", this.GenerateCodeLines(info).join("\n"));
         fs.writeFileSync(path.join(htmlPath, `${this.test.GetTestName()}.html`), toWrite);
     }

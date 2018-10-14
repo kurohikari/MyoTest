@@ -335,3 +335,9 @@ div.line-number {
     border-right: 1px solid black;
     text-align: right;
 }
+
+a.test-link {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
