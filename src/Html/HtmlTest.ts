@@ -1,10 +1,10 @@
+import { TestPortion } from "../Report/TestPortion";
 import { TestResult } from "../Report/TestResult";
 import { Test } from "../Resources/Resources";
+import { CodeInfo } from "../Report/CodeInfo";
+import { SideBar } from "./SideBar";
 import * as path from "path";
 import * as fs from "fs";
-import { CodeInfo } from "../Report/CodeInfo";
-import { TestPortion } from "../Report/TestPortion";
-import { SideBar } from "./SideBar";
 
 export class HTMLTest {
 

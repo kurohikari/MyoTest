@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const TestPortion_1 = require("../Report/TestPortion");
 const Resources_1 = require("../Resources/Resources");
+const CodeInfo_1 = require("../Report/CodeInfo");
+const SideBar_1 = require("./SideBar");
 const path = require("path");
 const fs = require("fs");
-const CodeInfo_1 = require("../Report/CodeInfo");
-const TestPortion_1 = require("../Report/TestPortion");
-const SideBar_1 = require("./SideBar");
 class HTMLTest {
     constructor(test) {
         this.test = test;
