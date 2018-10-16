@@ -27,6 +27,29 @@ export class HTMLTest {
     }
 
     public SaveAsHTML(htmlPath: string) {
+        if(!this.test.IsPassed()) {
+            this.SaveFullHTML(htmlPath);
+        } else {
+            let object = JSON.parse(this.test.GetMessage());
+            if(!object || !object.length || object.length === 0 ) {
+                this.SaveEmptyHTML(htmlPath);
+            } else {
+                this.SaveFullHTML(htmlPath);
+            }
+        }
+    }
+
+    public SaveEmptyHTML(htmlPath: string): void {
+        let filePath = path.join(htmlPath, `${this.test.GetTestName()}.html`);
+        let toWrite = Test.base.replace("{{filepure}}", this.test.GetTestName())
+            .replace("{{title}}", this.test.GetTestName())
+            .replace("{{path}}", this.test.GetPath())
+            .replace("{{sidebar}}", SideBar.GenerateSideBar(filePath))
+            .replace("{{code}}", "The testcase did not contain any test...");
+        fs.writeFileSync(path.join(htmlPath, `${this.test.GetTestName()}.html`), toWrite);
+    }
+
+    public SaveFullHTML(htmlPath: string): void {
         let object = JSON.parse(this.test.GetMessage());
         let info: CodeInfo = this.test.IsPassed() ? new CodeInfo(object[0]["paths"], path.parse(this.test.GetPath()).base) : new CodeInfo(object["err"]["stackMessage"].split("\n"), path.parse(this.test.GetPath()).base);
         let filePath = path.join(htmlPath, `${this.test.GetTestName()}.html`);
