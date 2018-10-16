@@ -1,169 +1,157 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const Suite_1 = require("./Suite");
-const assert = require("assert");
-class TestCase {
-    constructor(name) {
-        this.name = name;
+import * as assert from "assert";
+
+export class TestCase {
+
+    private info: any;
+    private failed: boolean;
+
+    constructor(private name: string) {
         this.info = [];
         this.failed = false;
     }
+
     /**
      * Get the name of the test case
      */
-    GetName() {
+    public GetName() {
         return this.name;
     }
+
     /**
      * Return true if the test case failed
      */
-    WasFailed() {
+    public WasFailed() {
         return this.failed;
     }
+
     /**
      * Get the information associated with the test case
      */
-    GetInfo() {
+    public GetInfo() {
         return this.info;
     }
+
     /**
      * Performs a strict equals assertion (===)
      * @param actual value tested
      * @param expected value expected
      * @param message error message
      */
-    Equals(actual, expected, message) {
+    public Equals(actual: any, expected: any, message?: string|Error) {
         assert.strictEqual(actual, expected, message);
         let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
+        this.info.push({"paths": infoLine});
     }
+
     /**
      * Performs a strict deep equals assertion
      * @param actual value tested
      * @param expected value expected
      * @param message error message
      */
-    DeepEquals(actual, expected, message) {
+    public DeepEquals(actual: any, expected: any, message?: string|Error) {
         assert.deepStrictEqual(actual, expected, message);
         let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
+        this.info.push({"paths": infoLine});
     }
+
     /**
      * Checks if the block or promise tested does not reject
      * @param block code to test
      * @param message error message
      */
-    DoesNotReject(block, message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield assert.doesNotReject(block, message).catch(error => { throw error; });
-            let infoLine = (new Error().stack).split("at ");
-            this.info.push({ "paths": infoLine });
-        });
+    public async DoesNotReject(block: Function|Promise<any>, message?: string|Error) {
+        await assert.doesNotReject(block, message).catch(error => {throw error});
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({"paths": infoLine});
     }
+
     /**
      * Checks if the code throws and error
      * @param block code
      * @param message error message
      */
-    DoesNotThrow(block, message) {
+    public DoesNotThrow(block: Function, message?: string|Error) {
         assert.doesNotThrow(block, message);
         let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
+        this.info.push({"paths": infoLine});
     }
+
     /**
      * Fail a test case
      * @param message error message
      */
-    Fail(message) {
+    public Fail(message?: string|Error) {
         assert.fail(message);
         let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
+        this.info.push({"paths": infoLine});
     }
+
     /**
      * Checks if valued passed is not null of undefined
      * @param value value to test
      */
-    IfError(value) {
+    public IfError(value: any) {
         assert.ifError(value);
         let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
+        this.info.push({"paths": infoLine});
     }
+
     /**
      * Performs a not strict equals assertion
      * @param actual value tested
      * @param expected value expected
      * @param message error message
      */
-    NotEquals(actual, expected, message) {
+    public NotEquals(actual: any, expected: any, message?: string|Error) {
         assert.notStrictEqual(actual, expected, message);
         let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
+        this.info.push({"paths": infoLine});
     }
+
     /**
      * Performs a not strict deep equals assertion
      * @param actual value tested
      * @param expected value expected
      * @param message error message
      */
-    NotDeepEquals(actual, expected, message) {
+    public NotDeepEquals(actual: any, expected: any, message?: string|Error) {
         assert.notDeepStrictEqual(actual, expected, message);
         let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
+        this.info.push({"paths": infoLine});
     }
+
     /**
      * Checks if a value is true
      * @param value value tested
      * @param message error message
      */
-    True(value, message) {
+    public True(value: any, message?: string|Error) {
         assert.ok(value, message);
         let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
+        this.info.push({"paths": infoLine});
     }
+
     /**
      * Checks that the block of Promise rejects
      * @param block block to test
      * @param message error message
      */
-    Rejects(block, message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield assert.rejects(block, message).catch(error => { throw error; });
-            let infoLine = (new Error().stack).split("at ");
-            this.info.push({ "paths": infoLine });
-        });
+    public async Rejects(block: Function|Promise<any>, message?: string|Error) {
+        await assert.rejects(block, message).catch(error => {throw error});
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({"paths": infoLine});
     }
+
     /**
      * Checks if the block of message throws an error
      * @param block block of code
      * @param message error message
      */
-    Throws(block, message) {
+    public Throws(block: Function, message?: string|Error) {
         assert.throws(block, message);
         let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
+        this.info.push({"paths": infoLine});
     }
+
 }
-exports.TestCase = TestCase;
-let Test = (testName, testFunc) => __awaiter(this, void 0, void 0, function* () {
-    let t = new TestCase(testName);
-    let suite = new Suite_1.Suite();
-    try {
-        yield testFunc(t);
-        console.log(`[${t.GetName()}] ${JSON.stringify(t.GetInfo())}`);
-    }
-    catch (error) {
-        let err = error;
-        err.stackMessage = err.stack;
-        err.errorMessage = err.message;
-        console.error(`[${t.GetName()}] ${JSON.stringify({ "info": t.GetInfo(), "err": err })}`);
-    }
-});
-exports.Test = Test;
