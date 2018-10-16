@@ -1,4 +1,8 @@
 # ChangeLog
+## V0.0.14 Colored lines (16 / 10 / 2018)
+### New Functionalities
+* Lines in a sample will be green when a test passed
+* The line where the test failed will be red
 ## V0.0.13 Async support (16 / 10 / 2018)
 ### New Functionality
 * Testcase can now be defined with async
