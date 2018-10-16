@@ -9,10 +9,7 @@ class TestSample {
         let stackLines = this.FindStackLines();
         let fileLines = this.FindFileLines(stackLines);
         this.path = this.FindPath(fileLines);
-        this.startLine = this.FindStartLine(fileLines);
-        if (this.startLine === -1) {
-            console.log(test.GetPath());
-        }
+        this.startLineCol = this.FindStartLineAndColumn(fileLines);
         this.lines = this.FindLines();
         this.MarkSuccessLines();
         this.MarkFailureLine();
@@ -79,10 +76,10 @@ class TestSample {
         }
         return num;
     }
-    FindStartLine(fileLines) {
-        let num = 0;
+    FindStartLineAndColumn(fileLines) {
+        let nums = [-1, -1];
         if (fileLines === null) {
-            num = -1;
+            nums = null;
         }
         else {
             if (fileLines.length < 2)
@@ -90,25 +87,27 @@ class TestSample {
             else {
                 let line = fileLines[1];
                 let linecol = line.match(/:\d+:\d+/)[0];
-                num = parseInt(linecol.split(":")[1]);
+                let start = parseInt(linecol.split(":")[1]);
+                let col = parseInt(linecol.split(":")[2]);
+                nums = [start, col];
             }
         }
-        return num;
+        return nums;
     }
     FindLines() {
         let codeLines = [];
-        if (this.startLine === -1) {
+        if (this.startLineCol === null) {
             codeLines = null;
         }
         else {
-            let content = fs.readFileSync(this.path).toString().split("\n").slice(this.startLine - 1);
+            let content = fs.readFileSync(this.path).toString().split("\n").slice(this.startLineCol[0] - 1);
             let p = 0;
             let i = 0;
             let working = true;
             while (working) {
                 let line = content[i];
-                codeLines.push(new CodeLine_1.CodeLine(line, this.startLine + i));
-                for (let j = (i === 0 ? this.startLine - 1 : 0); j < line.length; j++) {
+                codeLines.push(new CodeLine_1.CodeLine(line, this.startLineCol[0] + i));
+                for (let j = (i === 0 ? this.startLineCol[1] - 1 : 0); j < line.length; j++) {
                     if (line.charAt(j) === "(")
                         p++;
                     else if (line.charAt(j) === ")") {
@@ -128,7 +127,7 @@ class TestSample {
         return codeLines;
     }
     MarkSuccessLines() {
-        if (this.startLine === -1) {
+        if (this.startLineCol === null) {
             return;
         }
         else {
@@ -167,8 +166,8 @@ class TestSample {
             }
         }
     }
-    GetStartLine() {
-        return this.startLine;
+    GetStartLineCol() {
+        return this.startLineCol;
     }
     GetPath() {
         return this.path;

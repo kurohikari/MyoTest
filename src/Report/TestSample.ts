@@ -7,13 +7,13 @@ export class TestSample {
 
     private path: string;
     private lines: CodeLine[];
-    private startLine: number;
+    private startLineCol: [number, number];
 
     constructor(private test: TestResult) {
         let stackLines = this.FindStackLines();
         let fileLines = this.FindFileLines(stackLines);
         this.path = this.FindPath(fileLines);
-        this.startLine = this.FindStartLine(fileLines);
+        this.startLineCol = this.FindStartLineAndColumn(fileLines);
         this.lines = this.FindLines();
         this.MarkSuccessLines();
         this.MarkFailureLine();
@@ -79,34 +79,36 @@ export class TestSample {
         return num;
     }
 
-    private FindStartLine(fileLines: string[]): number {
-        let num = 0;
+    private FindStartLineAndColumn(fileLines: string[]): [number, number] {
+        let nums: [number, number] = [-1,-1];
         if(fileLines === null) {
-            num = -1;
+            nums = null;
         } else {
             if(fileLines.length < 2) throw new Error("Test start not found in stack trace!");
             else {
                 let line = fileLines[1];
                 let linecol = line.match(/:\d+:\d+/)[0];
-                num = parseInt(linecol.split(":")[1]);
+                let start = parseInt(linecol.split(":")[1]);
+                let col = parseInt(linecol.split(":")[2]);
+                nums = [start, col];
             }
         }
-        return num;
+        return nums;
     }
 
     private FindLines(): CodeLine[] {
         let codeLines = [];
-        if(this.startLine === -1) {
+        if(this.startLineCol === null) {
             codeLines = null;
         } else {
-            let content = fs.readFileSync(this.path).toString().split("\n").slice(this.startLine-1);
+            let content = fs.readFileSync(this.path).toString().split("\n").slice(this.startLineCol[0]-1);
             let p = 0;
             let i = 0;
             let working = true;
             while(working) {
                 let line = content[i];
-                codeLines.push(new CodeLine(line, this.startLine+i));
-                for(let j=(i===0 ? this.startLine-1 : 0); j<line.length; j++) {
+                codeLines.push(new CodeLine(line, this.startLineCol[0]+i));
+                for(let j=(i===0 ? this.startLineCol[1]-1 : 0); j<line.length; j++) { // TODO: Should be column!
                     if(line.charAt(j) === "(") p++;
                     else if(line.charAt(j) === ")") {
                         p--;
@@ -125,7 +127,7 @@ export class TestSample {
     }
 
     private MarkSuccessLines(): void {
-        if(this.startLine === -1) {
+        if(this.startLineCol === null) {
             return;
         } else {
             let object: any = JSON.parse(this.test.GetMessage());
@@ -164,8 +166,8 @@ export class TestSample {
         }
     }
 
-    public GetStartLine(): number {
-        return this.startLine;
+    public GetStartLineCol(): [number, number] {
+        return this.startLineCol;
     }
 
     public GetPath(): string {
