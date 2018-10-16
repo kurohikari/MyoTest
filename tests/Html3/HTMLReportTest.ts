@@ -1,5 +1,6 @@
 import { Test } from "../../src/Test/Test";
 
-Test("OK", (test) => {
-    test.True(true);
+Test("Nothing", (test) => {
+    let a = 0;
+    a++;
 });

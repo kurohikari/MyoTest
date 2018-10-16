@@ -156,10 +156,10 @@ export class TestCase {
 
 }
 
-let Test = (testName: string, test: (test: TestCase) => void) => {
+let Test = async (testName: string, testFunc: (test: TestCase) => void) => {
     let t = new TestCase(testName);
     try {
-        test(t);
+        await testFunc(t);
         console.log(`[${t.GetName()}] ${JSON.stringify(t.GetInfo())}`);
     } catch(error) {
         let err = error;

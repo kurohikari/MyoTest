@@ -151,10 +151,10 @@ class TestCase {
     }
 }
 exports.TestCase = TestCase;
-let Test = (testName, test) => {
+let Test = (testName, testFunc) => __awaiter(this, void 0, void 0, function* () {
     let t = new TestCase(testName);
     try {
-        test(t);
+        yield testFunc(t);
         console.log(`[${t.GetName()}] ${JSON.stringify(t.GetInfo())}`);
     }
     catch (error) {
@@ -163,5 +163,5 @@ let Test = (testName, test) => {
         err.errorMessage = err.message;
         console.error(`[${t.GetName()}] ${JSON.stringify({ "info": t.GetInfo(), "err": err })}`);
     }
-};
+});
 exports.Test = Test;
