@@ -1,11 +1,10 @@
 import { TestResult } from "../Report/TestResult";
-import { CodeInfo } from "../Report/CodeInfo";
+import { TestSuite } from "../Report/TestSuite";
 import { Suite } from "../Resources/Resources";
+import { CodeInfo } from "../Report/CodeInfo";
 import { SideBar } from "./SideBar";
 import * as path from "path";
 import * as fs from "fs";
-import { TestSuite } from "../Report/TestSuite";
-import { TestPortion } from "../Report/TestPortion";
 
 export class HTMLSuite {
 
