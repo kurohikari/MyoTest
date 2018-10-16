@@ -1,5 +1,10 @@
 # ChangeLog
-## V0.0.11 Add test detail (13 / 10 / 2018)
+## V0.0.13 Async support (16 / 10 / 2018)
+### New Functionality
+* Testcase can now be defined with async
+### Bug Fix
+* Handling when no test is performed in a testcase
+## V0.0.12 Add test detail (13 / 10 / 2018)
 ### New Functionality
 * Users can now click on a link on a test to see the test definition
 ### Bug fix
