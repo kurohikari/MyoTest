@@ -1,90 +1,92 @@
-import { TestResult } from "./TestResult";
-import { CodeLine } from "./CodeLine";
-import * as path from "path";
-import * as fs from "fs";
-
-export class TestSample {
-
-    private path: string;
-    private lines: CodeLine[];
-    private startLine: number;
-
-    constructor(private test: TestResult) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const CodeLine_1 = require("./CodeLine");
+const path = require("path");
+const fs = require("fs");
+class TestSample {
+    constructor(test) {
+        this.test = test;
         let stackLines = this.FindStackLines();
         let fileLines = this.FindFileLines(stackLines);
         this.path = this.FindPath(fileLines);
         this.startLine = this.FindStartLine(fileLines);
+        if (this.startLine === -1) {
+            console.log(test.GetPath());
+        }
         this.lines = this.FindLines();
         this.MarkSuccessLines();
         this.MarkFailureLine();
     }
-
-    private FindStackLines(): string[] {
+    FindStackLines() {
         let object = JSON.parse(this.test.GetMessage());
-        let sLines: string[] = [];
-        if(!this.test.IsPassed()) {
+        let sLines = [];
+        if (!this.test.IsPassed()) {
             sLines = object["err"]["stackMessage"].split("at ");
-        } else {
-            if(!object || !object.length || object.length === 0) {
+        }
+        else {
+            if (!object || !object.length || object.length === 0) {
                 sLines = null;
-            } else {
+            }
+            else {
                 sLines = object[0]["paths"];
             }
         }
         return sLines;
     }
-
-    private FindFileLines(stackLines: string[]): string[] {
-        let lines: string[] = [];
-        if(stackLines === null) {
+    FindFileLines(stackLines) {
+        let lines = [];
+        if (stackLines === null) {
             lines = null;
-        } else {
+        }
+        else {
             let file = path.parse(this.test.GetPath()).base;
-            for(let line of stackLines) {
-                if(line.indexOf(file) > -1) {
+            for (let line of stackLines) {
+                if (line.indexOf(file) > -1) {
                     lines.push(line);
                 }
             }
         }
         return lines;
     }
-
-    private FindPath(fileLines: string[]): string {
+    FindPath(fileLines) {
         let p = "";
-        if(fileLines === null) {
+        if (fileLines === null) {
             p = null;
-        } else {
-            if(fileLines.length < 1) {
+        }
+        else {
+            if (fileLines.length < 1) {
                 throw new Error(`There is no file line for ${path.parse(this.test.GetPath()).base}!`);
-            } else {
+            }
+            else {
                 let line = fileLines[0];
-                let pathnum = line.substring(line.indexOf("(")+1, line.lastIndexOf(")"));
+                let pathnum = line.substring(line.indexOf("(") + 1, line.lastIndexOf(")"));
                 let linecolumn = pathnum.match(/(:\d+:\d+)/)[0];
                 p = pathnum.substring(0, pathnum.indexOf(linecolumn));
             }
         }
         return p;
     }
-
-    private FindLineNumber(flines: string[]): number {
+    FindLineNumber(flines) {
         let num = 0;
-        if(flines === null || flines.length < 1) {
+        if (flines === null || flines.length < 1) {
             num = -1;
-        } else {
+        }
+        else {
             let line = flines[0];
-            let pathnum = line.substring(line.indexOf("(")+1, line.lastIndexOf(")"));
+            let pathnum = line.substring(line.indexOf("(") + 1, line.lastIndexOf(")"));
             let linecol = pathnum.match(/(:\d+:\d+)/)[0];
             num = parseInt(linecol.split(":")[1]);
         }
         return num;
     }
-
-    private FindStartLine(fileLines: string[]): number {
+    FindStartLine(fileLines) {
         let num = 0;
-        if(fileLines === null) {
+        if (fileLines === null) {
             num = -1;
-        } else {
-            if(fileLines.length < 2) throw new Error("Test start not found in stack trace!");
+        }
+        else {
+            if (fileLines.length < 2)
+                throw new Error("Test start not found in stack trace!");
             else {
                 let line = fileLines[1];
                 let linecol = line.match(/:\d+:\d+/)[0];
@@ -93,28 +95,30 @@ export class TestSample {
         }
         return num;
     }
-
-    private FindLines(): CodeLine[] {
+    FindLines() {
         let codeLines = [];
-        if(this.startLine === -1) {
+        if (this.startLine === -1) {
             codeLines = null;
-        } else {
-            let content = fs.readFileSync(this.path).toString().split("\n").slice(this.startLine-1);
+        }
+        else {
+            let content = fs.readFileSync(this.path).toString().split("\n").slice(this.startLine - 1);
             let p = 0;
             let i = 0;
             let working = true;
-            while(working) {
+            while (working) {
                 let line = content[i];
-                codeLines.push(new CodeLine(line, this.startLine+i));
-                for(let j=(i===0 ? this.startLine-1 : 0); j<line.length; j++) {
-                    if(line.charAt(j) === "(") p++;
-                    else if(line.charAt(j) === ")") {
+                codeLines.push(new CodeLine_1.CodeLine(line, this.startLine + i));
+                for (let j = (i === 0 ? this.startLine - 1 : 0); j < line.length; j++) {
+                    if (line.charAt(j) === "(")
+                        p++;
+                    else if (line.charAt(j) === ")") {
                         p--;
-                        if(p === 0) {
+                        if (p === 0) {
                             working = false;
                             break;
                         }
-                    } else {
+                    }
+                    else {
                         continue;
                     }
                 }
@@ -123,24 +127,25 @@ export class TestSample {
         }
         return codeLines;
     }
-
-    private MarkSuccessLines(): void {
-        if(this.startLine === -1) {
+    MarkSuccessLines() {
+        if (this.startLine === -1) {
             return;
-        } else {
-            let object: any = JSON.parse(this.test.GetMessage());
-            let messages: any = null;
-            if(this.test.IsPassed()) {
+        }
+        else {
+            let object = JSON.parse(this.test.GetMessage());
+            let messages = null;
+            if (this.test.IsPassed()) {
                 messages = object;
-            } else {
+            }
+            else {
                 messages = object["info"];
             }
-            for(let message of messages) {
+            for (let message of messages) {
                 let plines = message["paths"];
                 let flines = this.FindFileLines(plines);
                 let number = this.FindLineNumber(flines);
-                for(let line of this.lines) {
-                    if(line.GetLineNumber() === number) {
+                for (let line of this.lines) {
+                    if (line.GetLineNumber() === number) {
                         line.SetState("passed");
                         break;
                     }
@@ -148,32 +153,28 @@ export class TestSample {
             }
         }
     }
-
-    private MarkFailureLine(): void {
-        if(!this.test.IsPassed()) {
-            let object: any = JSON.parse(this.test.GetMessage());
-            let error: any = object["err"];
+    MarkFailureLine() {
+        if (!this.test.IsPassed()) {
+            let object = JSON.parse(this.test.GetMessage());
+            let error = object["err"];
             let stackLines = error.stackMessage.split("at ");
             let fileLines = this.FindFileLines(stackLines);
             let number = this.FindLineNumber(fileLines);
-            for(let line of this.lines) {
-                if(line.GetLineNumber() === number) {
+            for (let line of this.lines) {
+                if (line.GetLineNumber() === number) {
                     line.SetState("failed");
                 }
             }
         }
     }
-
-    public GetStartLine(): number {
+    GetStartLine() {
         return this.startLine;
     }
-
-    public GetPath(): string {
+    GetPath() {
         return this.path;
     }
-
-    public GetLines(): CodeLine[] {
+    GetLines() {
         return this.lines;
     }
-
 }
+exports.TestSample = TestSample;

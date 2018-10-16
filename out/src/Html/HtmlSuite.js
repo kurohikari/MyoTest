@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const CodeInfo_1 = require("../Report/CodeInfo");
 const Resources_1 = require("../Resources/Resources");
+const CodeInfo_1 = require("../Report/CodeInfo");
 const SideBar_1 = require("./SideBar");
 const path = require("path");
 const fs = require("fs");

@@ -2,9 +2,11 @@ import { TestPortion } from "../Report/TestPortion";
 import { TestResult } from "../Report/TestResult";
 import { Test } from "../Resources/Resources";
 import { CodeInfo } from "../Report/CodeInfo";
+import { CodeLine } from "../Report/CodeLine";
 import { SideBar } from "./SideBar";
 import * as path from "path";
 import * as fs from "fs";
+import { TestSample } from "../Report/TestSample";
 
 export class HTMLTest {
 
@@ -15,14 +17,20 @@ export class HTMLTest {
      * @param info 
      */
     private GenerateCodeLines(info: CodeInfo): string[] {
-        let portion = new TestPortion(info);
+        let sample = new TestSample(this.test);
+        let lines = [];
+        for(let line of sample.GetLines()) {
+            lines.push(this.CodeLineAsHTML(line));
+        }
+        return lines;
+        /*let portion = new TestPortion(info);
         let lines = [];
         let codeLines = portion.GetCodeLines();
         for(let i=0; i<codeLines.length; i++) {
             let codeLine = codeLines[i];
             lines.push(this.GenerateCodeLine(codeLine, i+info.GetTestStartLine()));
         }
-        return lines;
+        return lines;*/
     }
 
     /**
@@ -33,6 +41,12 @@ export class HTMLTest {
     private GenerateCodeLine(line: string, num: number): string {
         return Test.line.replace("{{linenumber}}", `${num}`)
             .replace("{{line}}", line);
+    }
+
+    private CodeLineAsHTML(line: CodeLine) {
+        return Test.line.replace("{{color}}", line.GetClass())
+            .replace("{{linenumber}}", `${line.GetLineNumber()}`)
+            .replace("{{line}}", line.GetLine());
     }
 
     /**

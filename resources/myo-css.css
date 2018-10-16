@@ -327,6 +327,14 @@ div.code-viewer-line {
     align-items: center;
 }
 
+div.passed-line {
+    background-color: rgba(70,255,70,0.5);
+}
+
+div.failed-line {
+    background-color: rgba(255,70,70,0.5);
+}
+
 div.line-number {
     width: 5ch;
     padding-left: 1ch;

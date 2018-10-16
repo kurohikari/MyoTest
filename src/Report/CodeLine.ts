@@ -24,13 +24,7 @@ export class CodeLine {
         return this.lineNumber;
     }
 
-    public GenerateAsHTML(): string {
-        return Test.line.replace("{{color}}", this.GetClassForState())
-            .replace("{{linenumber}}", `${this.lineNumber}`)
-            .replace("{{line}}", this.line);
-    }
-
-    private GetClassForState(): string {
+    public GetClass(): string {
         if(this.state === "neutral") {
             return "neutral-line";
         } else if(this.state === "passed") {
