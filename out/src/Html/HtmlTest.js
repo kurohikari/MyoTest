@@ -81,7 +81,13 @@ class HTMLTest {
      */
     SaveFullHTML(htmlPath) {
         let object = JSON.parse(this.test.GetMessage());
-        let info = this.test.IsPassed() ? new CodeInfo_1.CodeInfo(object[0]["paths"], path.parse(this.test.GetPath()).base) : new CodeInfo_1.CodeInfo(object["err"]["stackMessage"].split("\n"), path.parse(this.test.GetPath()).base);
+        let info;
+        try {
+            info = this.test.IsPassed() ? new CodeInfo_1.CodeInfo(object[0]["paths"], path.parse(this.test.GetPath()).base) : new CodeInfo_1.CodeInfo(object["err"]["stackMessage"].split("\n"), path.parse(this.test.GetPath()).base);
+        }
+        catch (error) {
+            return;
+        }
         let filePath = path.join(htmlPath, `${this.test.GetTestName()}.html`);
         let toWrite = Resources_1.Test.base.replace("{{filepure}}", this.test.GetTestName())
             .replace("{{title}}", this.test.GetTestName())
