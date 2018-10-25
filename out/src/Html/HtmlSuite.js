@@ -5,6 +5,7 @@ const Resources_1 = require("../Resources/Resources");
 const SideBar_1 = require("./SideBar");
 const path = require("path");
 const fs = require("fs");
+const Report_1 = require("../Report/Report");
 class HTMLSuite {
     constructor(suite) {
         this.suite = suite;
@@ -93,6 +94,7 @@ class HTMLSuite {
      * Returns an html string describing the path to the suite with links to prior directories
      */
     GetPathWithLinks() {
+        this.path = path.relative(Report_1.Report.GetReport().GetSource(), this.path);
         let items = this.path.split(path.sep);
         let links = [];
         for (let i = 0; i < items.length; i++) {
@@ -136,6 +138,7 @@ class HTMLSuite {
      * @param htmlPath path where to save report
      */
     SaveAsHTML(htmlPath) {
+        // console.log("HTMLPath: " + htmlPath);
         let file = this.suite.GetFile();
         let purename = file.substring(0, file.indexOf(path.parse(file).ext));
         let name = `${purename}.html`;

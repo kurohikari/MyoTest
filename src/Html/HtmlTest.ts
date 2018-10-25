@@ -18,18 +18,10 @@ export class HTMLTest {
         let lines = [];
         for(let i = 0; i<sample.GetLines().length; i++) {
             let line = sample.GetLines()[i];
-            let lineNumber = sample.StartLine() + i + 1;
+            let lineNumber = sample.StartLine() + i;
             lines.push(this.CodeLineAsHTML(line, sample.GetClass(lineNumber), lineNumber));
         }
         return lines;
-        /*let portion = new TestPortion(info);
-        let lines = [];
-        let codeLines = portion.GetCodeLines();
-        for(let i=0; i<codeLines.length; i++) {
-            let codeLine = codeLines[i];
-            lines.push(this.GenerateCodeLine(codeLine, i+info.GetTestStartLine()));
-        }
-        return lines;*/
     }
 
     /**

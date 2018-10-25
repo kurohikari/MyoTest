@@ -7,6 +7,7 @@ const path = require("path");
 const fs = require("fs");
 
 const reserved = ["-s", "--source", "-o", "--output", "-g", "--generate", "-v", "--verbose"];
+let promises = [];
 
 async function main() {
     let args = process.argv;
@@ -37,8 +38,8 @@ async function main() {
         let structure = new DirStructure(path.parse(source).base, true);
         let report = Report.GetReport();
         report.SetOutput(output);
-        report.SetSource(source);
-        await RunTests(source, structure);
+        RunTests(source, structure);
+        await Promise.all(promises).catch(error => {console.error(error)})
         report.SetStructure(structure);
         report.Save();
         if(generate) {
@@ -65,7 +66,7 @@ function DeleteOutput(output) {
     }
 }
 
-async function RunTests(testDir, structure) {
+function RunTests(testDir, structure) {
     let reads = fs.readdirSync(testDir);
     let files = [];
     let dirs = [];
@@ -78,19 +79,19 @@ async function RunTests(testDir, structure) {
         }
     }
     for(let file of files) {
-        await RunTest(testDir, file, structure);
+        RunTest(testDir, file, structure);
     }
     for(let dir of dirs) {
         structure.AddChild(new DirStructure(dir));
         let dirPath = path.join(testDir, dir);
-        await RunTests(dirPath, structure.GetChild(dir));
+        RunTests(dirPath, structure.GetChild(dir));
     }
 }
 
 function RunTest(dir, file, structure) {
     let filePath = path.join(dir, file);
     let proc = fork(`${filePath}`, { stdio: "pipe" });
-    return new Promise((resolve) => {
+    let promise = new Promise((resolve) => {
         proc.on("message", (m) => {
             structure.AddSuite(Suite.FromObject(m));
         });
@@ -98,6 +99,7 @@ function RunTest(dir, file, structure) {
             resolve();
         });
     });
+    promises.push(promise);
 }
 
 function GetSource(args, index) {
@@ -111,6 +113,13 @@ function GetSource(args, index) {
     if(!fs.existsSync(next)) {
         throw new Error("Source directory does not exist!");
     }
+    let p = "";
+    if(!path.isAbsolute(next)) {
+        p = path.join(__dirname, next);
+    } else {
+        p = next;
+    }
+    Report.GetReport().SetSource(p);
     return next;
 }
 

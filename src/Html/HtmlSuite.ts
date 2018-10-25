@@ -5,6 +5,7 @@ import { Suite } from "../Test/Suite";
 import { SideBar } from "./SideBar";
 import * as path from "path";
 import * as fs from "fs";
+import { Report } from "../Report/Report";
 
 export class HTMLSuite {
 
@@ -104,6 +105,7 @@ export class HTMLSuite {
      * Returns an html string describing the path to the suite with links to prior directories
      */
     private GetPathWithLinks(): string {
+        this.path = path.relative(Report.GetReport().GetSource(), this.path);
         let items = this.path.split(path.sep);
         let links: string[] = [];
         for(let i=0; i<items.length; i++) {
@@ -151,6 +153,7 @@ export class HTMLSuite {
      * @param htmlPath path where to save report
      */
     public SaveAsHTML(htmlPath: string): void {
+        // console.log("HTMLPath: " + htmlPath);
         let file = this.suite.GetFile();
         let purename = file.substring(0, file.indexOf(path.parse(file).ext));
         let name = `${purename}.html`;
