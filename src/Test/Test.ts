@@ -3,7 +3,8 @@ import { Suite } from "./Suite";
 
 let Test = async (testName: string, testFunc: (test: TestCase) => void) => {
     let t = new TestCase(testName);
-    let suite = new Suite();
+    let suite = Suite.Get();
+    console.log(JSON.stringify(suite));
     try {
         await testFunc(t);
         console.log(`[${t.GetName()}] ${JSON.stringify(t.GetInfo())}`);

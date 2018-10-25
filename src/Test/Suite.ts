@@ -1,4 +1,5 @@
 import * as path from "path";
+import { TestCase } from "./TestCase";
 
 let suites: Suite[] = [];
 
@@ -6,6 +7,7 @@ export class Suite {
 
     private file: string;
     private path: string;
+    private testCases: TestCase[];
 
     private constructor(file: string, filePath: string) {
         this.path = __filename;
@@ -23,6 +25,10 @@ export class Suite {
             }
         }
         return suite;
+    }
+
+    public AddTestCase(testCase: TestCase): void {
+        this.testCases.push(testCase);
     }
 
     public GetFile(): string {
