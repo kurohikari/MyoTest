@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
 class TestCase {
@@ -60,12 +52,10 @@ class TestCase {
      * @param block code to test
      * @param message error message
      */
-    DoesNotReject(block, message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield assert.doesNotReject(block, message).catch(error => { throw error; });
-            let infoLine = (new Error().stack).split("at ");
-            this.info.push({ "paths": infoLine });
-        });
+    async DoesNotReject(block, message) {
+        await assert.doesNotReject(block, message).catch(error => { throw error; });
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({ "paths": infoLine });
     }
     /**
      * Checks if the code throws and error
@@ -132,12 +122,10 @@ class TestCase {
      * @param block block to test
      * @param message error message
      */
-    Rejects(block, message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield assert.rejects(block, message).catch(error => { throw error; });
-            let infoLine = (new Error().stack).split("at ");
-            this.info.push({ "paths": infoLine });
-        });
+    async Rejects(block, message) {
+        await assert.rejects(block, message).catch(error => { throw error; });
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({ "paths": infoLine });
     }
     /**
      * Checks if the block of message throws an error
@@ -151,10 +139,10 @@ class TestCase {
     }
 }
 exports.TestCase = TestCase;
-let Test = (testName, testFunc) => __awaiter(this, void 0, void 0, function* () {
+let Test = async (testName, testFunc) => {
     let t = new TestCase(testName);
     try {
-        yield testFunc(t);
+        await testFunc(t);
         console.log(`[${t.GetName()}] ${JSON.stringify(t.GetInfo())}`);
     }
     catch (error) {
@@ -163,5 +151,5 @@ let Test = (testName, testFunc) => __awaiter(this, void 0, void 0, function* () 
         err.errorMessage = err.message;
         console.error(`[${t.GetName()}] ${JSON.stringify({ "info": t.GetInfo(), "err": err })}`);
     }
-});
+};
 exports.Test = Test;
