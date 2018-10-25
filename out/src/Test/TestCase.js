@@ -1,19 +1,100 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
+const path = require("path");
 class TestCase {
     constructor(name) {
         this.name = name;
         this.info = [];
+        this.successLines = [];
         this.failed = false;
+        let testfilename = path.join(__dirname, "Test.js");
+        let error = new Error();
+        let stack = error.stack.split("at ").slice(1);
+        for (let trace of stack) {
+            if (trace.indexOf(__filename) < 0 && trace.indexOf(testfilename) < 0) {
+                this.trace = trace.substring(trace.indexOf("(") + 1, trace.lastIndexOf(")"));
+                break;
+            }
+        }
+        this.filePath = this.trace.substring(0, this.trace.lastIndexOf(":"));
+        this.filePath = this.filePath.substring(0, this.filePath.lastIndexOf(":"));
+        this.fileName = path.parse(this.filePath).base;
+        this.startColumn = parseInt(this.trace.substring(this.trace.lastIndexOf(":") + 1));
+        let noCol = this.trace.substring(0, this.trace.lastIndexOf(":"));
+        this.startLine = parseInt(noCol.substring(noCol.lastIndexOf(":") + 1));
+    }
+    /**
+     * Returns the name of the file tested with extension
+     */
+    GetFileName() {
+        return this.fileName;
+    }
+    /**
+     * Get the path of the file tested
+     */
+    GetFilePath() {
+        return this.filePath;
+    }
+    /**
+     * Returns the trace of the error where the filename appears
+     */
+    GetTrace() {
+        return this.trace;
+    }
+    /**
+     * Returns the line number where the test starts
+     */
+    GetStartLine() {
+        return this.startLine;
+    }
+    /**
+     * Returns the column number where the test starts
+     */
+    GetStartColumn() {
+        return this.startColumn;
+    }
+    /**
+     * Returns the line numbers of successful tests
+     */
+    GetSuccessLines() {
+        return this.successLines;
+    }
+    /**
+     * Returns the line number of an error
+     */
+    GetErrorLine() {
+        return this.errorLine;
+    }
+    /**
+     * Get the error stack trace
+     */
+    GetErrorTrace() {
+        return this.errorTrace;
+    }
+    /**
+     * Get the error message
+     */
+    GetErrorMessage() {
+        return this.errorMessage;
+    }
+    /**
+     * Sets the error of the testcase and marks the testcase as failed
+     * @param error error with the trace
+     */
+    SetError(error) {
+        this.failed = true;
+        this.errorMessage = error.message;
+        this.errorTrace = error.stack;
+        for (let trace of this.errorTrace.split("at ").slice(1)) {
+            let index = trace.indexOf(this.filePath);
+            if (index >= 0) {
+                let num = trace.substring(index + this.filePath.length + 1, trace.lastIndexOf(":"));
+                let lineNum = parseInt(num);
+                this.errorLine = lineNum;
+                break;
+            }
+        }
     }
     /**
      * Get the name of the test case
@@ -41,6 +122,16 @@ class TestCase {
      */
     Equals(actual, expected, message) {
         assert.strictEqual(actual, expected, message);
+        let stack = (new Error()).stack.split("at ").slice(1);
+        for (let trace of stack) {
+            let index = trace.indexOf(this.filePath);
+            if (index >= 0) {
+                let num = trace.substring(index + this.filePath.length + 1, trace.lastIndexOf(":"));
+                let lineNum = parseInt(num);
+                this.successLines.push(lineNum);
+                break;
+            }
+        }
         let infoLine = (new Error().stack).split("at ");
         this.info.push({ "paths": infoLine });
     }
@@ -52,6 +143,16 @@ class TestCase {
      */
     DeepEquals(actual, expected, message) {
         assert.deepStrictEqual(actual, expected, message);
+        let stack = (new Error()).stack.split("at ").slice(1);
+        for (let trace of stack) {
+            let index = trace.indexOf(this.filePath);
+            if (index >= 0) {
+                let num = trace.substring(index + this.filePath.length + 1, trace.lastIndexOf(":"));
+                let lineNum = parseInt(num);
+                this.successLines.push(lineNum);
+                break;
+            }
+        }
         let infoLine = (new Error().stack).split("at ");
         this.info.push({ "paths": infoLine });
     }
@@ -60,12 +161,20 @@ class TestCase {
      * @param block code to test
      * @param message error message
      */
-    DoesNotReject(block, message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield assert.doesNotReject(block, message).catch(error => { throw error; });
-            let infoLine = (new Error().stack).split("at ");
-            this.info.push({ "paths": infoLine });
-        });
+    async DoesNotReject(block, message) {
+        await assert.doesNotReject(block, message).catch(error => { throw error; });
+        let stack = (new Error()).stack.split("at ").slice(1);
+        for (let trace of stack) {
+            let index = trace.indexOf(this.filePath);
+            if (index >= 0) {
+                let num = trace.substring(index + this.filePath.length + 1, trace.lastIndexOf(":"));
+                let lineNum = parseInt(num);
+                this.successLines.push(lineNum);
+                break;
+            }
+        }
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({ "paths": infoLine });
     }
     /**
      * Checks if the code throws and error
@@ -74,6 +183,16 @@ class TestCase {
      */
     DoesNotThrow(block, message) {
         assert.doesNotThrow(block, message);
+        let stack = (new Error()).stack.split("at ").slice(1);
+        for (let trace of stack) {
+            let index = trace.indexOf(this.filePath);
+            if (index >= 0) {
+                let num = trace.substring(index + this.filePath.length + 1, trace.lastIndexOf(":"));
+                let lineNum = parseInt(num);
+                this.successLines.push(lineNum);
+                break;
+            }
+        }
         let infoLine = (new Error().stack).split("at ");
         this.info.push({ "paths": infoLine });
     }
@@ -83,6 +202,16 @@ class TestCase {
      */
     Fail(message) {
         assert.fail(message);
+        let stack = (new Error()).stack.split("at ").slice(1);
+        for (let trace of stack) {
+            let index = trace.indexOf(this.filePath);
+            if (index >= 0) {
+                let num = trace.substring(index + this.filePath.length + 1, trace.lastIndexOf(":"));
+                let lineNum = parseInt(num);
+                this.successLines.push(lineNum);
+                break;
+            }
+        }
         let infoLine = (new Error().stack).split("at ");
         this.info.push({ "paths": infoLine });
     }
@@ -92,6 +221,16 @@ class TestCase {
      */
     IfError(value) {
         assert.ifError(value);
+        let stack = (new Error()).stack.split("at ").slice(1);
+        for (let trace of stack) {
+            let index = trace.indexOf(this.filePath);
+            if (index >= 0) {
+                let num = trace.substring(index + this.filePath.length + 1, trace.lastIndexOf(":"));
+                let lineNum = parseInt(num);
+                this.successLines.push(lineNum);
+                break;
+            }
+        }
         let infoLine = (new Error().stack).split("at ");
         this.info.push({ "paths": infoLine });
     }
@@ -103,6 +242,16 @@ class TestCase {
      */
     NotEquals(actual, expected, message) {
         assert.notStrictEqual(actual, expected, message);
+        let stack = (new Error()).stack.split("at ").slice(1);
+        for (let trace of stack) {
+            let index = trace.indexOf(this.filePath);
+            if (index >= 0) {
+                let num = trace.substring(index + this.filePath.length + 1, trace.lastIndexOf(":"));
+                let lineNum = parseInt(num);
+                this.successLines.push(lineNum);
+                break;
+            }
+        }
         let infoLine = (new Error().stack).split("at ");
         this.info.push({ "paths": infoLine });
     }
@@ -114,6 +263,16 @@ class TestCase {
      */
     NotDeepEquals(actual, expected, message) {
         assert.notDeepStrictEqual(actual, expected, message);
+        let stack = (new Error()).stack.split("at ").slice(1);
+        for (let trace of stack) {
+            let index = trace.indexOf(this.filePath);
+            if (index >= 0) {
+                let num = trace.substring(index + this.filePath.length + 1, trace.lastIndexOf(":"));
+                let lineNum = parseInt(num);
+                this.successLines.push(lineNum);
+                break;
+            }
+        }
         let infoLine = (new Error().stack).split("at ");
         this.info.push({ "paths": infoLine });
     }
@@ -124,6 +283,16 @@ class TestCase {
      */
     True(value, message) {
         assert.ok(value, message);
+        let stack = (new Error()).stack.split("at ").slice(1);
+        for (let trace of stack) {
+            let index = trace.indexOf(this.filePath);
+            if (index >= 0) {
+                let num = trace.substring(index + this.filePath.length + 1, trace.lastIndexOf(":"));
+                let lineNum = parseInt(num);
+                this.successLines.push(lineNum);
+                break;
+            }
+        }
         let infoLine = (new Error().stack).split("at ");
         this.info.push({ "paths": infoLine });
     }
@@ -132,12 +301,20 @@ class TestCase {
      * @param block block to test
      * @param message error message
      */
-    Rejects(block, message) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield assert.rejects(block, message).catch(error => { throw error; });
-            let infoLine = (new Error().stack).split("at ");
-            this.info.push({ "paths": infoLine });
-        });
+    async Rejects(block, message) {
+        await assert.rejects(block, message).catch(error => { throw error; });
+        let stack = (new Error()).stack.split("at ").slice(1);
+        for (let trace of stack) {
+            let index = trace.indexOf(this.filePath);
+            if (index >= 0) {
+                let num = trace.substring(index + this.filePath.length + 1, trace.lastIndexOf(":"));
+                let lineNum = parseInt(num);
+                this.successLines.push(lineNum);
+                break;
+            }
+        }
+        let infoLine = (new Error().stack).split("at ");
+        this.info.push({ "paths": infoLine });
     }
     /**
      * Checks if the block of message throws an error
@@ -146,6 +323,16 @@ class TestCase {
      */
     Throws(block, message) {
         assert.throws(block, message);
+        let stack = (new Error()).stack.split("at ").slice(1);
+        for (let trace of stack) {
+            let index = trace.indexOf(this.filePath);
+            if (index >= 0) {
+                let num = trace.substring(index + this.filePath.length + 1, trace.lastIndexOf(":"));
+                let lineNum = parseInt(num);
+                this.successLines.push(lineNum);
+                break;
+            }
+        }
         let infoLine = (new Error().stack).split("at ");
         this.info.push({ "paths": infoLine });
     }

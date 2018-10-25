@@ -9,22 +9,30 @@ export class Suite {
     private path: string;
     private testCases: TestCase[];
 
-    private constructor(file: string, filePath: string) {
-        this.path = __filename;
-        this.file = path.parse(this.path).base;
+    private constructor(filepath: string) {
+        this.path = filepath;
+        this.file = path.parse(filepath).base;
+        this.testCases = [];
     }
 
-    public static Get(): Suite {
-        let filePath = __filename;
-        let fileName = path.parse(filePath).base;
-        let suite = new Suite(fileName, filePath);
+    public static Get(filepath: string): Suite {
+        let suite = new Suite(filepath);
+        let found = false;
         for(let s of suites) {
-            if(s.GetPath() === filePath) {
+            if(s.GetPath() === filepath) {
                 suite = s;
+                found = true;
                 break;
             }
         }
+        if(!found) {
+            suites.push(suite);
+        }
         return suite;
+    }
+
+    public static GetAll(): Suite[] {
+        return suites;
     }
 
     public AddTestCase(testCase: TestCase): void {
@@ -37,6 +45,13 @@ export class Suite {
 
     public GetPath(): string {
         return this.path;
+    }
+
+    /**
+     * Returns the test cases in the test suite
+     */
+    public TestCases(): TestCase[] {
+        return this.testCases;
     }
 
 }
