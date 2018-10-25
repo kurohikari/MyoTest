@@ -84,11 +84,11 @@ class Report {
         console.log(`[${structure.GetName()}]\n`);
         let suites = structure.GetTestSuites();
         for (let suite of suites) {
-            console.log(`=== ${suite.GetFileName()} ===\n`);
-            let tests = suite.GetTests();
+            console.log(`=== ${suite.GetFile()} ===\n`);
+            let tests = suite.TestCases();
             for (let test of tests) {
-                let passMsg = test.IsPassed() ? "OK" : "KO";
-                console.log(`\t--- ${test.GetTestName()}: ${passMsg}`);
+                let passMsg = (!test.WasFailed()) ? "OK" : "KO";
+                console.log(`\t--- ${test.GetName()}: ${passMsg}`);
             }
             console.log(`\n`);
         }

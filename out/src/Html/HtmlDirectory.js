@@ -33,11 +33,11 @@ class HtmlDirectory {
      * @param suite test suite to link to
      */
     GenerateTestSuiteLink(suite) {
-        let htmlLink = `./${suite.GetFileName().replace(path.parse(suite.GetFileName()).ext, ".html")}`;
+        let htmlLink = `./${suite.GetFile().replace(path.parse(suite.GetFile()).ext, ".html")}`;
         return Resources_1.Directory.suiteLink.replace("{{htmllink}}", htmlLink)
-            .replace("{{name}}", suite.GetFileName())
-            .replace("{{passes}}", `${suite.GetPassCount()}`)
-            .replace("{{fails}}", `${suite.GetFailCount()}`);
+            .replace("{{name}}", suite.GetFile())
+            .replace("{{passes}}", `${suite.PassCount()}`)
+            .replace("{{fails}}", `${suite.FailCount()}`);
     }
     /**
      * Generates an <a> tag for a test directory

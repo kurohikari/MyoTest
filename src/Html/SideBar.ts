@@ -44,7 +44,7 @@ export class SideBar {
         let fileDivs = "";
         for(let suite of structure.GetTestSuites()) {
             if(suite.HasTests()) {
-                let file = suite.GetFileName();
+                let file = suite.GetFile();
                 href = path.join(path.relative(path.dirname(currentPath), outputPath), file.replace(path.parse(file).ext, ".html"));
                 let mark = (suite.IsClean()) ? sideCheckMark : sideFailMark;
                 let fileDiv = `<a href="${href}"><div class="file-div">${file} ${mark}</div></a>\n`;

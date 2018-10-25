@@ -1,11 +1,10 @@
-const exec = require("child_process").exec;
+const DirStructure = require("./out/src/Report/DirStructure").DirStructure;
+const ReportParser = require("./out/src/Html/ReportParser").ReportParser;
+const Report = require("./out/src/Report/Report").Report;
+const Suite = require("./out/src/Test/Suite").Suite;
+const fork = require("child_process").fork;
 const path = require("path");
 const fs = require("fs");
-const Report = require("./out/src/Report/Report").Report;
-const TestResult = require("./out/src/Report/TestResult").TestResult;
-const TestSuite = require("./out/src/Report/TestSuite").TestSuite;
-const ReportParser = require("./out/src/Html/ReportParser").ReportParser;
-const DirStructure = require("./out/src/Report/DirStructure").DirStructure;
 
 const reserved = ["-s", "--source", "-o", "--output", "-g", "--generate", "-v", "--verbose"];
 let promises = [];
@@ -39,9 +38,8 @@ async function main() {
         let structure = new DirStructure(path.parse(source).base, true);
         let report = Report.GetReport();
         report.SetOutput(output);
-        report.SetSource(source);
         RunTests(source, structure);
-        await Promise.all(promises).catch(error => {throw error});;
+        await Promise.all(promises).catch(error => {console.error(error)})
         report.SetStructure(structure);
         report.Save();
         if(generate) {
@@ -81,9 +79,7 @@ function RunTests(testDir, structure) {
         }
     }
     for(let file of files) {
-        let testSuite = new TestSuite(file);
-        structure.AddTestSuite(testSuite);
-        RunTest(testDir, file, structure, testSuite);
+        RunTest(testDir, file, structure);
     }
     for(let dir of dirs) {
         structure.AddChild(new DirStructure(dir));
@@ -92,31 +88,14 @@ function RunTests(testDir, structure) {
     }
 }
 
-function RunTest(dir, file, structure, suite) {
+function RunTest(dir, file, structure) {
     let filePath = path.join(dir, file);
-    let proc = exec(`node ${filePath}`);
+    let proc = fork(`${filePath}`, { stdio: "pipe" });
     let promise = new Promise((resolve) => {
-        proc.stdout.on("data", (data) => {
-            if(data.toString().indexOf("[") === 0) {
-                let testName = data.toString().split("[")[1].split("]")[0];
-                let message = data.toString().substring(data.toString().indexOf("]")+1).trim();
-                let result = new TestResult(testName, filePath, message, true);
-                suite.AddTest(result);
-            } else {
-                console.log(data);
-            }
+        proc.on("message", (m) => {
+            structure.AddSuite(Suite.FromObject(m));
         });
-        proc.stderr.on("data", (data) => {
-            if(data.toString().indexOf("[") === 0) {
-                let testName = data.toString().split("[")[1].split("]")[0];
-                let message = data.toString().substring(data.toString().indexOf("]")+1).trim();
-                let result = new TestResult(testName, filePath, message, false);
-                suite.AddTest(result);
-            } else {
-                console.error(data);
-            }
-        });
-        proc.on("close", () => {
+        proc.on("exit", () => {
             resolve();
         });
     });
@@ -134,6 +113,13 @@ function GetSource(args, index) {
     if(!fs.existsSync(next)) {
         throw new Error("Source directory does not exist!");
     }
+    let p = "";
+    if(!path.isAbsolute(next)) {
+        p = path.join(__dirname, next);
+    } else {
+        p = next;
+    }
+    Report.GetReport().SetSource(p);
     return next;
 }
 

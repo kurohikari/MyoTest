@@ -48,10 +48,10 @@ export class ReportParser {
             fs.writeFileSync(path.join(casesPath, "myo-js.js"), Js);
         }
         for(let suite of structure.GetTestSuites()) {
-            if(suite.HasTests()) {
+            if(suite.TestCases().length > 0) {
                 let htmlSuite = new HTMLSuite(suite);
                 htmlSuite.SaveAsHTML(currentPath);
-                for(let test of suite.GetTests()) {
+                for(let test of suite.TestCases()) {
                     let htmlTest = new HTMLTest(test);
                     htmlTest.SaveAsHTML(casesPath);
                 }

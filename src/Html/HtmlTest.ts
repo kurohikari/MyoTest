@@ -1,36 +1,27 @@
-import { TestPortion } from "../Report/TestPortion";
-import { TestResult } from "../Report/TestResult";
 import { Test } from "../Resources/Resources";
-import { CodeInfo } from "../Report/CodeInfo";
-import { CodeLine } from "../Report/CodeLine";
 import { SideBar } from "./SideBar";
 import * as path from "path";
 import * as fs from "fs";
 import { TestSample } from "../Report/TestSample";
+import { TestCase } from "../Test/TestCase";
 
 export class HTMLTest {
 
-    constructor(private test: TestResult) {}
+    constructor(private test: TestCase) {}
 
     /**
      * Generates the lines of code of the test case
      * @param info 
      */
-    private GenerateCodeLines(info: CodeInfo): string[] {
+    private GenerateCodeLines(): string[] {
         let sample = new TestSample(this.test);
         let lines = [];
-        for(let line of sample.GetLines()) {
-            lines.push(this.CodeLineAsHTML(line));
+        for(let i = 0; i<sample.GetLines().length; i++) {
+            let line = sample.GetLines()[i];
+            let lineNumber = sample.StartLine() + i;
+            lines.push(this.CodeLineAsHTML(line, sample.GetClass(lineNumber), lineNumber));
         }
         return lines;
-        /*let portion = new TestPortion(info);
-        let lines = [];
-        let codeLines = portion.GetCodeLines();
-        for(let i=0; i<codeLines.length; i++) {
-            let codeLine = codeLines[i];
-            lines.push(this.GenerateCodeLine(codeLine, i+info.GetTestStartLine()));
-        }
-        return lines;*/
     }
 
     /**
@@ -43,10 +34,10 @@ export class HTMLTest {
             .replace("{{line}}", line);
     }
 
-    private CodeLineAsHTML(line: CodeLine) {
-        return Test.line.replace("{{color}}", line.GetClass())
-            .replace("{{linenumber}}", `${line.GetLineNumber()}`)
-            .replace("{{line}}", line.GetLine());
+    private CodeLineAsHTML(line: string, lineClass: string, lineNumber: number) {
+        return Test.line.replace("{{color}}", lineClass)
+            .replace("{{linenumber}}", `${lineNumber}`)
+            .replace("{{line}}", line);
     }
 
     /**
@@ -54,11 +45,10 @@ export class HTMLTest {
      * @param htmlPath 
      */
     public SaveAsHTML(htmlPath: string) {
-        if(!this.test.IsPassed()) {
+        if(this.test.WasFailed()) {
             this.SaveFullHTML(htmlPath);
         } else {
-            let object = JSON.parse(this.test.GetMessage());
-            if(!object || !object.length || object.length === 0 ) {
+            if(this.test.GetSuccessLines().length === 0 && !this.test.WasFailed()) {
                 this.SaveEmptyHTML(htmlPath);
             } else {
                 this.SaveFullHTML(htmlPath);
@@ -71,13 +61,13 @@ export class HTMLTest {
      * @param htmlPath 
      */
     public SaveEmptyHTML(htmlPath: string): void {
-        let filePath = path.join(htmlPath, `${this.test.GetTestName()}.html`);
-        let toWrite = Test.base.replace("{{filepure}}", this.test.GetTestName())
-            .replace("{{title}}", this.test.GetTestName())
-            .replace("{{path}}", this.test.GetPath())
+        let filePath = path.join(htmlPath, `${this.test.GetName()}.html`);
+        let toWrite = Test.base.replace("{{filepure}}", this.test.GetName())
+            .replace("{{title}}", this.test.GetName())
+            .replace("{{path}}", this.test.GetFilePath())
             .replace("{{sidebar}}", SideBar.GenerateSideBar(filePath))
             .replace("{{code}}", "The testcase did not contain any test...");
-        fs.writeFileSync(path.join(htmlPath, `${this.test.GetTestName()}.html`), toWrite);
+        fs.writeFileSync(path.join(htmlPath, `${this.test.GetName()}.html`), toWrite);
     }
 
     /**
@@ -85,20 +75,13 @@ export class HTMLTest {
      * @param htmlPath 
      */
     public SaveFullHTML(htmlPath: string): void {
-        let object = JSON.parse(this.test.GetMessage());
-        let info : CodeInfo;
-        try {
-            info = this.test.IsPassed() ? new CodeInfo(object[0]["paths"], path.parse(this.test.GetPath()).base) : new CodeInfo(object["err"]["stackMessage"].split("\n"), path.parse(this.test.GetPath()).base);
-        } catch(error) {
-            return;
-        }
-        let filePath = path.join(htmlPath, `${this.test.GetTestName()}.html`);
-        let toWrite = Test.base.replace("{{filepure}}", this.test.GetTestName())
-            .replace("{{title}}", this.test.GetTestName())
-            .replace("{{path}}", this.test.GetPath())
+        let filePath = path.join(htmlPath, `${this.test.GetName()}.html`);
+        let toWrite = Test.base.replace("{{filepure}}", this.test.GetName())
+            .replace("{{title}}", this.test.GetName())
+            .replace("{{path}}", this.test.GetFilePath())
             .replace("{{sidebar}}", SideBar.GenerateSideBar(filePath))
-            .replace("{{code}}", this.GenerateCodeLines(info).join("\n"));
-        fs.writeFileSync(path.join(htmlPath, `${this.test.GetTestName()}.html`), toWrite);
+            .replace("{{code}}", this.GenerateCodeLines().join("\n"));
+        fs.writeFileSync(path.join(htmlPath, `${this.test.GetName()}.html`), toWrite);
     }
 
 }
