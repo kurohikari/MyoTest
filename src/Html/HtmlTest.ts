@@ -86,7 +86,12 @@ export class HTMLTest {
      */
     public SaveFullHTML(htmlPath: string): void {
         let object = JSON.parse(this.test.GetMessage());
-        let info: CodeInfo = this.test.IsPassed() ? new CodeInfo(object[0]["paths"], path.parse(this.test.GetPath()).base) : new CodeInfo(object["err"]["stackMessage"].split("\n"), path.parse(this.test.GetPath()).base);
+        let info : CodeInfo;
+        try {
+            info = this.test.IsPassed() ? new CodeInfo(object[0]["paths"], path.parse(this.test.GetPath()).base) : new CodeInfo(object["err"]["stackMessage"].split("\n"), path.parse(this.test.GetPath()).base);
+        } catch(error) {
+            return;
+        }
         let filePath = path.join(htmlPath, `${this.test.GetTestName()}.html`);
         let toWrite = Test.base.replace("{{filepure}}", this.test.GetTestName())
             .replace("{{title}}", this.test.GetTestName())
