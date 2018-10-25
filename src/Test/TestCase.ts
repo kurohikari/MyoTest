@@ -3,7 +3,6 @@ import * as path from "path";
 
 export class TestCase {
 
-    private info: any;
     private failed: boolean;
     private fileName: string;
     private filePath: string;
@@ -16,7 +15,6 @@ export class TestCase {
     private errorMessage: string;
 
     constructor(private name: string) {
-        this.info = [];
         this.successLines = [];
         this.failed = false;
         let testfilename = path.join(__dirname, "Test.js");
@@ -133,13 +131,6 @@ export class TestCase {
     }
 
     /**
-     * Get the information associated with the test case
-     */
-    public GetInfo() {
-        return this.info;
-    }
-
-    /**
      * Performs a strict equals assertion (===)
      * @param actual value tested
      * @param expected value expected
@@ -157,8 +148,6 @@ export class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -179,8 +168,6 @@ export class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -200,8 +187,6 @@ export class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -221,8 +206,6 @@ export class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -241,8 +224,6 @@ export class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -261,8 +242,6 @@ export class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -283,8 +262,6 @@ export class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -305,8 +282,6 @@ export class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -326,8 +301,6 @@ export class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -347,8 +320,6 @@ export class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({"paths": infoLine});
     }
 
     /**
@@ -368,8 +339,6 @@ export class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({"paths": infoLine});
     }
 
 }

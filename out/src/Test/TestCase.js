@@ -5,7 +5,6 @@ const path = require("path");
 class TestCase {
     constructor(name) {
         this.name = name;
-        this.info = [];
         this.successLines = [];
         this.failed = false;
         let testfilename = path.join(__dirname, "Test.js");
@@ -109,12 +108,6 @@ class TestCase {
         return this.failed;
     }
     /**
-     * Get the information associated with the test case
-     */
-    GetInfo() {
-        return this.info;
-    }
-    /**
      * Performs a strict equals assertion (===)
      * @param actual value tested
      * @param expected value expected
@@ -132,8 +125,6 @@ class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
     }
     /**
      * Performs a strict deep equals assertion
@@ -153,8 +144,6 @@ class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
     }
     /**
      * Checks if the block or promise tested does not reject
@@ -173,8 +162,6 @@ class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
     }
     /**
      * Checks if the code throws and error
@@ -193,8 +180,6 @@ class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
     }
     /**
      * Fail a test case
@@ -212,8 +197,6 @@ class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
     }
     /**
      * Checks if valued passed is not null of undefined
@@ -231,8 +214,6 @@ class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
     }
     /**
      * Performs a not strict equals assertion
@@ -252,8 +233,6 @@ class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
     }
     /**
      * Performs a not strict deep equals assertion
@@ -273,8 +252,6 @@ class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
     }
     /**
      * Checks if a value is true
@@ -293,8 +270,6 @@ class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
     }
     /**
      * Checks that the block of Promise rejects
@@ -313,8 +288,6 @@ class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
     }
     /**
      * Checks if the block of message throws an error
@@ -333,8 +306,6 @@ class TestCase {
                 break;
             }
         }
-        let infoLine = (new Error().stack).split("at ");
-        this.info.push({ "paths": infoLine });
     }
 }
 exports.TestCase = TestCase;
