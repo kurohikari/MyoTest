@@ -52,8 +52,12 @@ export class HTMLSuite {
         let toReturn: string[] = [];
         let messages = JSON.parse(test.GetMessage());
         for(let message of messages) {
-            let info = new CodeInfo(message["paths"], this.suite.GetFileName());
-            toReturn.push(this.GenerateOKLine(info));
+            try {
+                let info = new CodeInfo(message["paths"], this.suite.GetFileName());
+                toReturn.push(this.GenerateOKLine(info));
+            } catch(error) {
+                continue;
+            }
         }
         return toReturn;
     }
@@ -89,8 +93,12 @@ export class HTMLSuite {
     private GenerateKOLines(messages: any[]): string[] {
         let toReturn: string[] = [];
         for(let message of messages) {
-            let info = new CodeInfo(message["paths"], this.suite.GetFileName());
-            toReturn.push(this.GenerateKOLine(info));
+            try {
+                let info = new CodeInfo(message["paths"], this.suite.GetFileName());
+                toReturn.push(this.GenerateKOLine(info));
+            } catch(error) {
+                continue;
+            }
         }
         return toReturn;
     }

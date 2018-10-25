@@ -46,8 +46,13 @@ class HTMLSuite {
         let toReturn = [];
         let messages = JSON.parse(test.GetMessage());
         for (let message of messages) {
-            let info = new CodeInfo_1.CodeInfo(message["paths"], this.suite.GetFileName());
-            toReturn.push(this.GenerateOKLine(info));
+            try {
+                let info = new CodeInfo_1.CodeInfo(message["paths"], this.suite.GetFileName());
+                toReturn.push(this.GenerateOKLine(info));
+            }
+            catch (error) {
+                continue;
+            }
         }
         return toReturn;
     }
@@ -80,8 +85,13 @@ class HTMLSuite {
     GenerateKOLines(messages) {
         let toReturn = [];
         for (let message of messages) {
-            let info = new CodeInfo_1.CodeInfo(message["paths"], this.suite.GetFileName());
-            toReturn.push(this.GenerateKOLine(info));
+            try {
+                let info = new CodeInfo_1.CodeInfo(message["paths"], this.suite.GetFileName());
+                toReturn.push(this.GenerateKOLine(info));
+            }
+            catch (error) {
+                continue;
+            }
         }
         return toReturn;
     }
