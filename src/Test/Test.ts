@@ -15,8 +15,9 @@ let Test = async (testName: string, testFunc: (test: TestCase) => void) => {
 process.on("beforeExit", (code) => {
     let suites = Suite.GetAll();
     for(let suite of suites) {
-        console.log(JSON.stringify(suite));
+        process.send(suite);
     }
+    process.kill(0);
 });
 
 export { Test };

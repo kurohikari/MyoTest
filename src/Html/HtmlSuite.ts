@@ -1,7 +1,7 @@
-import { TestResult } from "../Report/TestResult";
-import { TestSuite } from "../Report/TestSuite";
-import { Suite } from "../Resources/Resources";
-import { CodeInfo } from "../Report/CodeInfo";
+import { TestSample } from "../Report/TestSample";
+import { RSuite } from "../Resources/Resources";
+import { TestCase } from "../Test/TestCase";
+import { Suite } from "../Test/Suite";
 import { SideBar } from "./SideBar";
 import * as path from "path";
 import * as fs from "fs";
@@ -10,8 +10,8 @@ export class HTMLSuite {
 
     private path: string;
 
-    constructor(private suite: TestSuite) {
-        if(suite.HasTests()) this.path = suite.GetTests()[0].GetPath();
+    constructor(private suite: Suite) {
+        if(suite.TestCases().length > 0) this.path = suite.GetPath();
     }
 
     /**
@@ -19,7 +19,7 @@ export class HTMLSuite {
      */
     private GenerateTests(): string[] {
         let toReturn: string[] = [];
-        for(let test of this.suite.GetTests()) {
+        for(let test of this.suite.TestCases()) {
             toReturn.push(this.GenerateTest(test));
         }
         return toReturn;
@@ -29,18 +29,18 @@ export class HTMLSuite {
      * Generate an html test using the given test
      * @param test 
      */
-    private GenerateTest(test: TestResult): string {
-        return (test.IsPassed() ? this.GenerateOKTest(test) : this.GenerateKOTest(test));
+    private GenerateTest(test: TestCase): string {
+        return ((!test.WasFailed()) ? this.GenerateOKTest(test) : this.GenerateKOTest(test));
     }
 
     /**
      * Generate an OK test report using the test passed
      * @param test 
      */
-    private GenerateOKTest(test: TestResult): string {
+    private GenerateOKTest(test: TestCase): string {
         let codeLines = this.GenerateOKLines(test);
-        return Suite.okTest.replace("{{testname}}", test.GetTestName())
-            .replace("{{testlink}}", path.join(".", "testcases", `${test.GetTestName()}.html`))
+        return RSuite.okTest.replace("{{testname}}", test.GetName())
+            .replace("{{testlink}}", path.join(".", "testcases", `${path.parse(test.GetName()).name}.html`))
             .replace("{{info}}", codeLines.join("\n"));
     }
 
@@ -48,12 +48,11 @@ export class HTMLSuite {
      * Generates a list of html ok lines using the given test
      * @param messages 
      */
-    private GenerateOKLines(test: TestResult): string[] {
+    private GenerateOKLines(test: TestCase): string[] {
         let toReturn: string[] = [];
-        let messages = JSON.parse(test.GetMessage());
-        for(let message of messages) {
-            let info = new CodeInfo(message["paths"], this.suite.GetFileName());
-            toReturn.push(this.GenerateOKLine(info));
+        let testSample = new TestSample(test);
+        for(let num of test.GetSuccessLines()) {
+            toReturn.push(this.GenerateOKLine(testSample, num));
         }
         return toReturn;
     }
@@ -62,35 +61,32 @@ export class HTMLSuite {
      * Generates an html ok line using the given info
      * @param info 
      */
-    private GenerateOKLine(info: CodeInfo): string {
-        return Suite.okLine.replace("{{codeline}}", info.GetCodeLine())
-            .replace("{{linenumber}}", `${info.GetLine()}`);
+    private GenerateOKLine(testSample: TestSample, lineNumber: number): string {
+        return RSuite.okLine.replace("{{codeline}}", testSample.GetLineAt(lineNumber))
+            .replace("{{linenumber}}", `${lineNumber}`);
     }
 
     /**
      * Generate a KO test report using the test passed
      * @param test 
      */
-    private GenerateKOTest(test: TestResult): string {
-        let object = JSON.parse(test.GetMessage());
-        let messages = object["info"];
-        let error = object["err"];
-        let codeLines = this.GenerateKOLines(messages);
-        return Suite.koTest.replace("{{name}}", test.GetTestName())
-            .replace("{{testlink}}", path.join(".", "testcases", `${test.GetTestName()}.html`))
+    private GenerateKOTest(test: TestCase): string {
+        let codeLines = this.GenerateKOLines(test);
+        return RSuite.koTest.replace("{{name}}", test.GetName())
+            .replace("{{testlink}}", path.join(".", "testcases", `${path.parse(test.GetName()).name}.html`))
             .replace("{{lines}}", codeLines.join("\n"))
-            .replace("{{error}", error.stackMessage)
+            .replace("{{error}", test.GetTrace())
     }
 
     /**
      * Generates a list of html ko lines using the given list of messages
      * @param messages 
      */
-    private GenerateKOLines(messages: any[]): string[] {
+    private GenerateKOLines(test: TestCase): string[] {
+        let sample = new TestSample(test);
         let toReturn: string[] = [];
-        for(let message of messages) {
-            let info = new CodeInfo(message["paths"], this.suite.GetFileName());
-            toReturn.push(this.GenerateKOLine(info));
+        for(let num of test.GetSuccessLines()) {
+            toReturn.push(this.GenerateKOLine(sample.GetLineAt(num), num));
         }
         return toReturn;
     }
@@ -99,9 +95,9 @@ export class HTMLSuite {
      * Generates an html ko line using the given info
      * @param info 
      */
-    private GenerateKOLine(info: CodeInfo): string {
-        return Suite.koLine.replace("{{codeline}}", info.GetCodeLine())
-            .replace("{{linenumber}}", `${info.GetLine()}`);
+    private GenerateKOLine(line: string, lineNumber: number): string {
+        return RSuite.koLine.replace("{{codeline}}", line)
+            .replace("{{linenumber}}", `${lineNumber}`);
     }
 
     /**
@@ -114,7 +110,7 @@ export class HTMLSuite {
             let item = items[items.length-1-i];
             if(i === 0) {
                 links.unshift(
-                    Suite.titleLink.replace("{{pathtofile}}", "#")
+                    RSuite.titleLink.replace("{{pathtofile}}", "#")
                         .replace("{{item}}", item)
                 );
             } else {
@@ -124,7 +120,7 @@ export class HTMLSuite {
                 }
                 pathToFile = path.join(pathToFile, `dir_${item}.html`);
                 links.unshift(
-                    Suite.titleLink.replace("{{pathtofile}}", pathToFile)
+                    RSuite.titleLink.replace("{{pathtofile}}", pathToFile)
                         .replace("{{item}}", item)
                 );
             }
@@ -136,15 +132,15 @@ export class HTMLSuite {
      * Generates the analysis part of the html
      */
     private GenerateAnalysis(): string {
-        let numPasses = this.suite.GetPassCount();
-        let numFails = this.suite.GetFailCount();
+        let numPasses = this.suite.PassCount();
+        let numFails = this.suite.FailCount();
         let tot = numPasses + numFails;
         if(numFails === 0 && numPasses === 0) return '<div class="analysis">No test was run!</div>';
         else {
             let percentage = (numPasses*100/tot).toFixed(2);
             let passes = (numPasses === 1) ? "1 test passed!" : `${numPasses} tests passed!`;
             let fails = (numFails === 1) ? "1 test failed!" : `${numFails} tests failed!`;
-            return Suite.analysis.replace("{{percentage}}", percentage)
+            return RSuite.analysis.replace("{{percentage}}", percentage)
                 .replace("{{passes}}", passes)
                 .replace("{{fails}}", fails);
         }
@@ -155,7 +151,7 @@ export class HTMLSuite {
      * @param htmlPath path where to save report
      */
     public SaveAsHTML(htmlPath: string): void {
-        let file = this.suite.GetFileName();
+        let file = this.suite.GetFile();
         let purename = file.substring(0, file.indexOf(path.parse(file).ext));
         let name = `${purename}.html`;
         let filePath = path.join(htmlPath, name);
@@ -164,8 +160,8 @@ export class HTMLSuite {
         let sidebar = SideBar.GenerateSideBar(filePath);
         let tests = this.GenerateTests();
 
-        let toWrite = Suite.base.replace("{{filepure}}", purename)
-            .replace("{{title}}", this.suite.GetFileName())
+        let toWrite = RSuite.base.replace("{{filepure}}", purename)
+            .replace("{{title}}", this.suite.GetFile())
             .replace("{{sidebar}}", sidebar)
             .replace("{{path}}", links)
             .replace("{{analysis}}", analysis)

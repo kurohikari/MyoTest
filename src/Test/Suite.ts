@@ -54,4 +54,46 @@ export class Suite {
         return this.testCases;
     }
 
+    public HasTests(): boolean {
+        for(let testcase of this.testCases) {
+            if(testcase.GetSuccessLines.length > 0 || testcase.WasFailed()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public IsClean(): boolean {
+        for(let testcase of this.testCases) {
+            if(testcase.WasFailed()) return false;
+        }
+        return true;
+    }
+
+    public PassCount(): number {
+        let count = 0;
+        for(let testcase of this.testCases) {
+            if(!testcase.WasFailed()) count++;
+        }
+        return count;
+    }
+
+    public FailCount(): number {
+        let count = 0;
+        for(let testcase of this.testCases) {
+            if(testcase.WasFailed()) count++;
+        }
+        return count;
+    }
+
+    public static FromObject(object: any): Suite {
+        let suite = new Suite(object.path);
+        for(let testcase of object.testCases) {
+            let testCase = TestCase.FromObject(testcase);
+            suite.AddTestCase(testCase);
+        }
+        suites.push(suite);
+        return suite;
+    }
+
 }

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
+const TestCase_1 = require("./TestCase");
 let suites = [];
 class Suite {
     constructor(filepath) {
@@ -40,6 +41,46 @@ class Suite {
      */
     TestCases() {
         return this.testCases;
+    }
+    HasTests() {
+        for (let testcase of this.testCases) {
+            if (testcase.GetSuccessLines.length > 0 || testcase.WasFailed()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    IsClean() {
+        for (let testcase of this.testCases) {
+            if (testcase.WasFailed())
+                return false;
+        }
+        return true;
+    }
+    PassCount() {
+        let count = 0;
+        for (let testcase of this.testCases) {
+            if (!testcase.WasFailed())
+                count++;
+        }
+        return count;
+    }
+    FailCount() {
+        let count = 0;
+        for (let testcase of this.testCases) {
+            if (testcase.WasFailed())
+                count++;
+        }
+        return count;
+    }
+    static FromObject(object) {
+        let suite = new Suite(object.path);
+        for (let testcase of object.testCases) {
+            let testCase = TestCase_1.TestCase.FromObject(testcase);
+            suite.AddTestCase(testCase);
+        }
+        suites.push(suite);
+        return suite;
     }
 }
 exports.Suite = Suite;

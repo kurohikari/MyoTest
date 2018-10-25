@@ -3,25 +3,46 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
 const path = require("path");
 class TestCase {
-    constructor(name) {
+    constructor(name, object = null) {
         this.name = name;
-        this.successLines = [];
-        this.failed = false;
-        let testfilename = path.join(__dirname, "Test.js");
-        let error = new Error();
-        let stack = error.stack.split("at ").slice(1);
-        for (let trace of stack) {
-            if (trace.indexOf(__filename) < 0 && trace.indexOf(testfilename) < 0) {
-                this.trace = trace.substring(trace.indexOf("(") + 1, trace.lastIndexOf(")"));
-                break;
+        if (object === null) {
+            this.successLines = [];
+            this.failed = false;
+            let testfilename = path.join(__dirname, "Test.js");
+            let error = new Error();
+            let stack = error.stack.split("at ").slice(1);
+            for (let trace of stack) {
+                if (trace.indexOf(__filename) < 0 && trace.indexOf(testfilename) < 0) {
+                    this.trace = trace.substring(trace.indexOf("(") + 1, trace.lastIndexOf(")"));
+                    break;
+                }
             }
+            this.filePath = this.trace.substring(0, this.trace.lastIndexOf(":"));
+            this.filePath = this.filePath.substring(0, this.filePath.lastIndexOf(":"));
+            this.fileName = path.parse(this.filePath).base;
+            this.startColumn = parseInt(this.trace.substring(this.trace.lastIndexOf(":") + 1));
+            let noCol = this.trace.substring(0, this.trace.lastIndexOf(":"));
+            this.startLine = parseInt(noCol.substring(noCol.lastIndexOf(":") + 1));
         }
-        this.filePath = this.trace.substring(0, this.trace.lastIndexOf(":"));
-        this.filePath = this.filePath.substring(0, this.filePath.lastIndexOf(":"));
-        this.fileName = path.parse(this.filePath).base;
-        this.startColumn = parseInt(this.trace.substring(this.trace.lastIndexOf(":") + 1));
-        let noCol = this.trace.substring(0, this.trace.lastIndexOf(":"));
-        this.startLine = parseInt(noCol.substring(noCol.lastIndexOf(":") + 1));
+        else {
+            this.failed = object.failed;
+            this.fileName = object.fileName;
+            this.filePath = object.filePath;
+            this.trace = object.trace;
+            this.startLine = object.startLine;
+            this.startColumn = object.startColumn;
+            this.successLines = object.successLines;
+            this.errorLine = object.errorLine;
+            this.errorTrace = object.errorTrace;
+            this.errorMessage = object.errorMessage;
+        }
+    }
+    /**
+     * Turns an object to a testcase
+     * @param object
+     */
+    static FromObject(object) {
+        return new TestCase(object.name, object);
     }
     /**
      * Returns the name of the file tested with extension

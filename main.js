@@ -1,14 +1,12 @@
-const exec = require("child_process").exec;
+const DirStructure = require("./out/src/Report/DirStructure").DirStructure;
+const ReportParser = require("./out/src/Html/ReportParser").ReportParser;
+const Report = require("./out/src/Report/Report").Report;
+const Suite = require("./out/src/Test/Suite").Suite;
+const fork = require("child_process").fork;
 const path = require("path");
 const fs = require("fs");
-const Report = require("./out/src/Report/Report").Report;
-const TestResult = require("./out/src/Report/TestResult").TestResult;
-const TestSuite = require("./out/src/Report/TestSuite").TestSuite;
-const ReportParser = require("./out/src/Html/ReportParser").ReportParser;
-const DirStructure = require("./out/src/Report/DirStructure").DirStructure;
 
 const reserved = ["-s", "--source", "-o", "--output", "-g", "--generate", "-v", "--verbose"];
-let promises = [];
 
 async function main() {
     let args = process.argv;
@@ -40,8 +38,7 @@ async function main() {
         let report = Report.GetReport();
         report.SetOutput(output);
         report.SetSource(source);
-        RunTests(source, structure);
-        await Promise.all(promises).catch(error => {throw error});;
+        await RunTests(source, structure);
         report.SetStructure(structure);
         report.Save();
         if(generate) {
@@ -68,7 +65,7 @@ function DeleteOutput(output) {
     }
 }
 
-function RunTests(testDir, structure) {
+async function RunTests(testDir, structure) {
     let reads = fs.readdirSync(testDir);
     let files = [];
     let dirs = [];
@@ -81,46 +78,26 @@ function RunTests(testDir, structure) {
         }
     }
     for(let file of files) {
-        let testSuite = new TestSuite(file);
-        structure.AddTestSuite(testSuite);
-        RunTest(testDir, file, structure, testSuite);
+        await RunTest(testDir, file, structure);
     }
     for(let dir of dirs) {
         structure.AddChild(new DirStructure(dir));
         let dirPath = path.join(testDir, dir);
-        RunTests(dirPath, structure.GetChild(dir));
+        await RunTests(dirPath, structure.GetChild(dir));
     }
 }
 
-function RunTest(dir, file, structure, suite) {
+function RunTest(dir, file, structure) {
     let filePath = path.join(dir, file);
-    let proc = exec(`node ${filePath}`);
-    let promise = new Promise((resolve) => {
-        proc.stdout.on("data", (data) => {
-            if(data.toString().indexOf("[") === 0) {
-                let testName = data.toString().split("[")[1].split("]")[0];
-                let message = data.toString().substring(data.toString().indexOf("]")+1).trim();
-                let result = new TestResult(testName, filePath, message, true);
-                suite.AddTest(result);
-            } else {
-                console.log(data);
-            }
+    let proc = fork(`${filePath}`, { stdio: "pipe" });
+    return new Promise((resolve) => {
+        proc.on("message", (m) => {
+            structure.AddSuite(Suite.FromObject(m));
         });
-        proc.stderr.on("data", (data) => {
-            if(data.toString().indexOf("[") === 0) {
-                let testName = data.toString().split("[")[1].split("]")[0];
-                let message = data.toString().substring(data.toString().indexOf("]")+1).trim();
-                let result = new TestResult(testName, filePath, message, false);
-                suite.AddTest(result);
-            } else {
-                console.error(data);
-            }
-        });
-        proc.on("close", () => {
+        proc.on("exit", () => {
             resolve();
         });
     });
-    promises.push(promise);
 }
 
 function GetSource(args, index) {

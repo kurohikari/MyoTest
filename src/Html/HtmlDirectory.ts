@@ -1,6 +1,6 @@
 import { DirStructure } from "../Report/DirStructure";
-import { TestSuite } from "../Report/TestSuite";
 import { Directory } from "../Resources/Resources";
+import { Suite } from "../Test/Suite";
 import { SideBar } from "./SideBar";
 import * as path from "path";
 import * as fs from "fs";
@@ -34,12 +34,12 @@ export class HtmlDirectory {
      * Generates an <a> tag for a test suite
      * @param suite test suite to link to
      */
-    private GenerateTestSuiteLink(suite: TestSuite) {
-        let htmlLink = `./${suite.GetFileName().replace(path.parse(suite.GetFileName()).ext, ".html")}`;
+    private GenerateTestSuiteLink(suite: Suite) {
+        let htmlLink = `./${suite.GetFile().replace(path.parse(suite.GetFile()).ext, ".html")}`;
         return Directory.suiteLink.replace("{{htmllink}}", htmlLink)
-            .replace("{{name}}", suite.GetFileName())
-            .replace("{{passes}}", `${suite.GetPassCount()}`)
-            .replace("{{fails}}", `${suite.GetFailCount()}`);
+            .replace("{{name}}", suite.GetFile())
+            .replace("{{passes}}", `${suite.PassCount()}`)
+            .replace("{{fails}}", `${suite.FailCount()}`);
     }
 
     /**

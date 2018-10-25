@@ -1,8 +1,8 @@
 import { DirStructure } from "./DirStructure";
-import { TestSuite } from "./TestSuite";
-import { TestResult } from "./TestResult";
 import * as path from "path";
 import * as fs from "fs";
+import { Suite } from "../Test/Suite";
+import { TestCase } from "../Test/TestCase";
 
 /**
  * Name used for the report file
@@ -96,13 +96,13 @@ export class Report {
      */
     public Verbose(structure = this.structure) {
         console.log(`[${structure.GetName()}]\n`);
-        let suites : TestSuite[] = structure.GetTestSuites();
+        let suites : Suite[] = structure.GetTestSuites();
         for(let suite of suites){
-            console.log(`=== ${suite.GetFileName()} ===\n`)
-            let tests : TestResult[] = suite.GetTests();
+            console.log(`=== ${suite.GetFile()} ===\n`)
+            let tests : TestCase[] = suite.TestCases();
             for(let test of tests){
-                let passMsg : string = test.IsPassed() ? "OK":"KO";
-                console.log(`\t--- ${test.GetTestName()}: ${passMsg}`)
+                let passMsg : string = (!test.WasFailed()) ? "OK":"KO";
+                console.log(`\t--- ${test.GetName()}: ${passMsg}`)
             }
             console.log(`\n`);
         }

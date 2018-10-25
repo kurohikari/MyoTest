@@ -1,5 +1,4 @@
 import { Test } from "../../src/Test/Test";
-import { TestResult } from "../../src/Report/TestResult";
 import { DirStructure } from "../../src/Report/DirStructure";
 
 /*Test("Test structure has test", (test) => {

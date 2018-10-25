@@ -17,6 +17,7 @@ exports.Test = Test;
 process.on("beforeExit", (code) => {
     let suites = Suite_1.Suite.GetAll();
     for (let suite of suites) {
-        console.log(JSON.stringify(suite));
+        process.send(suite);
     }
+    process.kill(0);
 });

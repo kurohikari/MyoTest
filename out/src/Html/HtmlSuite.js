@@ -1,22 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const TestSample_1 = require("../Report/TestSample");
 const Resources_1 = require("../Resources/Resources");
-const CodeInfo_1 = require("../Report/CodeInfo");
 const SideBar_1 = require("./SideBar");
 const path = require("path");
 const fs = require("fs");
 class HTMLSuite {
     constructor(suite) {
         this.suite = suite;
-        if (suite.HasTests())
-            this.path = suite.GetTests()[0].GetPath();
+        if (suite.TestCases().length > 0)
+            this.path = suite.GetPath();
     }
     /**
      * Generates the tests to be included in the report
      */
     GenerateTests() {
         let toReturn = [];
-        for (let test of this.suite.GetTests()) {
+        for (let test of this.suite.TestCases()) {
             toReturn.push(this.GenerateTest(test));
         }
         return toReturn;
@@ -26,7 +26,7 @@ class HTMLSuite {
      * @param test
      */
     GenerateTest(test) {
-        return (test.IsPassed() ? this.GenerateOKTest(test) : this.GenerateKOTest(test));
+        return ((!test.WasFailed()) ? this.GenerateOKTest(test) : this.GenerateKOTest(test));
     }
     /**
      * Generate an OK test report using the test passed
@@ -34,8 +34,8 @@ class HTMLSuite {
      */
     GenerateOKTest(test) {
         let codeLines = this.GenerateOKLines(test);
-        return Resources_1.Suite.okTest.replace("{{testname}}", test.GetTestName())
-            .replace("{{testlink}}", path.join(".", "testcases", `${test.GetTestName()}.html`))
+        return Resources_1.RSuite.okTest.replace("{{testname}}", test.GetName())
+            .replace("{{testlink}}", path.join(".", "testcases", `${path.parse(test.GetName()).name}.html`))
             .replace("{{info}}", codeLines.join("\n"));
     }
     /**
@@ -44,10 +44,9 @@ class HTMLSuite {
      */
     GenerateOKLines(test) {
         let toReturn = [];
-        let messages = JSON.parse(test.GetMessage());
-        for (let message of messages) {
-            let info = new CodeInfo_1.CodeInfo(message["paths"], this.suite.GetFileName());
-            toReturn.push(this.GenerateOKLine(info));
+        let testSample = new TestSample_1.TestSample(test);
+        for (let num of test.GetSuccessLines()) {
+            toReturn.push(this.GenerateOKLine(testSample, num));
         }
         return toReturn;
     }
@@ -55,33 +54,30 @@ class HTMLSuite {
      * Generates an html ok line using the given info
      * @param info
      */
-    GenerateOKLine(info) {
-        return Resources_1.Suite.okLine.replace("{{codeline}}", info.GetCodeLine())
-            .replace("{{linenumber}}", `${info.GetLine()}`);
+    GenerateOKLine(testSample, lineNumber) {
+        return Resources_1.RSuite.okLine.replace("{{codeline}}", testSample.GetLineAt(lineNumber))
+            .replace("{{linenumber}}", `${lineNumber}`);
     }
     /**
      * Generate a KO test report using the test passed
      * @param test
      */
     GenerateKOTest(test) {
-        let object = JSON.parse(test.GetMessage());
-        let messages = object["info"];
-        let error = object["err"];
-        let codeLines = this.GenerateKOLines(messages);
-        return Resources_1.Suite.koTest.replace("{{name}}", test.GetTestName())
-            .replace("{{testlink}}", path.join(".", "testcases", `${test.GetTestName()}.html`))
+        let codeLines = this.GenerateKOLines(test);
+        return Resources_1.RSuite.koTest.replace("{{name}}", test.GetName())
+            .replace("{{testlink}}", path.join(".", "testcases", `${path.parse(test.GetName()).name}.html`))
             .replace("{{lines}}", codeLines.join("\n"))
-            .replace("{{error}", error.stackMessage);
+            .replace("{{error}", test.GetTrace());
     }
     /**
      * Generates a list of html ko lines using the given list of messages
      * @param messages
      */
-    GenerateKOLines(messages) {
+    GenerateKOLines(test) {
+        let sample = new TestSample_1.TestSample(test);
         let toReturn = [];
-        for (let message of messages) {
-            let info = new CodeInfo_1.CodeInfo(message["paths"], this.suite.GetFileName());
-            toReturn.push(this.GenerateKOLine(info));
+        for (let num of test.GetSuccessLines()) {
+            toReturn.push(this.GenerateKOLine(sample.GetLineAt(num), num));
         }
         return toReturn;
     }
@@ -89,9 +85,9 @@ class HTMLSuite {
      * Generates an html ko line using the given info
      * @param info
      */
-    GenerateKOLine(info) {
-        return Resources_1.Suite.koLine.replace("{{codeline}}", info.GetCodeLine())
-            .replace("{{linenumber}}", `${info.GetLine()}`);
+    GenerateKOLine(line, lineNumber) {
+        return Resources_1.RSuite.koLine.replace("{{codeline}}", line)
+            .replace("{{linenumber}}", `${lineNumber}`);
     }
     /**
      * Returns an html string describing the path to the suite with links to prior directories
@@ -102,7 +98,7 @@ class HTMLSuite {
         for (let i = 0; i < items.length; i++) {
             let item = items[items.length - 1 - i];
             if (i === 0) {
-                links.unshift(Resources_1.Suite.titleLink.replace("{{pathtofile}}", "#")
+                links.unshift(Resources_1.RSuite.titleLink.replace("{{pathtofile}}", "#")
                     .replace("{{item}}", item));
             }
             else {
@@ -111,7 +107,7 @@ class HTMLSuite {
                     pathToFile = path.join(pathToFile, "..");
                 }
                 pathToFile = path.join(pathToFile, `dir_${item}.html`);
-                links.unshift(Resources_1.Suite.titleLink.replace("{{pathtofile}}", pathToFile)
+                links.unshift(Resources_1.RSuite.titleLink.replace("{{pathtofile}}", pathToFile)
                     .replace("{{item}}", item));
             }
         }
@@ -121,8 +117,8 @@ class HTMLSuite {
      * Generates the analysis part of the html
      */
     GenerateAnalysis() {
-        let numPasses = this.suite.GetPassCount();
-        let numFails = this.suite.GetFailCount();
+        let numPasses = this.suite.PassCount();
+        let numFails = this.suite.FailCount();
         let tot = numPasses + numFails;
         if (numFails === 0 && numPasses === 0)
             return '<div class="analysis">No test was run!</div>';
@@ -130,7 +126,7 @@ class HTMLSuite {
             let percentage = (numPasses * 100 / tot).toFixed(2);
             let passes = (numPasses === 1) ? "1 test passed!" : `${numPasses} tests passed!`;
             let fails = (numFails === 1) ? "1 test failed!" : `${numFails} tests failed!`;
-            return Resources_1.Suite.analysis.replace("{{percentage}}", percentage)
+            return Resources_1.RSuite.analysis.replace("{{percentage}}", percentage)
                 .replace("{{passes}}", passes)
                 .replace("{{fails}}", fails);
         }
@@ -140,7 +136,7 @@ class HTMLSuite {
      * @param htmlPath path where to save report
      */
     SaveAsHTML(htmlPath) {
-        let file = this.suite.GetFileName();
+        let file = this.suite.GetFile();
         let purename = file.substring(0, file.indexOf(path.parse(file).ext));
         let name = `${purename}.html`;
         let filePath = path.join(htmlPath, name);
@@ -148,8 +144,8 @@ class HTMLSuite {
         let analysis = this.GenerateAnalysis();
         let sidebar = SideBar_1.SideBar.GenerateSideBar(filePath);
         let tests = this.GenerateTests();
-        let toWrite = Resources_1.Suite.base.replace("{{filepure}}", purename)
-            .replace("{{title}}", this.suite.GetFileName())
+        let toWrite = Resources_1.RSuite.base.replace("{{filepure}}", purename)
+            .replace("{{title}}", this.suite.GetFile())
             .replace("{{sidebar}}", sidebar)
             .replace("{{path}}", links)
             .replace("{{analysis}}", analysis)

@@ -1,62 +1,26 @@
-import { TestResult } from "./TestResult";
-import { TestSuite } from "./TestSuite";
+import { Suite } from "../Test/Suite";
 import * as path from "path";
 
 export class DirStructure {
 
     private name: string;
     private root: boolean;
-    private testSuites: TestSuite[];
+    private suites: Suite[];
     private children: DirStructure[];
 
     constructor(name: string, root: boolean = false) {
         this.name = name;
         this.root = root;
         this.children = [];
-        this.testSuites = [];
+        this.suites = [];
     }
 
     /**
-     * Adds a test suite to the report
-     * @param testSuite test suite to add
-     * @param mergeIfExist default to true. Adds merge test results to existing test suite when there is already one for the same file. Do nothing when it is false.
+     * Adds a test suite to the directory
+     * @param suite 
      */
-    public AddTestSuite(testSuite: TestSuite, mergeIfExist = true) {
-        if(this.HasTestSuite(testSuite) && !mergeIfExist) return false;
-        else if(this.HasTestSuite(testSuite) && mergeIfExist) {
-            for(let suite of this.testSuites) {
-                if(suite.GetFileName() === testSuite.GetFileName()) {
-                    testSuite.MergeInto(suite);
-                    break;
-                }
-            }
-        } else {
-            this.testSuites.push(testSuite);
-        }
-    }
-
-    /**
-     * Returns true when the report contains a test suite for the same file as the one passed
-     * @param testSuite test suite to check
-     */
-    public HasTestSuite(testSuite: TestSuite) {
-        for(let suite of this.testSuites) {
-            if(suite.GetFileName() === testSuite.GetFileName()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Returns true when the directory has a test suite with the given filename
-     * @param file filename to check
-     */
-    public HasTestSuiteForFile(file: string) {
-        for(let suite of this.testSuites) {
-            if(suite.GetFileName() === file) return true;
-        }
-        return false;
+    public AddSuite(suite: Suite) {
+        this.suites.push(suite);
     }
 
     /**
@@ -64,8 +28,12 @@ export class DirStructure {
      */
     public GetTotalPasses(): number {
         let tot = 0;
-        for(let suite of this.testSuites) {
-            tot += suite.GetPassCount();
+        for(let suite of this.suites) {
+            for(let testcase of suite.TestCases()) {
+                if(!testcase.WasFailed()) {
+                    tot++;
+                }
+            }
         }
         for(let child of this.children) {
             tot += child.GetTotalPasses();
@@ -78,8 +46,12 @@ export class DirStructure {
      */
     public GetTotalFails(): number {
         let tot = 0;
-        for(let suite of this.testSuites) {
-            tot += suite.GetFailCount();
+        for(let suite of this.suites) {
+            for(let testcase of suite.TestCases()) {
+                if(testcase.WasFailed()) {
+                    tot++;
+                }
+            }
         }
         for(let child of this.children) {
             tot += child.GetTotalFails();
@@ -90,8 +62,8 @@ export class DirStructure {
     /**
      * Get the test suite in the current directory
      */
-    public GetTestSuites() {
-        return this.testSuites;
+    public GetTestSuites(): Suite[] {
+        return this.suites;
     }
     
     /**
@@ -112,8 +84,8 @@ export class DirStructure {
      * Check if the directory or any of its subdirectories contains tests
      */
     public HasTests() {
-        for(let suite of this.testSuites) {
-            if(suite.HasTests()) return true;
+        for(let suite of this.suites) {
+            if(suite.TestCases().length > 0) return true;
         }
         for(let child of this.children) {
             if(child.HasTests()) return true;
@@ -206,10 +178,10 @@ export class DirStructure {
      * @param recursive when set to true (default), this will also clean the child directories
      */
     public Clean(recursive = true) {
-        let newSuites: TestSuite[] = [];
+        let newSuites: Suite[] = [];
         let newChildren : DirStructure[] = [];
-        for(let suite of this.testSuites) {
-            if(suite.HasTests()) {
+        for(let suite of this.suites) {
+            if(suite.TestCases().length > 0) {
                 newSuites.push(suite);
             }
         }
@@ -219,7 +191,7 @@ export class DirStructure {
                 newChildren.push(child);
             }
         }
-        this.testSuites = newSuites;
+        this.suites = newSuites;
         this.children = newChildren;
     }
 
@@ -245,10 +217,10 @@ export class DirStructure {
         indents += "\t";
         for(let suite of dir.GetTestSuites()) {
             let testsStr = "";
-            for(let test of suite.GetTests()) {
-                testsStr += `<${test.GetTestName()}> `;
+            for(let test of suite.TestCases()) {
+                testsStr += `<${test.GetName()}> `;
             }
-            console.log(`${indents}"${suite.GetFileName()}" - ${testsStr}`);
+            console.log(`${indents}"${suite.GetFile()}" - ${testsStr}`);
         }
         for(let subDir of dir.GetChildren()) {
             this.toStringify(indentLevel+1, subDir);
