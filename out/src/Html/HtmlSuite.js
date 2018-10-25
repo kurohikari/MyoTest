@@ -68,7 +68,7 @@ class HTMLSuite {
         return Resources_1.RSuite.koTest.replace("{{name}}", test.GetName())
             .replace("{{testlink}}", path.join(".", "testcases", `${path.parse(test.GetName()).name}.html`))
             .replace("{{lines}}", codeLines.join("\n"))
-            .replace("{{error}", test.GetTrace());
+            .replace("{{error}", test.GetErrorTrace());
     }
     /**
      * Generates a list of html ko lines using the given list of messages

@@ -56,7 +56,7 @@ export class Suite {
 
     public HasTests(): boolean {
         for(let testcase of this.testCases) {
-            if(testcase.GetSuccessLines.length > 0 || testcase.WasFailed()) {
+            if(testcase.GetSuccessLines().length > 0 || testcase.WasFailed()) {
                 return true;
             }
         }

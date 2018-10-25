@@ -44,7 +44,7 @@ class Suite {
     }
     HasTests() {
         for (let testcase of this.testCases) {
-            if (testcase.GetSuccessLines.length > 0 || testcase.WasFailed()) {
+            if (testcase.GetSuccessLines().length > 0 || testcase.WasFailed()) {
                 return true;
             }
         }

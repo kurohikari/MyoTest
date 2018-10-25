@@ -76,7 +76,7 @@ export class HTMLSuite {
         return RSuite.koTest.replace("{{name}}", test.GetName())
             .replace("{{testlink}}", path.join(".", "testcases", `${path.parse(test.GetName()).name}.html`))
             .replace("{{lines}}", codeLines.join("\n"))
-            .replace("{{error}", test.GetTrace())
+            .replace("{{error}", test.GetErrorTrace())
     }
 
     /**
