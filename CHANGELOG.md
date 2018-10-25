@@ -1,4 +1,11 @@
 # ChangeLog
+## V0.0.15 Refactoring (25 / 10 / 2018)
+### Refactoring
+* Information collection done at test time
+* Should increase reliability
+* Removed CodeInfo, CodeSample, CodeLine
+* TestCase used directly instead of TestResult
+* Suite used directly instead of TestSuite
 ## V0.0.14 Colored lines (16 / 10 / 2018)
 ### New Functionalities
 * Lines in a sample will be green when a test passed

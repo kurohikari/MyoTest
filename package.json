@@ -1,6 +1,6 @@
 {
   "name": "myotest",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Unit Testing",
   "main": "main.js",
   "scripts": {
