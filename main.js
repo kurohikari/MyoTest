@@ -93,7 +93,8 @@ function RunTest(dir, file, structure) {
     let proc = fork(`${filePath}`, { stdio: "pipe" });
     let promise = new Promise((resolve) => {
         proc.on("message", (m) => {
-            structure.AddSuite(Suite.FromObject(m));
+            let suite = Suite.FromObject(m);
+            structure.AddSuite(suite);
         });
         proc.on("exit", () => {
             resolve();

@@ -36,3 +36,10 @@ Test_1.Test("Test Func 3", async (test) => {
     let num2 = await Func();
     test.Equals(num, 1);
 });
+let str = "Hello World!";
+Test_1.Setup(() => {
+    str = "Goodbye cruel world!";
+});
+Test_1.Test("Test setup", (test) => {
+    test.Equals(str, "Goodbye cruel world!", "str should be 'Goodbye cruel world!'");
+});

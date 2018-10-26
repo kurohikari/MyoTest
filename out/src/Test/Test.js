@@ -2,22 +2,51 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const TestCase_1 = require("./TestCase");
 const Suite_1 = require("./Suite");
-let Test = async (testName, testFunc) => {
+/**
+ * Defines a testcase to be run by the test suite
+ * @param testName
+ * @param testFunc
+ */
+function Test(testName, testFunc) {
     let t = new TestCase_1.TestCase(testName);
     let suite = Suite_1.Suite.Get(t.GetFilePath());
-    suite.AddTestCase(t);
-    try {
-        await testFunc(t);
-    }
-    catch (error) {
-        t.SetError(error);
-    }
-};
+    suite.AddTestCase(t, testFunc);
+}
 exports.Test = Test;
-process.on("beforeExit", (code) => {
+/**
+ * Sets a setup function for the current testsuite (will be overriden when called twice)
+ * @param setupFunction
+ */
+function Setup(setupFunction) {
+    let t = new TestCase_1.TestCase("");
+    let suite = Suite_1.Suite.Get(t.GetFilePath());
+    suite.SetOnSetup(setupFunction);
+}
+exports.Setup = Setup;
+let proc = process;
+process.on("beforeExit", async (code) => {
     let suites = Suite_1.Suite.GetAll();
-    for (let suite of suites) {
-        process.send(suite);
+    let willKill = true;
+    if (!process.send)
+        willKill = false;
+    while (suites.length > 0) {
+        let suite = suites.shift();
+        await suite.Setup();
+        await suite.RunTests();
+        suite.clearTests();
+        if (!willKill) {
+            console.log(suite);
+        }
+        else {
+            process.send(suite);
+        }
     }
-    process.kill(0);
+    proc.on("beforeExit", (c) => {
+        if (!proc.send) {
+            // Dont know how else to handle yet
+        }
+        else {
+            proc.kill(0);
+        }
+    });
 });
