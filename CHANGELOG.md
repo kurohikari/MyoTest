@@ -1,4 +1,13 @@
 # ChangeLog
+## [v0.16.0](https://github.com/kurohikari/MyoTest/projects/1#column-3673246) Setup / Teardown
+### New functionalities
+* Created Setup functionality: Runs a function before all tests in a suite.
+* Created Teardown functionality: Runs a function after all tests in a suite.
+### Big Fixes
+* Path in test case
+* Path in test detail
+### Link
+[v0.16.0](https://github.com/kurohikari/MyoTest/tree/cdf916aea776b9db2d99291b3ec1892a63eb0717)
 ## V0.0.15 Refactoring (25 / 10 / 2018)
 ## Link
 [v0.0.15](https://github.com/kurohikari/MyoTest/tree/92cdeeece213e828b91d14f677e8745a6890d2a9)
