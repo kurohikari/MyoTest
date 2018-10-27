@@ -94,7 +94,8 @@ class HTMLSuite {
      * Returns an html string describing the path to the suite with links to prior directories
      */
     GetPathWithLinks() {
-        this.path = path.relative(Report_1.Report.GetReport().GetSource(), this.path);
+        let base = path.parse(Report_1.Report.GetReport().GetSource()).base;
+        this.path = this.path.replace(Report_1.Report.GetReport().GetSource(), base);
         let items = this.path.split(path.sep);
         let links = [];
         for (let i = 0; i < items.length; i++) {
@@ -138,7 +139,6 @@ class HTMLSuite {
      * @param htmlPath path where to save report
      */
     SaveAsHTML(htmlPath) {
-        // console.log("HTMLPath: " + htmlPath);
         let file = this.suite.GetFile();
         let purename = file.substring(0, file.indexOf(path.parse(file).ext));
         let name = `${purename}.html`;
