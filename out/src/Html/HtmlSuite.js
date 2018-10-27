@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const TestSample_1 = require("../Report/TestSample");
 const Resources_1 = require("../Resources/Resources");
+const Report_1 = require("../Report/Report");
 const SideBar_1 = require("./SideBar");
 const path = require("path");
 const fs = require("fs");
-const Report_1 = require("../Report/Report");
 class HTMLSuite {
     constructor(suite) {
         this.suite = suite;

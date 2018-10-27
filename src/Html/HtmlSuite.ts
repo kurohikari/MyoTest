@@ -1,11 +1,11 @@
 import { TestSample } from "../Report/TestSample";
 import { RSuite } from "../Resources/Resources";
 import { TestCase } from "../Test/TestCase";
+import { Report } from "../Report/Report";
 import { Suite } from "../Test/Suite";
 import { SideBar } from "./SideBar";
 import * as path from "path";
 import * as fs from "fs";
-import { Report } from "../Report/Report";
 
 export class HTMLSuite {
 

@@ -1,13 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Resources_1 = require("../Resources/Resources");
+const TestSample_1 = require("../Report/TestSample");
+const Report_1 = require("../Report/Report");
 const SideBar_1 = require("./SideBar");
 const path = require("path");
 const fs = require("fs");
-const TestSample_1 = require("../Report/TestSample");
 class HTMLTest {
     constructor(test) {
         this.test = test;
+        this.path = test.GetFilePath();
     }
     /**
      * Generates the lines of code of the test case
@@ -55,6 +57,32 @@ class HTMLTest {
         }
     }
     /**
+     * Returns an html string describing the path to the suite with links to prior directories
+     */
+    GetPathWithLinks() {
+        let base = path.parse(Report_1.Report.GetReport().GetSource()).base;
+        this.path = this.path.replace(Report_1.Report.GetReport().GetSource(), base);
+        let items = this.path.split(path.sep);
+        let links = [];
+        for (let i = 0; i < items.length; i++) {
+            let item = items[items.length - 1 - i];
+            if (i === 0) {
+                links.unshift(Resources_1.RSuite.titleLink.replace("{{pathtofile}}", "#")
+                    .replace("{{item}}", item));
+            }
+            else {
+                let pathToFile = "..";
+                for (let j = 0; j < i - 1; j++) {
+                    pathToFile = path.join(pathToFile, "..");
+                }
+                pathToFile = path.join(pathToFile, `dir_${item}.html`);
+                links.unshift(Resources_1.RSuite.titleLink.replace("{{pathtofile}}", pathToFile)
+                    .replace("{{item}}", item));
+            }
+        }
+        return links.join(path.sep);
+    }
+    /**
      * Save the test case when it does not contain any test
      * @param htmlPath
      */
@@ -75,7 +103,7 @@ class HTMLTest {
         let filePath = path.join(htmlPath, `${this.test.GetName()}.html`);
         let toWrite = Resources_1.Test.base.replace("{{filepure}}", this.test.GetName())
             .replace("{{title}}", this.test.GetName())
-            .replace("{{path}}", this.test.GetFilePath())
+            .replace("{{path}}", this.GetPathWithLinks())
             .replace("{{sidebar}}", SideBar_1.SideBar.GenerateSideBar(filePath))
             .replace("{{code}}", this.GenerateCodeLines().join("\n"));
         fs.writeFileSync(path.join(htmlPath, `${this.test.GetName()}.html`), toWrite);
