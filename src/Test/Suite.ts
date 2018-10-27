@@ -9,6 +9,7 @@ export class Suite {
     private path: string;
     private testCases: TestCase[];
     private setupFunction: () => void;
+    private teardownFunction: () => void;
     private testFuncs: ((test: TestCase) => void)[];
 
     private constructor(filepath: string) {
@@ -17,6 +18,7 @@ export class Suite {
         this.testCases = [];
         this.testFuncs = [];
         this.setupFunction = null;
+        this.teardownFunction = null;
     }
 
     /**
@@ -74,7 +76,7 @@ export class Suite {
     /**
      * removes all the test functions (used before passing to myotest)
      */
-    public clearTests(): void {
+    public ClearTests(): void {
         this.testFuncs = [];
     }
 
@@ -113,6 +115,23 @@ export class Suite {
     public async Setup(): Promise<void> {
         if(this.setupFunction !== null) {
             await this.setupFunction();
+        }
+    }
+
+    /**
+     * Sets the teardown function of the test suite
+     * @param teardown 
+     */
+    public SetOnTeardown(teardown: () => void){
+        this.teardownFunction = teardown;
+    }
+
+    /**
+     * Runs the teardown function
+     */
+    public async Teardown(): Promise<void> {
+        if(this.teardownFunction !== null){
+            await this.teardownFunction();
         }
     }
 

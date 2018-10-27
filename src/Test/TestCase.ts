@@ -150,7 +150,7 @@ export class TestCase {
     public WasFailed() {
         return this.failed;
     }
-
+    
     /**
      * Performs a strict equals assertion (===)
      * @param actual value tested

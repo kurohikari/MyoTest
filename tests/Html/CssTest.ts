@@ -1,4 +1,4 @@
-import { Setup, Test } from "../../src/Test/Test";
+import { Setup, Test, Teardown } from "../../src/Test/Test";
 
 Test("OK", (test) => {
     let sthhhhhh = true;
@@ -48,4 +48,8 @@ Setup(() => {
 
 Test("Test setup", (test) => {
     test.Equals(str, "Goodbye cruel world!", "str should be 'Goodbye cruel world!'");
+});
+
+Teardown(() => {
+    str = null;
 });

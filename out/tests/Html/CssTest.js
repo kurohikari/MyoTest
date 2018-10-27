@@ -43,3 +43,6 @@ Test_1.Setup(() => {
 Test_1.Test("Test setup", (test) => {
     test.Equals(str, "Goodbye cruel world!", "str should be 'Goodbye cruel world!'");
 });
+Test_1.Teardown(() => {
+    str = null;
+});

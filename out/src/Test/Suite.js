@@ -10,6 +10,7 @@ class Suite {
         this.testCases = [];
         this.testFuncs = [];
         this.setupFunction = null;
+        this.teardownFunction = null;
     }
     /**
      * Returns a test suite for the given file path
@@ -63,7 +64,7 @@ class Suite {
     /**
      * removes all the test functions (used before passing to myotest)
      */
-    clearTests() {
+    ClearTests() {
         this.testFuncs = [];
     }
     /**
@@ -97,6 +98,21 @@ class Suite {
     async Setup() {
         if (this.setupFunction !== null) {
             await this.setupFunction();
+        }
+    }
+    /**
+     * Sets the teardown function of the test suite
+     * @param teardown
+     */
+    SetOnTeardown(teardown) {
+        this.teardownFunction = teardown;
+    }
+    /**
+     * Runs the teardown function
+     */
+    async Teardown() {
+        if (this.teardownFunction !== null) {
+            await this.teardownFunction();
         }
     }
     /**

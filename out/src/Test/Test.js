@@ -23,6 +23,16 @@ function Setup(setupFunction) {
     suite.SetOnSetup(setupFunction);
 }
 exports.Setup = Setup;
+/**
+ * Sets a teardown function for the current testsuite (can be overriden when called multiple times)
+ * @param teardownFunction
+ */
+function Teardown(teardownFunction) {
+    let t = new TestCase_1.TestCase("");
+    let suite = Suite_1.Suite.Get(t.GetFilePath());
+    suite.SetOnTeardown(teardownFunction);
+}
+exports.Teardown = Teardown;
 let proc = process;
 process.on("beforeExit", async (code) => {
     let suites = Suite_1.Suite.GetAll();
@@ -33,7 +43,8 @@ process.on("beforeExit", async (code) => {
         let suite = suites.shift();
         await suite.Setup();
         await suite.RunTests();
-        suite.clearTests();
+        await suite.Teardown();
+        suite.ClearTests();
         if (!willKill) {
             console.log(suite);
         }
