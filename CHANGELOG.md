@@ -1,4 +1,8 @@
 # ChangeLog
+## [v0.17.0](https://github.com/kurohikari/MyoTest/tree/65b08f02b4beec3841f04f32ecff26f68cdd41c9) Before / After Test
+### New Functionalities
+* BeforeTest will run the same function before each test
+* AfterTest will run the same function after each test
 ## [v0.16.0](https://github.com/kurohikari/MyoTest/projects/1#column-3673246) Setup / Teardown
 ### New functionalities
 * Created Setup functionality: Runs a function before all tests in a suite.
