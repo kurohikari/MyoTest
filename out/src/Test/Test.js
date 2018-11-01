@@ -24,6 +24,26 @@ function Setup(setupFunction) {
 }
 exports.Setup = Setup;
 /**
+ * Sets a function to be called before each test
+ * @param beforeFunction
+ */
+function BeforeTest(beforeFunction) {
+    let t = new TestCase_1.TestCase("");
+    let suite = Suite_1.Suite.Get(t.GetFilePath());
+    suite.SetOnBeforeTest(beforeFunction);
+}
+exports.BeforeTest = BeforeTest;
+/**
+ * Sets a function to be called after each test
+ * @param afterFunction
+ */
+function AfterTest(afterFunction) {
+    let t = new TestCase_1.TestCase("");
+    let suite = Suite_1.Suite.Get(t.GetFilePath());
+    suite.SetOnAfterTest(afterFunction);
+}
+exports.AfterTest = AfterTest;
+/**
  * Sets a teardown function for the current testsuite (can be overriden when called multiple times)
  * @param teardownFunction
  */

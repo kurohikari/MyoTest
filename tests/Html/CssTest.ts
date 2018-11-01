@@ -1,4 +1,12 @@
-import { Setup, Test, Teardown } from "../../src/Test/Test";
+import { Setup, Test, Teardown, BeforeTest, AfterTest } from "../../src/Test/Test";
+
+BeforeTest(() => {
+    console.log("Before test");
+});
+
+AfterTest(() => {
+    console.log("After test");
+})
 
 Test("OK", (test) => {
     let sthhhhhh = true;

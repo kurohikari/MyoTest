@@ -10,6 +10,8 @@ class Suite {
         this.testCases = [];
         this.testFuncs = [];
         this.setupFunction = null;
+        this.beforeFunction = null;
+        this.afterFunction = null;
         this.teardownFunction = null;
     }
     /**
@@ -53,12 +55,14 @@ class Suite {
         for (let i = 0; i < this.testFuncs.length; i++) {
             let test = this.testCases[i];
             let testFunc = this.testFuncs[i];
+            await this.BeforeTest();
             try {
                 await testFunc(test);
             }
             catch (error) {
                 test.SetError(error);
             }
+            await this.AfterTest();
         }
     }
     /**
@@ -98,6 +102,36 @@ class Suite {
     async Setup() {
         if (this.setupFunction !== null) {
             await this.setupFunction();
+        }
+    }
+    /**
+     * Sets the function to be called before each test
+     * @param before
+     */
+    SetOnBeforeTest(before) {
+        this.beforeFunction = before;
+    }
+    /**
+     * Runs the before test function
+     */
+    async BeforeTest() {
+        if (this.beforeFunction !== null) {
+            await this.beforeFunction();
+        }
+    }
+    /**
+     * Sets the function to be called after each test
+     * @param after
+     */
+    SetOnAfterTest(after) {
+        this.afterFunction = after;
+    }
+    /**
+     * Runs the after test function
+     */
+    async AfterTest() {
+        if (this.afterFunction !== null) {
+            await this.afterFunction();
         }
     }
     /**

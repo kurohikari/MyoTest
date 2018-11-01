@@ -9,6 +9,8 @@ export class Suite {
     private path: string;
     private testCases: TestCase[];
     private setupFunction: () => void;
+    private beforeFunction: () => void;
+    private afterFunction: () => void;
     private teardownFunction: () => void;
     private testFuncs: ((test: TestCase) => void)[];
 
@@ -18,6 +20,8 @@ export class Suite {
         this.testCases = [];
         this.testFuncs = [];
         this.setupFunction = null;
+        this.beforeFunction = null;
+        this.afterFunction = null;
         this.teardownFunction = null;
     }
 
@@ -65,11 +69,13 @@ export class Suite {
         for(let i = 0; i<this.testFuncs.length; i++) {
             let test = this.testCases[i];
             let testFunc = this.testFuncs[i];
+            await this.BeforeTest();
             try {
                 await testFunc(test);
             } catch(error) {
                 test.SetError(error);
             }
+            await this.AfterTest();
         }
     }
 
@@ -115,6 +121,40 @@ export class Suite {
     public async Setup(): Promise<void> {
         if(this.setupFunction !== null) {
             await this.setupFunction();
+        }
+    }
+
+    /**
+     * Sets the function to be called before each test
+     * @param before 
+     */
+    public SetOnBeforeTest(before: () => void) {
+        this.beforeFunction = before;
+    }
+
+    /**
+     * Runs the before test function
+     */
+    private async BeforeTest(): Promise<void> {
+        if(this.beforeFunction !== null) {
+            await this.beforeFunction();
+        }
+    }
+
+    /**
+     * Sets the function to be called after each test
+     * @param after 
+     */
+    public SetOnAfterTest(after: () => void) {
+        this.afterFunction = after;
+    }
+
+    /**
+     * Runs the after test function
+     */
+    private async AfterTest(): Promise<void> {
+        if(this.afterFunction !== null) {
+            await this.afterFunction();
         }
     }
 
