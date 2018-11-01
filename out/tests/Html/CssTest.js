@@ -1,6 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Test_1 = require("../../src/Test/Test");
+Test_1.BeforeTest(() => {
+    console.log("Before test");
+});
+Test_1.AfterTest(() => {
+    console.log("After test");
+});
 Test_1.Test("OK", (test) => {
     let sthhhhhh = true;
     test.True(sthhhhhh);
